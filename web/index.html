@@ -589,6 +589,91 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
   .msg{max-width:93%}
 }
 @media print{#sb,#tb,#scrim{display:none}#main{margin:0;padding:0}}
+
+/* ---------- MEETINGS ---------- */
+.mtg-list{display:flex; flex-direction:column}
+.mtg{display:block; width:100%; text-align:left; border:0; background:transparent; cursor:pointer;
+  padding:15px 16px; border-bottom:1px solid var(--line); transition:.13s; position:relative}
+.mtg:last-child{border-bottom:0}
+.mtg:hover{background:#F7FBF8}
+.mtg::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:transparent}
+.mtg:hover::before{background:var(--kt-green)}
+.mtg .mh{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.mtg .mt{font-size:13.5px; font-weight:600; line-height:1.35; color:var(--ink)}
+.mtg:hover .mt{color:var(--kt-green)}
+.mtg .mw{font-size:10.5px; color:var(--ink-3); margin-left:auto; font-variant-numeric:tabular-nums; white-space:nowrap}
+.mtg .mm{font-size:11px; color:var(--ink-2); margin-top:5px}
+.mtg .mtags{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px}
+.chp{font-size:9.5px; font-weight:700; padding:2px 8px; border-radius:10px; background:#EEF4F0; color:var(--kt-dark);
+  text-transform:uppercase; letter-spacing:.05em; white-space:nowrap}
+.mtg-open{margin-left:auto; font-size:11px; font-weight:600; color:var(--kt-green)}
+
+.mtg-det{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:16px}
+@media(max-width:1180px){.mtg-det{grid-template-columns:1fr}}
+.tr{padding:2px 2px}
+.tr .turn{padding:11px 0; border-bottom:1px solid var(--line)}
+.tr .turn:last-child{border-bottom:0}
+.tr .sp{font-size:11.5px; font-weight:700; color:var(--kt-dark); display:block; margin-bottom:3px}
+.tr .sp small{font-weight:500; color:var(--ink-3); font-size:10.5px}
+.tr .tx{font-size:12.5px; color:var(--ink); line-height:1.55}
+.ai-side{display:flex; flex-direction:column; gap:14px}
+.ai-sec .ai-t{display:flex; align-items:center; gap:7px; font-size:11px; font-weight:700; text-transform:uppercase;
+  letter-spacing:.07em; color:var(--ink-3); margin:0 0 8px}
+.ai-sec ul{margin:0; padding-left:17px}
+.ai-sec ul li{font-size:12px; color:var(--ink); line-height:1.5; margin-bottom:6px}
+.ai-badge{display:inline-flex; align-items:center; gap:5px; font-size:9px; font-weight:800; letter-spacing:.06em;
+  text-transform:uppercase; padding:2px 8px; border-radius:20px; background:#F0EAFA; color:#5B3A8E}
+.ai-badge::before{content:"✦"; font-size:10px}
+.ppl{display:flex; flex-direction:column; gap:8px}
+.ppl .pr{display:flex; gap:10px; align-items:flex-start}
+.ppl .av{width:30px; height:30px; border-radius:50%; flex:0 0 30px; display:grid; place-items:center;
+  background:linear-gradient(140deg,var(--kt-green),#0a7a3a); color:#fff; font-size:11px; font-weight:600}
+.ppl .pn{font-size:12px; font-weight:600; color:var(--ink)}
+.ppl .prole{font-size:10.5px; color:var(--ink-3)}
+.ppl .powns{font-size:11px; color:var(--ink-2); margin-top:2px}
+
+/* ---------- PRIORITY / CRITICALITY BADGES ---------- */
+.cr-b{font-size:9px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; padding:2px 7px;
+  border-radius:3px; background:var(--kt-dark); color:#fff; white-space:nowrap}
+.cr-b.critical{background:#C42B22; color:#fff}
+.cr-b.high{background:#E08A15; color:#fff}
+.cr-b.medium{background:#0D8FB8; color:#fff}
+.cr-b.low{background:#EAF6EE; color:#0B6B33}
+
+/* ---------- KANBAN ---------- */
+.kb-bar{display:flex; flex-wrap:wrap; gap:16px; align-items:flex-end}
+.kb-bar .fg{display:flex; flex-direction:column; gap:5px}
+.kb-bar .fg>span{font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3)}
+.kb-board{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; align-items:start}
+@media(max-width:1180px){.kb-board{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){.kb-board{grid-template-columns:1fr}}
+.kb-col{background:#F1F5F2; border:1px solid var(--line); border-radius:var(--r); padding:10px; min-height:120px}
+.kb-col .kb-ch{display:flex; align-items:center; gap:8px; padding:2px 4px 10px}
+.kb-col .kb-ch b{font-size:12px; font-weight:700; color:var(--ink)}
+.kb-col .kb-ch .cnt{margin-left:auto; background:#fff; border:1px solid var(--line); font-size:10.5px; font-weight:700;
+  color:var(--ink-2); padding:1px 8px; border-radius:9px}
+.kb-col .kb-dot{width:8px; height:8px; border-radius:50%; flex:0 0 8px}
+.kb-col.todo .kb-dot{background:var(--kt-grey)} .kb-col.doing .kb-dot{background:var(--az-blue)}
+.kb-col.blocked .kb-dot{background:var(--down)} .kb-col.done .kb-dot{background:var(--kt-green)}
+.kb-empty{font-size:11px; color:var(--ink-3); text-align:center; padding:14px 0}
+.kc{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:11px; margin-bottom:9px;
+  box-shadow:var(--sh); position:relative; border-left:3px solid var(--kt-mid)}
+.kc:last-child{margin-bottom:0}
+.kc.critical{border-left-color:#C42B22} .kc.high{border-left-color:#E08A15}
+.kc.medium{border-left-color:#0D8FB8} .kc.low{border-left-color:var(--kt-mid)}
+.kc .kbadges{display:flex; flex-wrap:wrap; gap:5px; align-items:center; margin-bottom:7px}
+.kc .kt{font-size:12px; font-weight:600; line-height:1.4; color:var(--ink)}
+.kc .kmeta{font-size:10.5px; color:var(--ink-2); margin-top:7px; line-height:1.5}
+.kc .kmeta b{color:var(--ink); font-weight:600}
+.kc .ksrc{font-size:10px; color:var(--ink-3); margin-top:6px; padding-top:6px; border-top:1px dashed var(--line)}
+.kc .ksrc.lk{cursor:pointer} .kc .ksrc.lk:hover{color:var(--kt-green)}
+.kc .kfoot{display:flex; align-items:center; gap:6px; margin-top:9px}
+.kc select{font-family:inherit; font-size:10.5px; font-weight:600; color:var(--ink-2); border:1px solid var(--line);
+  background:var(--surface); border-radius:6px; padding:4px 6px; cursor:pointer; width:100%}
+.kc select:hover{border-color:var(--kt-mid)}
+.risk-i{display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:700; color:var(--ink-3)}
+.risk-i::before{content:""; width:7px; height:7px; border-radius:2px; background:var(--kt-mid)}
+.risk-i.high::before{background:var(--down)} .risk-i.med::before{background:var(--warn)} .risk-i.low::before{background:var(--kt-mid)}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -632,6 +717,10 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     <div class="sb-lbl" data-i18n="navOps"></div>
     <button class="nv grp" id="ucToggle" data-go="usecases"><span class="ic">▦</span><span data-i18n="pgUseCases"></span><span class="bdg">10</span><span class="chev">›</span></button>
     <div class="sb-sub" id="ucNav"></div>
+
+    <div class="sb-lbl" data-i18n="navMeetings"></div>
+    <button class="nv" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
+    <button class="nv" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
   </nav>
   <div class="sb-foot">
     <div data-i18n="footEnv"></div>
@@ -975,6 +1064,34 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 
 <!-- One page per use case, generated from FEED.dash -->
 <div id="ucPages"></div>
+
+<!-- ===================== MEETINGS (index) ===================== -->
+<section class="page" id="p-meetings">
+  <div class="card">
+    <div class="card-h"><h3 data-i18n="mtgH"></h3><span class="sub" data-i18n="mtgSub"></span>
+      <div class="sp"></div><span class="ai-badge" data-i18n="mtgAiBadge"></span></div>
+    <div class="mtg-list" id="mtgList"></div>
+  </div>
+  <div class="disc" style="margin-top:16px" data-i18n="mtgDemo"></div>
+</section>
+
+<!-- One detail page per meeting, generated from FEED.meetings -->
+<div id="mtgPages"></div>
+
+<!-- ===================== KANBAN / ACTION BOARD ===================== -->
+<section class="page" id="p-kanban">
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-h"><h3 data-i18n="kbH"></h3><span class="sub" data-i18n="kbSub"></span></div>
+    <div class="card-b">
+      <div class="kb-bar">
+        <div class="fg"><span data-i18n="kbFilterCrit"></span><div class="filt" id="kbCritFilt"></div></div>
+        <div class="fg"><span data-i18n="kbFilterTopic"></span><div class="filt" id="kbTopicFilt"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="kb-board" id="kbBoard"></div>
+  <div class="disc" style="margin-top:16px" data-i18n="kbDemo"></div>
+</section>
 
 </div></main>
 <script>
@@ -2262,6 +2379,206 @@ window.FEED = {
         en:"Agricultural output in Jan–Jul 2026 was <b>AZN 8,797.2 mn</b> with real growth of <b>+2.8%</b>, faster than the +0.9% recorded for full-year 2025. The sector is <b>5.9%</b> of GDP and 8.3% of non-oil GDP, and roughly 34.7% of employment is connected to it. Full-year 2025 output was AZN 14,190 mn (crops 6,750, livestock 7,440). The strongest feature is exports: USD 896.4 mn in Jan–Jul 2026, up <b>22.8%</b>. The weakest is the trade balance: 2025 food imports of USD 2,591 mn against agri exports of USD 1,300 mn — a deficit of roughly <b>USD 1.3 bn</b>.",
         ru:"Производство сельхозпродукции в янв–июл 2026 года составило <b>8 797,2 млн AZN</b> при реальном росте <b>+2,8%</b>, что быстрее +0,9% за весь 2025 год. Сектор составляет <b>5,9%</b> ВВП и 8,3% ненефтяного ВВП, около 34,7% занятости связано с ним. Полный результат 2025 года — 14 190 млн AZN (растениеводство 6 750, животноводство 7 440). Сильнейшая сторона — экспорт: 896,4 млн долларов в янв–июл 2026 года, рост на <b>22,8%</b>. Слабейшая — торговый баланс: в 2025 году импорт продовольствия 2 591 млн долларов против агроэкспорта 1 300 млн долларов, дефицит около <b>1,3 млрд долларов</b>."},
      c:"stat.gov.az · APA · Interfax · ereforms.gov.az", go:"economy"}
+  ],
+
+  /* ===== MEETINGS WORKSPACE (demonstration data) =====
+     Transcripts and AI analysis are pre-authored mock content. To-dos live
+     in FEED.todos below and are linked to meetings via the `mtg` id, so the
+     meeting detail view and the Kanban board read from the same source. */
+  meetings:[
+    {id:"m1",
+     t:{az:"Suvarma və su idarəçiliyi şurası", en:"Irrigation & water management council", ru:"Совет по орошению и управлению водными ресурсами"},
+     dt:"2026-09-08T09:00", virtual:false,
+     loc:{az:"Nazirlik, Bakı", en:"Ministry HQ, Baku", ru:"Министерство, Баку"},
+     tags:["irrigation","climate"],
+     attendees:[
+       {n:"Rəşad Məmmədov", r:"Deputy Minister (Water)"},
+       {n:"Leyla Orucova", r:"Amelioration & Water Farm OJSC"},
+       {n:"Kamran Rəhimov", r:"CTO, eAgro / EKTIS"}],
+     transcript:[
+       {sp:"Rəşad Məmmədov", r:"Deputy Minister", x:"Reservoir levels in the Aran zone are eleven percent below the five-year average. If we do not accelerate modern irrigation this autumn, the 2027 wheat and cotton seasons carry a real water risk."},
+       {sp:"Leyla Orucova", r:"Water Farm OJSC", x:"We can convert roughly fifteen thousand hectares to drip and pivot systems before spring, but only if the per-hectare subsidy is confirmed now. Contractors need the tender by the end of September."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Then confirm the split this week. I want the four-hundred manat rate reserved for verified modern systems, and I want eAgro satellite layers used to check that installed area matches the declaration."},
+       {sp:"Kamran Rəhimov", r:"eAgro", x:"The water-stress and crop-water-demand layers already cover all districts. We can flag any parcel where irrigation is claimed but no infrastructure signature appears within two weeks of payment."}],
+     analysis:{
+       actions:[
+         "Confirm the 400/200 AZN/ha modern-irrigation subsidy split before the September tender deadline.",
+         "Target ~15,000 ha of drip and pivot conversion across priority Aran districts for the 2027 season.",
+         "Use eAgro satellite layers to verify installed irrigation against subsidy declarations."],
+       people:[
+         {n:"Rəşad Məmmədov", r:"Deputy Minister (Water)", o:"Owns the subsidy-split decision and tender timing."},
+         {n:"Leyla Orucova", r:"Amelioration & Water Farm OJSC", o:"Owns contractor tender and field conversion delivery."},
+         {n:"Kamran Rəhimov", r:"eAgro / EKTIS", o:"Owns satellite verification of installed systems."}],
+       topics:["irrigation","climate","digital"]}},
+
+    {id:"m2",
+     t:{az:"Fermer subsidiya mexanizminin baxışı", en:"Farmer subsidy mechanism review", ru:"Обзор механизма фермерских субсидий"},
+     dt:"2026-09-07T14:30", virtual:true, loc:null,
+     tags:["subsidy","digital"],
+     attendees:[
+       {n:"Aygün Hüseynova", r:"Head of Subsidy Department"},
+       {n:"Kamran Rəhimov", r:"CTO, eAgro / EKTIS"},
+       {n:"Elnur Səfərov", r:"Legal & Compliance"}],
+     transcript:[
+       {sp:"Aygün Hüseynova", r:"Subsidy Dept", x:"The thirty percent advance sowing subsidy is approved in principle, but we have not defined what happens when a farmer takes the advance and does not sow. Without a clawback rule the mechanism is exposed."},
+       {sp:"Elnur Səfərov", r:"Legal", x:"We need the clawback written into the regulation before the first payment. My concern is proportionality — the AI monitoring will produce false positives, and a farmer must have a way to appeal before money is reclaimed."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Agreed. Cap the total advance envelope for the first season, define the clawback, and pair every automated flag with a manual appeal channel. I do not want a headline about wrongly penalised farmers."},
+       {sp:"Kamran Rəhimov", r:"eAgro", x:"We can route flags into a review queue in EKTIS so an officer confirms before any clawback is triggered. That keeps a human in the loop."}],
+     analysis:{
+       actions:[
+         "Write a clawback rule for advances where sowing does not occur, before the first payment.",
+         "Cap the total first-season advance envelope to limit fiscal exposure.",
+         "Pair every AI monitoring flag with a manual appeal / officer-review channel in EKTIS."],
+       people:[
+         {n:"Aygün Hüseynova", r:"Head of Subsidy Department", o:"Owns the advance-subsidy parameters and envelope cap."},
+         {n:"Elnur Səfərov", r:"Legal & Compliance", o:"Owns drafting of the clawback regulation."},
+         {n:"Kamran Rəhimov", r:"eAgro / EKTIS", o:"Owns the review-queue and appeal workflow."}],
+       topics:["subsidy","digital"]}},
+
+    {id:"m3",
+     t:{az:"Buğda üzrə özünütəminat strategiyası", en:"Wheat self-sufficiency strategy", ru:"Стратегия самообеспеченности пшеницей"},
+     dt:"2026-09-06T11:00", virtual:false,
+     loc:{az:"Mərkəzi Taxıl Qərargahı, Bakı", en:"Central Grain HQ, Baku", ru:"Центральный зерновой штаб, Баку"},
+     tags:["grain","climate"],
+     attendees:[
+       {n:"Elçin Qasımov", r:"Director, State Grain Fund"},
+       {n:"Rəşad Məmmədov", r:"Deputy Minister (Water)"},
+       {n:"Nigar Əliyeva", r:"Head of Export Promotion"}],
+     transcript:[
+       {sp:"Elçin Qasımov", r:"State Grain Fund", x:"CBOT wheat is up nearly forty-three percent year on year and Black Sea logistics are being re-routed. Our food-wheat self-sufficiency is still fifty-five percent, so every week we wait to procure for the fourth quarter costs us."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Open the procurement window now. I do not want to gamble on prices falling. Run parallel negotiations with Kazakhstan so we are not dependent on a single corridor."},
+       {sp:"Rəşad Məmmədov", r:"Deputy Minister", x:"On the production side, laser levelling and modern irrigation are the only structural levers that move the fifty-five percent number. We should tie the levelling subsidy to measured yield uplift so we can prove effectiveness."},
+       {sp:"Elçin Qasımov", r:"State Grain Fund", x:"Understood. I will bring a procurement volume and a strategic-reserve top-up proposal within the week."}],
+     analysis:{
+       actions:[
+         "Open the Q4 wheat procurement window immediately rather than waiting for prices to fall.",
+         "Run parallel procurement talks with Kazakhstan to diversify the supply corridor.",
+         "Tie the laser-levelling subsidy to measured yield uplift verified via eAgro."],
+       people:[
+         {n:"Elçin Qasımov", r:"Director, State Grain Fund", o:"Owns Q4 procurement and strategic-reserve top-up."},
+         {n:"Rəşad Məmmədov", r:"Deputy Minister (Water)", o:"Owns the production-side levers (levelling, irrigation)."}],
+       topics:["grain","climate","export"]}},
+
+    {id:"m4",
+     t:{az:"Aqrar ixracın təşviqi və bazara çıxış", en:"Agri-export promotion & market access", ru:"Продвижение агроэкспорта и доступ к рынкам"},
+     dt:"2026-09-05T10:00", virtual:false,
+     loc:{az:"AZPROMO, Bakı", en:"AZPROMO, Baku", ru:"AZPROMO, Баку"},
+     tags:["export","coop"],
+     attendees:[
+       {n:"Nigar Əliyeva", r:"Head of Export Promotion"},
+       {n:"Ramil Cəfərov", r:"AZPROMO liaison"},
+       {n:"Səbinə Abbasova", r:"Chief Veterinary Officer"}],
+     transcript:[
+       {sp:"Nigar Əliyeva", r:"Export Promotion", x:"Agri exports are up almost twenty-three percent this year, driven by fruit and vegetables. The Gulf market wants more Azerbaijani apples, but the phytosanitary protocol is the bottleneck."},
+       {sp:"Ramil Cəfərov", r:"AZPROMO", x:"Smallholders cannot meet Gulf volume and packaging standards individually. If we consolidate through cooperatives we can offer consistent lots. Three fruit cooperatives are ready to pilot."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Fast-track the phytosanitary protocol and onboard those cooperatives. Export growth is our strongest story this year — let us not lose momentum on paperwork."},
+       {sp:"Səbinə Abbasova", r:"Veterinary", x:"For animal products I will need the same protocol clarity. I can align the veterinary certification track with the phytosanitary one so exporters face a single window."}],
+     analysis:{
+       actions:[
+         "Fast-track the phytosanitary protocol for apple exports to Gulf markets.",
+         "Onboard three fruit cooperatives into an export-consolidation scheme.",
+         "Align veterinary certification with phytosanitary certification into a single exporter window."],
+       people:[
+         {n:"Nigar Əliyeva", r:"Head of Export Promotion", o:"Owns market access and the phytosanitary fast-track."},
+         {n:"Ramil Cəfərov", r:"AZPROMO liaison", o:"Owns cooperative onboarding and consolidation."}],
+       topics:["export","coop","veterinary"]}},
+
+    {id:"m5",
+     t:{az:"Çəyirtkə və zərərvericilərə qarşı hazırlıq", en:"Locust & pest control preparedness", ru:"Готовность к борьбе с саранчой и вредителями"},
+     dt:"2026-09-04T15:00", virtual:true, loc:null,
+     tags:["pest","climate"],
+     attendees:[
+       {n:"Tural Vəliyev", r:"Head of Plant Protection Service"},
+       {n:"Kamran Rəhimov", r:"CTO, eAgro / EKTIS"},
+       {n:"Günel Bayramova", r:"Regional coordinator, Aran"}],
+     transcript:[
+       {sp:"Tural Vəliyev", r:"Plant Protection", x:"A warmer, drier autumn raises the risk of a locust build-up in the Aran districts next spring. We treated late this year; we cannot repeat that. Treatment stocks must be pre-positioned now."},
+       {sp:"Günel Bayramova", r:"Aran region", x:"Districts need spray coverage confirmed before the egg-laying window. Last season we lost time waiting for central allocation."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Pre-position stocks in the Aran districts and put the plant-health monitoring alerts live across all twenty-two districts. Early warning is cheaper than emergency spraying."},
+       {sp:"Kamran Rəhimov", r:"eAgro", x:"The plant-health and spray-timing modules are ready. We can push district-level risk alerts and optimal spraying windows straight to the regional coordinators."}],
+     analysis:{
+       actions:[
+         "Pre-position locust treatment stocks in Aran districts ahead of the egg-laying window.",
+         "Deploy plant-health monitoring alerts across all 22 districts.",
+         "Push optimal spray-timing windows to regional coordinators via eAgro."],
+       people:[
+         {n:"Tural Vəliyev", r:"Head of Plant Protection Service", o:"Owns treatment stock and spray coverage."},
+         {n:"Günel Bayramova", r:"Regional coordinator, Aran", o:"Owns district-level readiness."},
+         {n:"Kamran Rəhimov", r:"eAgro / EKTIS", o:"Owns monitoring alerts and spray-timing rollout."}],
+       topics:["pest","climate","digital"]}},
+
+    {id:"m6",
+     t:{az:"Rəqəmsal eAgro / EKTİS tətbiqi", en:"Digital eAgro / EKTIS rollout", ru:"Внедрение цифровой eAgro / ЕКТИС"},
+     dt:"2026-09-03T13:00", virtual:false,
+     loc:{az:"eAgro Mərkəzi, Bakı", en:"eAgro Center, Baku", ru:"Центр eAgro, Баку"},
+     tags:["digital","subsidy"],
+     attendees:[
+       {n:"Kamran Rəhimov", r:"CTO, eAgro / EKTIS"},
+       {n:"Aygün Hüseynova", r:"Head of Subsidy Department"},
+       {n:"Vüsal Məhərrəmov", r:"Data & Integration lead"}],
+     transcript:[
+       {sp:"Kamran Rəhimov", r:"eAgro", x:"To make subsidies conditional on declarations, EKTIS has to be the single source of truth. The declaration integration is eighty percent done, but the satellite data sync has a latency problem that blocks real-time verification."},
+       {sp:"Vüsal Məhərrəmov", r:"Data", x:"The sync lag is up to forty-eight hours during peak load. For payment verification we need it under six. It is an infrastructure fix, not a redesign."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Finish the declaration integration so payouts can be tied to EKTIS, and resolve the sync latency. And run farmer training on the Farmer Score — adoption is what makes this real."},
+       {sp:"Aygün Hüseynova", r:"Subsidy Dept", x:"Once the integration is live we can retire the parallel paper track entirely, which removes a whole class of reconciliation errors."}],
+     analysis:{
+       actions:[
+         "Complete EKTIS declaration integration so subsidy payouts can be tied to it.",
+         "Resolve the EKTIS-satellite data sync latency (target under six hours).",
+         "Run farmer training webinars on the eAgro Farmer Score to drive adoption."],
+       people:[
+         {n:"Kamran Rəhimov", r:"CTO, eAgro / EKTIS", o:"Owns the overall rollout and integration."},
+         {n:"Vüsal Məhərrəmov", r:"Data & Integration lead", o:"Owns the data-sync latency fix."}],
+       topics:["digital","subsidy"]}},
+
+    {id:"m7",
+     t:{az:"Heyvandarlıq, baytarlıq və torpaq islahatı", en:"Livestock, veterinary & land reform", ru:"Животноводство, ветеринария и земельная реформа"},
+     dt:"2026-09-02T10:30", virtual:false,
+     loc:{az:"Gəncə regional ofisi", en:"Ganja regional office", ru:"Гянджинский региональный офис"},
+     tags:["veterinary","land"],
+     attendees:[
+       {n:"Səbinə Abbasova", r:"Chief Veterinary Officer"},
+       {n:"Fərid Nəbiyev", r:"Head of Land Reform"},
+       {n:"Rəşad Məmmədov", r:"Deputy Minister (Water)"}],
+     transcript:[
+       {sp:"Səbinə Abbasova", r:"Veterinary", x:"The autumn foot-and-mouth vaccination campaign has to start on schedule. A gap in coverage would put our live-animal and dairy export ambitions at risk."},
+       {sp:"Fərid Nəbiyev", r:"Land Reform", x:"On land, fragmentation keeps holdings below the size where modern equipment pays off. A digitised consolidation registry, piloted in three rayons, would let us measure the effect before scaling."},
+       {sp:"Minister", r:"Minister of Agriculture", x:"Approve the vaccination schedule this week, and start the land consolidation registry pilot. Bigger, verifiable holdings are the foundation for everything else we discussed — irrigation, subsidies, and exports."},
+       {sp:"Rəşad Məmmədov", r:"Deputy Minister", x:"Consolidated parcels also make irrigation investment far more efficient, so these two tracks reinforce each other."}],
+     analysis:{
+       actions:[
+         "Approve and launch the autumn FMD vaccination campaign on schedule.",
+         "Start a digitised land-consolidation registry pilot in three rayons.",
+         "Align consolidation with irrigation investment to maximise efficiency."],
+       people:[
+         {n:"Səbinə Abbasova", r:"Chief Veterinary Officer", o:"Owns the FMD vaccination campaign."},
+         {n:"Fərid Nəbiyev", r:"Head of Land Reform", o:"Owns the consolidation registry pilot."}],
+       topics:["veterinary","land","irrigation"]}}
+  ],
+
+  /* ===== SHARED TO-DO MODEL =====
+     Read by both the meeting detail view (filtered by `mtg`) and the Kanban
+     board. `mtg:null` items are standalone strategic follow-ups.
+     pri: critical|high|medium|low · risk: high|med|low · status: todo|doing|blocked|done */
+  todos:[
+    {id:"t1", mtg:"m1", t:"Finalise 2027 modern-irrigation subsidy split (400/200 AZN/ha)", owner:"Rəşad Məmmədov", role:"Deputy Minister (Water)", pri:"critical", risk:"high", topic:"irrigation", due:"2026-09-22", status:"doing"},
+    {id:"t2", mtg:"m1", t:"Select 15 pilot districts for drip/pivot conversion", owner:"Leyla Orucova", role:"Water Farm OJSC", pri:"high", risk:"med", topic:"irrigation", due:"2026-10-05", status:"todo"},
+    {id:"t3", mtg:"m2", t:"Draft clawback rule for 30% advance sowing subsidy", owner:"Elnur Səfərov", role:"Legal & Compliance", pri:"critical", risk:"high", topic:"subsidy", due:"2026-09-18", status:"blocked"},
+    {id:"t4", mtg:"m2", t:"Add manual appeal channel for AI monitoring flags", owner:"Aygün Hüseynova", role:"Head of Subsidy Dept", pri:"medium", risk:"med", topic:"subsidy", due:"2026-10-01", status:"done"},
+    {id:"t5", mtg:"m3", t:"Open Q4 wheat procurement window", owner:"Elçin Qasımov", role:"Director, State Grain Fund", pri:"critical", risk:"high", topic:"grain", due:"2026-09-20", status:"doing"},
+    {id:"t6", mtg:"m3", t:"Start parallel talks with Kazakhstan on alternative origin", owner:"Elçin Qasımov", role:"Director, State Grain Fund", pri:"high", risk:"med", topic:"grain", due:"2026-09-28", status:"todo"},
+    {id:"t7", mtg:"m4", t:"Fast-track phytosanitary protocol for apple exports to Gulf", owner:"Nigar Əliyeva", role:"Head of Export Promotion", pri:"high", risk:"med", topic:"export", due:"2026-10-10", status:"todo"},
+    {id:"t8", mtg:"m4", t:"Onboard 3 fruit cooperatives to export consolidation scheme", owner:"Ramil Cəfərov", role:"AZPROMO liaison", pri:"medium", risk:"low", topic:"coop", due:"2026-10-15", status:"done"},
+    {id:"t9", mtg:"m5", t:"Pre-position locust treatment stocks in Aran districts", owner:"Tural Vəliyev", role:"Head of Plant Protection", pri:"critical", risk:"high", topic:"pest", due:"2026-09-25", status:"todo"},
+    {id:"t10", mtg:"m5", t:"Deploy plant-health monitoring alerts to 22 districts", owner:"Kamran Rəhimov", role:"CTO, eAgro / EKTIS", pri:"high", risk:"med", topic:"pest", due:"2026-10-03", status:"doing"},
+    {id:"t11", mtg:"m6", t:"Complete EKTIS declaration integration for subsidy payouts", owner:"Kamran Rəhimov", role:"CTO, eAgro / EKTIS", pri:"high", risk:"med", topic:"digital", due:"2026-10-08", status:"doing"},
+    {id:"t12", mtg:"m6", t:"Run farmer training webinars on eAgro Farmer Score", owner:"Kamran Rəhimov", role:"CTO, eAgro / EKTIS", pri:"low", risk:"low", topic:"digital", due:"2026-10-20", status:"todo"},
+    {id:"t13", mtg:"m6", t:"Resolve EKTIS-satellite data sync latency", owner:"Vüsal Məhərrəmov", role:"Data & Integration lead", pri:"medium", risk:"med", topic:"digital", due:"2026-09-30", status:"blocked"},
+    {id:"t14", mtg:"m7", t:"Approve autumn FMD vaccination campaign schedule", owner:"Səbinə Abbasova", role:"Chief Veterinary Officer", pri:"critical", risk:"high", topic:"veterinary", due:"2026-09-24", status:"todo"},
+    {id:"t15", mtg:"m7", t:"Digitise land consolidation registry pilot in 3 rayons", owner:"Fərid Nəbiyev", role:"Head of Land Reform", pri:"medium", risk:"med", topic:"land", due:"2026-10-18", status:"todo"},
+    {id:"t16", mtg:null, t:"Finalise 2027 agri-budget submission for Cabinet review", owner:"Aygün Hüseynova", role:"Head of Subsidy Dept", pri:"high", risk:"med", topic:"subsidy", due:"2026-10-12", status:"doing"},
+    {id:"t17", mtg:null, t:"Prepare Minister's COP climate-resilience commitments", owner:"Rəşad Məmmədov", role:"Deputy Minister (Water)", pri:"medium", risk:"med", topic:"climate", due:"2026-11-01", status:"todo"},
+    {id:"t18", mtg:null, t:"Complete land reform cadastre data migration", owner:"Fərid Nəbiyev", role:"Head of Land Reform", pri:"high", risk:"high", topic:"land", due:"2026-10-25", status:"blocked"}
   ]
 };
 /*DATA-END*/
@@ -2278,6 +2595,19 @@ az:{
   pgOverview:"İcmal", pgEconomy:"Aqrar iqtisadiyyat", pgMarkets:"Bazarlar və qiymətlər",
   pgCropMap:"Əkin xəritəsi", pgNews:"Xəbərlər", pgAI:"Süni intellekt alətləri",
   pgDecisions:"Qərar gözləyənlər", pgSim:"Ssenari modelləşdirməsi", pgUseCases:"İstifadə ssenariləri",
+  navMeetings:"İclaslar və icra", pgMeetings:"İclaslar", pgKanban:"Fəaliyyət lövhəsi",
+  mtgH:"Nazirin iclasları", mtgSub:"süni intellekt tərəfindən icmallaşdırılmış iş sahəsi",
+  mtgAttendees:"İştirakçılar", mtgVirtual:"Virtual", mtgOpen:"İclası aç", mtgBack:"İclaslara qayıt",
+  mtgTranscript:"Transkripsiya", mtgAnalysis:"Süni intellekt təhlili",
+  mtgActions:"Əsas qərarlar və addımlar", mtgPeople:"Məsul şəxslər", mtgTodos:"İcra tapşırıqları", mtgTopics:"Mövzular",
+  mtgAiBadge:"Süni intellekt · nümayiş", mtgOwns:"Cavabdehlik",
+  mtgDemo:"<b>Qeyd:</b> transkripsiya və təhlil nümayiş məqsədilə hazırlanmış məlumatlardır. İstismar mühitində transkripsiya iclas qeydlərindən, təhlil isə süni intellekt modeli tərəfindən avtomatik yaradılacaq.",
+  kbH:"Fəaliyyət lövhəsi", kbSub:"iclas tapşırıqları və strateji izləmə",
+  kbFilterCrit:"Kritiklik", kbFilterTopic:"Mövzu", kbSource:"Mənbə iclas", kbStandalone:"Strateji izləmə",
+  kbOwner:"Məsul", kbDue:"Son tarix", kbRisk:"Risk", kbMove:"Statusu dəyiş",
+  colTodo:"Görüləcək", colDoing:"İcrada", colBlocked:"Bloklanıb", colDone:"Tamamlandı",
+  priCritical:"Kritik", priHigh:"Yüksək", priMedium:"Orta", priLow:"Aşağı",
+  kbDemo:"<b>Qeyd:</b> tapşırıqlar iclas təhlillərindən (nümayiş məlumatı) və strateji izləmə maddələrindən toplanıb. Status dəyişiklikləri yalnız cari sessiyada saxlanılır.",
   footEnv:"Nümayiş mühiti · McKinsey & Company",
   bakuTime:"Bakı vaxtı", refresh:"Yenilə", viewAll:"Hamısına bax", modelIt:"Modelləşdir", regen:"Yenidən yarat",
   heroEyebrow:"Nazirlik üçün gündəlik icmal",
@@ -2400,6 +2730,19 @@ en:{
   pgOverview:"Overview", pgEconomy:"Agricultural economy", pgMarkets:"Markets & prices",
   pgCropMap:"Crop map", pgNews:"News", pgAI:"AI tools",
   pgDecisions:"Decision inbox", pgSim:"Scenario simulator", pgUseCases:"Use cases",
+  navMeetings:"Meetings & follow-up", pgMeetings:"Meetings", pgKanban:"Action board",
+  mtgH:"Minister's meetings", mtgSub:"AI-summarised meeting workspace",
+  mtgAttendees:"Attendees", mtgVirtual:"Virtual", mtgOpen:"Open meeting", mtgBack:"Back to meetings",
+  mtgTranscript:"Transcription", mtgAnalysis:"AI analysis",
+  mtgActions:"Key actions", mtgPeople:"Key responsible people", mtgTodos:"To-dos", mtgTopics:"Topics",
+  mtgAiBadge:"AI-generated · demo", mtgOwns:"Responsibility",
+  mtgDemo:"<b>Note:</b> the transcription and analysis are demonstration data. In production the transcription would come from meeting minutes and the analysis would be generated automatically by an AI model.",
+  kbH:"Action board", kbSub:"meeting to-dos & strategic follow-up",
+  kbFilterCrit:"Criticality", kbFilterTopic:"Topic", kbSource:"Source meeting", kbStandalone:"Strategic item",
+  kbOwner:"Owner", kbDue:"Due", kbRisk:"Risk", kbMove:"Move",
+  colTodo:"To do", colDoing:"In progress", colBlocked:"Blocked", colDone:"Done",
+  priCritical:"Critical", priHigh:"High", priMedium:"Medium", priLow:"Low",
+  kbDemo:"<b>Note:</b> to-dos are aggregated from the meeting analyses (demonstration data) plus standalone strategic items. Status changes are held in memory for the current session only.",
   footEnv:"Demonstration environment · McKinsey & Company",
   bakuTime:"Baku time", refresh:"Refresh", viewAll:"View all", modelIt:"Model it", regen:"Regenerate",
   heroEyebrow:"Daily brief for the Minister",
@@ -2522,6 +2865,19 @@ ru:{
   pgOverview:"Обзор", pgEconomy:"Аграрная экономика", pgMarkets:"Рынки и цены",
   pgCropMap:"Карта посевов", pgNews:"Новости", pgAI:"Инструменты ИИ",
   pgDecisions:"Решения на рассмотрении", pgSim:"Моделирование сценариев", pgUseCases:"Сценарии использования",
+  navMeetings:"Совещания и контроль", pgMeetings:"Совещания", pgKanban:"Доска задач",
+  mtgH:"Совещания министра", mtgSub:"рабочая среда с ИИ-резюме",
+  mtgAttendees:"Участники", mtgVirtual:"Онлайн", mtgOpen:"Открыть совещание", mtgBack:"Назад к совещаниям",
+  mtgTranscript:"Транскрипция", mtgAnalysis:"ИИ-анализ",
+  mtgActions:"Ключевые решения", mtgPeople:"Ответственные лица", mtgTodos:"Поручения", mtgTopics:"Темы",
+  mtgAiBadge:"ИИ · демо", mtgOwns:"Зона ответственности",
+  mtgDemo:"<b>Примечание:</b> транскрипция и анализ являются демонстрационными данными. В эксплуатации транскрипция формировалась бы из протокола совещания, а анализ — автоматически ИИ-моделью.",
+  kbH:"Доска задач", kbSub:"поручения совещаний и стратегический контроль",
+  kbFilterCrit:"Критичность", kbFilterTopic:"Тема", kbSource:"Совещание-источник", kbStandalone:"Стратегическая задача",
+  kbOwner:"Ответственный", kbDue:"Срок", kbRisk:"Риск", kbMove:"Переместить",
+  colTodo:"К выполнению", colDoing:"В работе", colBlocked:"Заблокировано", colDone:"Готово",
+  priCritical:"Критично", priHigh:"Высокий", priMedium:"Средний", priLow:"Низкий",
+  kbDemo:"<b>Примечание:</b> поручения собраны из анализа совещаний (демонстрационные данные) и отдельных стратегических задач. Изменения статуса сохраняются только в текущей сессии.",
   footEnv:"Демонстрационная среда · McKinsey & Company",
   bakuTime:"Бакинское время", refresh:"Обновить", viewAll:"Показать все", modelIt:"Смоделировать", regen:"Сформировать заново",
   heroEyebrow:"Ежедневная сводка для Министра",
@@ -2642,6 +2998,7 @@ ru:{
 let LG = localStorage.getItem('np_lang') || 'az';
 let PAGE = 'overview';
 let ovBucket = 'all', nwBucket = 'all', nwTag = 'all', mapCrop = 'all';
+let kbCrit = 'all', kbTopic = 'all';
 const CH = {};
 const F = window.FEED;
 
@@ -2665,6 +3022,21 @@ const TAGN = {policy:{az:"Siyasət",en:"Policy",ru:"Политика"},harvest:{
   subsidy:{az:"Subsidiya",en:"Subsidy",ru:"Субсидии"},"food-security":{az:"Ərzaq təhlükəsizliyi",en:"Food security",ru:"Продбезопасность"},
   climate:{az:"İqlim",en:"Climate",ru:"Климат"},"ai-innovation":{az:"Süni intellekt",en:"AI",ru:"ИИ"},
   "public-sector":{az:"Dövlət sektoru",en:"Public sector",ru:"Госсектор"}};
+/* topic taxonomy for meetings + Kanban */
+const MTOP = {
+  irrigation:{az:"Suvarma",en:"Irrigation",ru:"Орошение"},
+  subsidy:{az:"Subsidiya",en:"Subsidy",ru:"Субсидии"},
+  grain:{az:"Taxıl",en:"Grain",ru:"Зерно"},
+  export:{az:"İxrac",en:"Export",ru:"Экспорт"},
+  pest:{az:"Zərərvericilər",en:"Pest control",ru:"Защита растений"},
+  climate:{az:"İqlim",en:"Climate",ru:"Климат"},
+  coop:{az:"Kooperativlər",en:"Cooperatives",ru:"Кооперативы"},
+  digital:{az:"Rəqəmsallaşma",en:"Digital",ru:"Цифровизация"},
+  land:{az:"Torpaq islahatı",en:"Land reform",ru:"Земельная реформа"},
+  veterinary:{az:"Baytarlıq",en:"Veterinary",ru:"Ветеринария"}};
+const topN = t => tx(MTOP[t] || {en:t});
+const mtgById = id => (F.meetings || []).find(m => m.id === id);
+const todosFor = id => (F.todos || []).filter(t => t.mtg === id);
 
 /* ========================= RENDER: CHROME ========================= */
 function applyStatic(){
@@ -2686,14 +3058,24 @@ function pgTitleFor(p){
     const d = ucById(p.slice(3));
     if (d) return tx(d.t);
   }
+  if (p && p.indexOf('mtg-') === 0){
+    const m = mtgById(p.slice(4));
+    if (m) return tx(m.t);
+  }
   const m = {overview:'pgOverview',economy:'pgEconomy',markets:'pgMarkets',cropmap:'pgCropMap',
-    news:'pgNews',ai:'pgAI',decisions:'pgDecisions',simulator:'pgSim',usecases:'pgUseCases'};
+    news:'pgNews',ai:'pgAI',decisions:'pgDecisions',simulator:'pgSim',usecases:'pgUseCases',
+    meetings:'pgMeetings',kanban:'pgKanban'};
   return T(m[p] || 'pgOverview');
 }
 function go(p){
   PAGE = p;
   document.querySelectorAll('.page').forEach(s => s.classList.toggle('on', s.id === 'p-' + p));
   document.querySelectorAll('.nv[data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === p));
+  /* keep the meetings entry active while inside a meeting detail page */
+  if (p.indexOf('mtg-') === 0){
+    const mb = document.querySelector('.nv[data-go="meetings"]');
+    if (mb) mb.classList.add('on');
+  }
   document.getElementById('pgTitle').textContent = pgTitleFor(p);
   /* keep the use-case group expanded while the reader is inside it */
   const inUc = p === 'usecases' || p.indexOf('uc-') === 0;
@@ -4174,6 +4556,134 @@ function renderUcCharts(){
   });
 }
 
+/* ========================= MEETINGS WORKSPACE =========================
+   Transcripts + AI analysis are pre-authored demonstration data (FEED.meetings).
+   To-dos are read from FEED.todos, shared with the Kanban board.            */
+function dtfmt(s){
+  const d = new Date(s);
+  return dfmt(s.slice(0,10)) + ' · ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function mtgLoc(m){ return m.virtual ? T('mtgVirtual') : (m.loc ? tx(m.loc) : ''); }
+function initials(n){ return n.split(/\s+/).map(w => w[0]).slice(0,2).join('').toUpperCase(); }
+function critB(pri){
+  const lb = {critical:T('priCritical'),high:T('priHigh'),medium:T('priMedium'),low:T('priLow')}[pri] || pri;
+  return `<span class="cr-b ${esc(pri)}">${esc(lb)}</span>`;
+}
+function riskI(risk){
+  const lb = {high:T('sevHigh'),med:T('sevMed'),low:T('sevLow')}[risk] || risk;
+  return `<span class="risk-i ${esc(risk)}">${esc(T('kbRisk'))}: ${esc(lb)}</span>`;
+}
+function mtgRow(m){
+  const tags = m.tags.map(t => `<span class="chp">${esc(topN(t))}</span>`).join('');
+  return `<button class="mtg" data-go="mtg-${esc(m.id)}">
+    <div class="mh"><span class="mt">${esc(tx(m.t))}</span><span class="mw">${esc(dtfmt(m.dt))}</span></div>
+    <div class="mm">◷ ${esc(mtgLoc(m))} · ${esc(T('mtgAttendees'))}: ${m.attendees.length}</div>
+    <div class="mtags">${tags}<span class="mtg-open">${esc(T('mtgOpen'))} →</span></div></button>`;
+}
+function mtgTodoItem(t){
+  return `<li>${esc(t.t)} — ${critB(t.pri)} <span class="chp">${esc(topN(t.topic))}</span>
+    <span style="font-size:10.5px;color:var(--ink-3)">${esc(T('kbOwner'))}: ${esc(t.owner)} · ${esc(T('kbDue'))}: ${esc(dfmt(t.due))}</span></li>`;
+}
+function mtgDetail(m){
+  const turns = m.transcript.map(tn => `<div class="turn">
+    <span class="sp">${esc(tn.sp)} <small>${esc(tn.r)}</small></span>
+    <div class="tx">${esc(tn.x)}</div></div>`).join('');
+  const actions = m.analysis.actions.map(a => `<li>${esc(a)}</li>`).join('');
+  const people = m.analysis.people.map(p => `<div class="pr">
+    <div class="av">${esc(initials(p.n))}</div>
+    <div><div class="pn">${esc(p.n)}</div><div class="prole">${esc(p.r)}</div>
+      <div class="powns">${esc(p.o)}</div></div></div>`).join('');
+  const todos = todosFor(m.id).map(mtgTodoItem).join('') || `<li>—</li>`;
+  const topics = m.analysis.topics.map(t => `<span class="chp">${esc(topN(t))}</span>`).join('');
+  const att = m.attendees.map(a => `<div class="pr"><div class="av">${esc(initials(a.n))}</div>
+    <div><div class="pn">${esc(a.n)}</div><div class="prole">${esc(a.r)}</div></div></div>`).join('');
+  const hr = `<hr style="border:0;border-top:1px solid var(--line);margin:14px 0">`;
+  return `<section class="page" id="p-mtg-${esc(m.id)}">
+    <div style="margin-bottom:14px"><button class="btn sm" data-go="meetings">← ${esc(T('mtgBack'))}</button></div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-h"><h3>${esc(tx(m.t))}</h3><div class="sp"></div>
+        <span class="sub">${esc(dtfmt(m.dt))} · ${esc(mtgLoc(m))}</span></div>
+      <div class="card-b">
+        <div class="mtags" style="margin:0 0 12px">${m.tags.map(t=>`<span class="chp">${esc(topN(t))}</span>`).join('')}</div>
+        <div class="ppl" style="flex-direction:row;flex-wrap:wrap;gap:16px">${att}</div>
+      </div>
+    </div>
+    <div class="mtg-det">
+      <div class="card">
+        <div class="card-h"><h3>${esc(T('mtgTranscript'))}</h3></div>
+        <div class="card-b"><div class="tr">${turns}</div></div>
+      </div>
+      <div class="ai-side">
+        <div class="card">
+          <div class="card-h"><h3>${esc(T('mtgAnalysis'))}</h3><div class="sp"></div>
+            <span class="ai-badge">${esc(T('mtgAiBadge'))}</span></div>
+          <div class="card-b">
+            <div class="ai-sec"><div class="ai-t">◫ ${esc(T('mtgActions'))}</div><ul>${actions}</ul></div>${hr}
+            <div class="ai-sec"><div class="ai-t">◧ ${esc(T('mtgPeople'))}</div><div class="ppl">${people}</div></div>${hr}
+            <div class="ai-sec"><div class="ai-t">✓ ${esc(T('mtgTodos'))}</div><ul>${todos}</ul></div>${hr}
+            <div class="ai-sec"><div class="ai-t">▤ ${esc(T('mtgTopics'))}</div><div class="mtags">${topics}</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="disc" style="margin-top:16px">${T('mtgDemo')}</div>
+  </section>`;
+}
+function renderMeetings(){
+  document.getElementById('mtgList').innerHTML = (F.meetings || []).map(mtgRow).join('');
+  document.getElementById('mtgPages').innerHTML = (F.meetings || []).map(mtgDetail).join('');
+  document.getElementById('mb').textContent = (F.meetings || []).length;
+}
+
+/* ========================= KANBAN / ACTION BOARD =========================
+   Reads FEED.todos (shared with meeting detail). Status changes are in-memory. */
+const KB_COLS = [['todo','colTodo'],['doing','colDoing'],['blocked','colBlocked'],['done','colDone']];
+function kbCard(t){
+  const m = t.mtg ? mtgById(t.mtg) : null;
+  const src = m
+    ? `<div class="ksrc lk" data-mtg="${esc(m.id)}">▣ ${esc(tx(m.t))} · ${esc(dfmt(m.dt.slice(0,10)))}</div>`
+    : `<div class="ksrc">◆ ${esc(T('kbStandalone'))}</div>`;
+  const opts = KB_COLS.map(([v,k]) =>
+    `<option value="${v}"${v === t.status ? ' selected' : ''}>${esc(T(k))}</option>`).join('');
+  return `<div class="kc ${esc(t.pri)}">
+    <div class="kbadges">${critB(t.pri)}<span class="chp">${esc(topN(t.topic))}</span>${riskI(t.risk)}</div>
+    <div class="kt">${esc(t.t)}</div>
+    <div class="kmeta"><b>${esc(t.owner)}</b> · ${esc(t.role)}<br>${esc(T('kbDue'))}: ${esc(dfmt(t.due))}</div>
+    ${src}
+    <div class="kfoot"><select data-todo="${esc(t.id)}" aria-label="${esc(T('kbMove'))}">${opts}</select></div>
+  </div>`;
+}
+function kbFiltered(){
+  return (F.todos || []).filter(t =>
+    (kbCrit === 'all' || t.pri === kbCrit) && (kbTopic === 'all' || t.topic === kbTopic));
+}
+function renderKanban(){
+  const crOpts = [['all',T('fAll')],['critical',T('priCritical')],['high',T('priHigh')],['medium',T('priMedium')],['low',T('priLow')]];
+  filtBtns('kbCritFilt', kbCrit, crOpts, v => { kbCrit = v; renderKanban(); });
+  const topics = [...new Set((F.todos || []).map(t => t.topic))];
+  filtBtns('kbTopicFilt', kbTopic, [['all',T('fAll')], ...topics.map(t => [t, topN(t)])],
+    v => { kbTopic = v; renderKanban(); });
+
+  const items = kbFiltered();
+  document.getElementById('kbBoard').innerHTML = KB_COLS.map(([st,k]) => {
+    const cards = items.filter(t => t.status === st);
+    const body = cards.length ? cards.map(kbCard).join('') : `<div class="kb-empty">—</div>`;
+    return `<div class="kb-col ${st}">
+      <div class="kb-ch"><span class="kb-dot"></span><b>${esc(T(k))}</b><span class="cnt">${cards.length}</span></div>
+      ${body}</div>`;
+  }).join('');
+
+  const board = document.getElementById('kbBoard');
+  board.querySelectorAll('select[data-todo]').forEach(sel =>
+    sel.onchange = () => {
+      const t = (F.todos || []).find(x => x.id === sel.dataset.todo);
+      if (t){ t.status = sel.value; renderKanban(); }
+    });
+  board.querySelectorAll('.ksrc.lk').forEach(el =>
+    el.onclick = () => go('mtg-' + el.dataset.mtg));
+  document.getElementById('kb').textContent = (F.todos || []).length;
+}
+
 /* ========================= BOOT ========================= */
 function bindGo(){
   document.querySelectorAll('[data-go]').forEach(b => {
@@ -4184,7 +4694,8 @@ function bindGo(){
 function renderAll(){
   applyStatic(); renderHero(); renderKpi(); renderTicker(); renderNews();
   renderBrief(); renderAlerts(); renderDec(); renderEcon(); renderMkt();
-  renderAI(); renderDash(); renderMapChrome(); renderCharts(); renderUcCharts(); bindGo();
+  renderAI(); renderDash(); renderMeetings(); renderKanban();
+  renderMapChrome(); renderCharts(); renderUcCharts(); bindGo();
   if (MAP) drawMap(); else if (document.getElementById('mapfb').style.display === 'block') fallbackMap();
 }
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
