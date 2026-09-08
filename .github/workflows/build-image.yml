@@ -1,0 +1,107 @@
+# Container build for the Platform McKinsey Deployer K8s path.
+#
+# INCOMPLETE BY DESIGN. The registry path, the credential secret names and the
+# approved Wiz scan step are issued when the Deployer service is provisioned;
+# they are marked TODO below and must be filled from the provisioned repo's own
+# workflow or the Deployer service guide. Until the Wiz step is real, do not
+# point `push` at the production registry. Never bypass the scan.
+#
+# The GitHub Pages workflow (pages.yml) is a separate, static-only path and is
+# unrelated to this one.
+
+name: Build container image
+
+# Manual-only until the TODOs below are filled, so an unconfigured build does
+# not fail on every push. Add the push trigger when the registry, the
+# credentials and the Wiz step are real:
+#   push:
+#     branches: [main]
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --no-cache-dir -r server/requirements.txt
+      - name: Compile the server modules
+        run: python -m py_compile server/app.py server/llm.py
+      - name: Smoke-test the API in mock mode
+        env:
+          LLM_MOCK: "1"
+        run: |
+          python - <<'PY'
+          from fastapi.testclient import TestClient
+          from server.app import app
+
+          with TestClient(app) as client:
+              health = client.get("/api/health")
+              assert health.status_code == 200, health.status_code
+              assert health.json() == {"ok": True, "mock": True}, health.json()
+
+              chat = client.post(
+                  "/api/chat",
+                  json={"lang": "en", "messages": [{"role": "user", "content": "hello"}], "context": {}},
+              )
+              assert chat.status_code == 200, chat.status_code
+              assert chat.json()["reply"], chat.json()
+
+              assert client.post("/api/chat", json={"lang": "zz", "messages": []}).status_code == 422
+              assert client.post("/api/chat", json={"lang": "az", "messages": []}).status_code == 400
+              assert client.get("/").status_code == 200
+          print("smoke tests passed")
+          PY
+
+  image:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to JFrog
+        uses: docker/login-action@v3
+        with:
+          # TODO(platform): JFrog registry host and the credential secrets
+          # created with the Deployer service.
+          registry: ${{ secrets.TODO_JFROG_REGISTRY }}
+          username: ${{ secrets.TODO_JFROG_USERNAME }}
+          password: ${{ secrets.TODO_JFROG_PASSWORD }}
+
+      - name: Build the image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          # Loaded locally first so the scan runs before anything is published.
+          load: true
+          push: false
+          tags: nazir-paneli:${{ github.sha }}
+
+      # TODO(platform): insert the McKinsey-approved Wiz image scan here, copied
+      # from the provisioned repo's workflow or the Deployer service guide. It
+      # must fail the job on a policy violation, and this job must not push
+      # without it.
+      - name: Wiz scan
+        run: |
+          echo "::error::Wiz scan step not configured — see TODO above." && exit 1
+
+      - name: Push the scanned image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: deploy/Dockerfile
+          push: true
+          tags: ${{ secrets.TODO_JFROG_REGISTRY }}/nazir-paneli:${{ github.sha }}
+
+      - name: Report the digest to set in values.yaml
+        run: |
+          echo "Set image.tag in deploy/values.yaml to ${{ github.sha }}, then sync in Argo CD."

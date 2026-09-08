@@ -1,0 +1,16 @@
+# Build context exclusions for deploy/Dockerfile (BuildKit reads the
+# <dockerfile>.dockerignore file next to the Dockerfile). Keeps the local
+# virtualenv, git history and archives out of the context upload.
+.git/
+.venv/
+venv/
+**/__pycache__/
+**/*.py[cod]
+0. Archive/
+deploy/
+*.md
+.env
+.env.*
+desktop.ini
+Thumbs.db
+.DS_Store
