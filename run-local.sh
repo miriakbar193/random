@@ -9,6 +9,12 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Remember settings: load local-config.txt if present and no key already set.
+if [ -z "${CURSOR_API_KEY:-}" ] && [ -f local-config.txt ]; then
+  echo "==> Loading settings from local-config.txt"
+  set -a; . ./local-config.txt; set +a
+fi
+
 PY="${PYTHON:-python3}"
 PORT="${PORT:-8000}"
 
@@ -44,4 +50,11 @@ fi
 
 echo ""
 echo "==> Dashboard running at: http://localhost:$PORT   (Ctrl+C to stop)"
+
+# Open the browser automatically once the server is up.
+( sleep 4
+  if command -v open >/dev/null 2>&1; then open "http://localhost:$PORT"
+  elif command -v xdg-open >/dev/null 2>&1; then xdg-open "http://localhost:$PORT"
+  fi ) >/dev/null 2>&1 &
+
 exec ./.venv/bin/python -m uvicorn server.app:app --port "$PORT"

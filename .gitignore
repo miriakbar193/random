@@ -4,6 +4,8 @@
 !.env.example
 *.key
 *.pem
+# Local run config (holds your Cursor API key for run-local.*)
+local-config.txt
 
 # Python
 __pycache__/

@@ -1,0 +1,11 @@
+# Copy this file to  local-config.txt  and fill in your values.
+# run-local.cmd / run-local.sh read it automatically so you never re-type the key.
+# Lines starting with # are ignored. Do NOT put quotes around values.
+
+# Your Cursor API key (crsr_...). Required only for live AI; omit for mock replies.
+CURSOR_API_KEY=crsr_paste_your_key_here
+
+# Optional overrides:
+# CURSOR_MODEL=composer-2.5
+# PORT=8000
+# CURSOR_BRIDGE_PORT=8788
