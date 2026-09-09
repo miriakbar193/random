@@ -849,6 +849,39 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 .cal-item.sel{box-shadow:inset 0 0 0 1px rgba(15,165,79,.25)}
 .doc-row{transition:.12s} .doc-row:hover{background:#F7FBF8}
 
+/* ---------- STANDALONE ENTRY (HUB) MODE ----------
+   When the entry chooser is active the whole dashboard chrome is hidden and
+   the page becomes a clean full-screen splash on the KTN dark-green brand. */
+body.hub-mode{background:linear-gradient(168deg,#0E462A 0%,#0B3A22 52%,#082C1A 100%)}
+body.hub-mode #sb,
+body.hub-mode #tb,
+body.hub-mode #scrim,
+body.hub-mode #navBtn{display:none !important}
+body.hub-mode #main{margin-left:0; padding:0}
+body.hub-mode .wrap{max-width:none; margin:0; padding:0}
+.sb-brand[data-go]{cursor:pointer}
+.sb-brand[data-go]:hover{background:rgba(255,255,255,.05)}
+
+.entry{min-height:100vh; width:100%; display:flex; flex-direction:column}
+.entry-top{display:flex; align-items:center; gap:14px; padding:24px clamp(20px,5vw,48px) 8px}
+.entry-brand{display:flex; align-items:center; gap:12px}
+.entry-brand img{width:40px; height:40px; object-fit:contain; filter:brightness(0) invert(1); opacity:.97}
+.entry-brand .eb-t{color:#fff; font-size:13px; font-weight:600; line-height:1.3}
+.entry-brand .eb-s{color:var(--kt-mid); font-size:10px; text-transform:uppercase; letter-spacing:.12em; margin-top:2px}
+.entry-lang{margin-left:auto; background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.16)}
+.entry-lang button{color:rgba(255,255,255,.82)}
+.entry-lang button:hover{color:#fff}
+.entry-lang button.on{background:var(--kt-green); color:#fff}
+.entry-mid{flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; align-items:center;
+  padding:16px clamp(20px,5vw,48px) 48px; text-align:center}
+.entry-hd{max-width:640px}
+.entry-hd .eyebrow{font-size:10.5px; text-transform:uppercase; letter-spacing:.14em; color:var(--kt-mid); font-weight:700}
+.entry-hd h1{color:#fff; font-size:clamp(24px,3vw,34px); letter-spacing:-.02em; margin-top:6px}
+.entry-hd p{color:var(--kt-light); font-size:14px; margin-top:10px; line-height:1.55}
+.entry .hub-grid{width:100%; max-width:1080px; margin-top:26px}
+.entry-foot{margin-top:28px; max-width:820px; width:100%}
+@media(max-width:900px){.entry-mid{justify-content:flex-start; padding-top:20px}}
+
 /* ---------- ENTRY HUB + BUCKETS ---------- */
 .hub-hero h1{font-size:24px}
 .hub-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px}
@@ -961,10 +994,10 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 </mso:CustomDocumentProperties>
 </xml><![endif]-->
 </head>
-<body>
+<body class="hub-mode">
 
 <aside id="sb">
-  <div class="sb-brand">
+  <div class="sb-brand" data-go="hub" title="" role="button" tabindex="0">
     <img src="assets/ktn-logo.svg" alt="KTN">
     <div>
       <div class="bt" data-i18n="brand"></div>
@@ -980,28 +1013,34 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
   </div>
   <nav class="sb-nav">
     <div class="sb-lbl" data-i18n="navStart"></div>
-    <button class="nv on" data-go="hub"><span class="ic">⌂</span><span data-i18n="pgHub"></span></button>
+    <button class="nv" data-go="hub"><span class="ic">⌂</span><span data-i18n="navEntry"></span></button>
 
-    <div class="sb-lbl" data-i18n="navPlan"></div>
-    <button class="nv" data-go="calendar"><span class="ic">◷</span><span data-i18n="pgCalendar"></span></button>
-    <button class="nv" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
-    <button class="nv" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
+    <!-- Bucket 1: Decision & Meeting Intelligence -->
+    <div class="sb-lbl" data-bucket="b1" data-i18n="navPlan"></div>
+    <button class="nv" data-bucket="b1" data-go="b1"><span class="ic">◫</span><span data-i18n="bkHub"></span></button>
+    <button class="nv" data-bucket="b1" data-go="prio"><span class="ic">◔</span><span data-i18n="prioMatrixH"></span></button>
+    <button class="nv" data-bucket="b1" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
+    <button class="nv" data-bucket="b1" data-go="calendar"><span class="ic">◷</span><span data-i18n="pgCalendar"></span></button>
+    <button class="nv" data-bucket="b1" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
+    <div class="sb-lbl" data-bucket="b1" data-i18n="navAI"></div>
+    <button class="nv" data-bucket="b1" data-go="ai"><span class="ic">✦</span><span data-i18n="pgAI"></span></button>
+    <button class="nv" data-bucket="b1" data-go="decisions"><span class="ic">◫</span><span data-i18n="pgDecisions"></span><span class="bdg" id="db">0</span></button>
+    <button class="nv" data-bucket="b1" data-go="simulator"><span class="ic">◑</span><span data-i18n="pgSim"></span></button>
 
-    <div class="sb-lbl" data-i18n="navExec"></div>
-    <button class="nv" data-go="overview"><span class="ic">◧</span><span data-i18n="pgOverview"></span></button>
-    <button class="nv" data-go="economy"><span class="ic">◈</span><span data-i18n="pgEconomy"></span></button>
-    <button class="nv" data-go="markets"><span class="ic">◇</span><span data-i18n="pgMarkets"></span></button>
-    <button class="nv" data-go="cropmap"><span class="ic">◉</span><span data-i18n="pgCropMap"></span></button>
-    <button class="nv" data-go="news"><span class="ic">▤</span><span data-i18n="pgNews"></span><span class="bdg" id="nb">0</span></button>
+    <!-- Bucket 2: Sector & Economy -->
+    <div class="sb-lbl" data-bucket="b2" data-i18n="navExec"></div>
+    <button class="nv" data-bucket="b2" data-go="b2"><span class="ic">◧</span><span data-i18n="bkHub"></span></button>
+    <button class="nv" data-bucket="b2" data-go="overview"><span class="ic">◧</span><span data-i18n="pgOverview"></span></button>
+    <button class="nv" data-bucket="b2" data-go="economy"><span class="ic">◈</span><span data-i18n="pgEconomy"></span></button>
+    <button class="nv" data-bucket="b2" data-go="markets"><span class="ic">◇</span><span data-i18n="pgMarkets"></span></button>
+    <button class="nv" data-bucket="b2" data-go="cropmap"><span class="ic">◉</span><span data-i18n="pgCropMap"></span></button>
+    <button class="nv" data-bucket="b2" data-go="news"><span class="ic">▤</span><span data-i18n="pgNews"></span><span class="bdg" id="nb">0</span></button>
 
-    <div class="sb-lbl" data-i18n="navAI"></div>
-    <button class="nv" data-go="ai"><span class="ic">✦</span><span data-i18n="pgAI"></span></button>
-    <button class="nv" data-go="decisions"><span class="ic">◫</span><span data-i18n="pgDecisions"></span><span class="bdg" id="db">0</span></button>
-    <button class="nv" data-go="simulator"><span class="ic">◑</span><span data-i18n="pgSim"></span></button>
-
-    <div class="sb-lbl" data-i18n="navOps"></div>
-    <button class="nv grp" id="ucToggle" data-go="usecases"><span class="ic">▦</span><span data-i18n="pgUseCases"></span><span class="bdg">10</span><span class="chev">›</span></button>
-    <div class="sb-sub" id="ucNav"></div>
+    <!-- Bucket 3: eAgro Operational Modules -->
+    <div class="sb-lbl" data-bucket="b3" data-i18n="navOps"></div>
+    <button class="nv" data-bucket="b3" data-go="b3"><span class="ic">▦</span><span data-i18n="bkHub"></span></button>
+    <button class="nv grp" data-bucket="b3" id="ucToggle" data-go="usecases"><span class="ic">▦</span><span data-i18n="pgUseCases"></span><span class="bdg">10</span><span class="chev">›</span></button>
+    <div class="sb-sub" data-bucket="b3" id="ucNav"></div>
   </nav>
   <div class="sb-foot">
     <div data-i18n="footEnv"></div>
@@ -1025,23 +1064,38 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     <button data-lang="en">EN</button>
     <button data-lang="ru">RU</button>
   </div>
+  <button class="btn" id="switchBtn" data-go="hub"><span>⇄</span><span data-i18n="switchView"></span></button>
   <button class="btn pri" id="refresh"><span class="sync"></span><span data-i18n="refresh"></span></button>
 </header>
 <div id="scrim"></div>
 
 <main id="main"><div class="wrap">
 
-<!-- ===================== HUB (entry landing) ===================== -->
-<section class="page on" id="p-hub">
-  <div class="hero hub-hero">
-    <div class="hl">
+<!-- ===================== HUB (standalone entry landing) ===================== -->
+<section class="page on entry" id="p-hub">
+  <div class="entry-top">
+    <div class="entry-brand">
+      <img src="assets/ktn-logo.svg" alt="KTN">
+      <div>
+        <div class="eb-t" data-i18n="brand"></div>
+        <div class="eb-s" data-i18n="brandSub"></div>
+      </div>
+    </div>
+    <div class="lang entry-lang">
+      <button data-lang="az">AZ</button>
+      <button data-lang="en">EN</button>
+      <button data-lang="ru">RU</button>
+    </div>
+  </div>
+  <div class="entry-mid">
+    <div class="entry-hd">
       <div class="eyebrow" data-i18n="hubEyebrow"></div>
       <h1 id="hubGreet"></h1>
       <p data-i18n="hubSub"></p>
     </div>
+    <div class="hub-grid" id="hubGrid"></div>
+    <div class="entry-foot"><div class="disc" data-i18n="hubDemo"></div></div>
   </div>
-  <div class="hub-grid" id="hubGrid"></div>
-  <div class="disc" style="margin-top:16px" data-i18n="hubDemo"></div>
 </section>
 
 <!-- ===================== BUCKET SUB-HUBS ===================== -->
@@ -3329,6 +3383,7 @@ az:{
   brand:"Kənd Təsərrüfatı Nazirliyi", brandSub:"Azərbaycan Respublikası", brandShort:"Kənd Təsərrüfatı Nazirliyi",
   userName:"Nazir", userRole:"Kənd təsərrüfatı naziri",
   navStart:"Başlanğıc", pgHub:"Baş səhifə",
+  navEntry:"Giriş ekranı", switchView:"Bölmələri dəyiş", bkHub:"Bölmə mərkəzi",
   hubEyebrow:"Nazirin iş məkanı", hubSub:"Baxmaq istədiyiniz sahəni seçin — hər kart müvafiq dərin təhlilə aparır.",
   hubDemo:"<b>Qeyd:</b> bu giriş səhifəsi mövcud bölmələri üç istiqamətə qruplaşdırır. Bütün məzmun nümayiş məqsədilə hazırlanmışdır.",
   hubBack:"Baş səhifəyə qayıt",
@@ -3525,6 +3580,7 @@ en:{
   brand:"Ministry of Agriculture", brandSub:"Republic of Azerbaijan", brandShort:"Ministry of Agriculture",
   userName:"Minister", userRole:"Minister of Agriculture",
   navStart:"Start", pgHub:"Home",
+  navEntry:"Entry screen", switchView:"Switch view", bkHub:"Section hub",
   hubEyebrow:"Minister's workspace", hubSub:"Choose the area you wish to see — each card opens the matching deep dive.",
   hubDemo:"<b>Note:</b> this entry page groups the existing sections into three streams. All content is demonstration data.",
   hubBack:"Back to home",
@@ -3721,6 +3777,7 @@ ru:{
   brand:"Министерство сельского хозяйства", brandSub:"Азербайджанская Республика", brandShort:"Министерство сельского хозяйства",
   userName:"Министр", userRole:"Министр сельского хозяйства",
   navStart:"Начало", pgHub:"Главная",
+  navEntry:"Стартовый экран", switchView:"Сменить раздел", bkHub:"Центр раздела",
   hubEyebrow:"Рабочее пространство министра", hubSub:"Выберите раздел, который хотите увидеть — каждая карточка открывает соответствующий детальный обзор.",
   hubDemo:"<b>Примечание:</b> эта стартовая страница группирует существующие разделы в три направления. Весь контент — демонстрационные данные.",
   hubBack:"На главную",
@@ -3917,7 +3974,25 @@ ru:{
 /* ========================= STATE & HELPERS ========================= */
 let LG = localStorage.getItem('np_lang') || 'az';
 let PAGE = 'hub';
+let BUCKET = 'b1';   /* which entry bucket the dashboard is currently scoped to */
 let ovBucket = 'all', nwBucket = 'all', nwTag = 'all', mapCrop = 'all';
+/* Which entry bucket each dashboard page belongs to (drives sidebar scoping). */
+const PAGE_BUCKET = {
+  b1:'b1', prio:'b1', meetings:'b1', calendar:'b1', kanban:'b1', decisions:'b1', ai:'b1', simulator:'b1',
+  b2:'b2', overview:'b2', economy:'b2', markets:'b2', cropmap:'b2', news:'b2',
+  b3:'b3', usecases:'b3'
+};
+function bucketOf(p){
+  if (p.indexOf('mtg-') === 0) return 'b1';
+  if (p.indexOf('uc-') === 0) return 'b3';
+  return PAGE_BUCKET[p] || null;
+}
+/* Show only the sidebar groups/items that belong to the active bucket. */
+function applyBucketScope(bucket){
+  document.querySelectorAll('#sb [data-bucket]').forEach(el => {
+    el.style.display = (!bucket || el.dataset.bucket === bucket) ? '' : 'none';
+  });
+}
 let kbCrit = 'all', kbTopic = 'all';
 const CAL_DEFAULT_DAY = '2026-09-08';   /* representative busy day for the demonstration calendar */
 let calDay = CAL_DEFAULT_DAY;           /* currently displayed day (YYYY-MM-DD) */
@@ -3999,6 +4074,15 @@ function pgTitleFor(p){
 }
 function go(p){
   PAGE = p;
+  const isHub = (p === 'hub');
+  /* Entry chooser is a standalone full-screen screen: hide the dashboard chrome. */
+  document.body.classList.toggle('hub-mode', isHub);
+  /* Scope the sidebar to the selected bucket while inside the dashboard. */
+  if (!isHub){
+    const bk = bucketOf(p);
+    if (bk) BUCKET = bk;
+  }
+  applyBucketScope(isHub ? null : BUCKET);
   document.querySelectorAll('.page').forEach(s => s.classList.toggle('on', s.id === 'p-' + p));
   document.querySelectorAll('.nv[data-go]').forEach(b => b.classList.toggle('on', b.dataset.go === p));
   /* keep the meetings entry active while inside a meeting detail page */
@@ -4006,9 +4090,9 @@ function go(p){
     const mb = document.querySelector('.nv[data-go="meetings"]');
     if (mb) mb.classList.add('on');
   }
-  /* keep the Home entry active while inside the bucket / prioritisation layer */
-  if (['b1','b2','b3','prio'].includes(p)){
-    const hb = document.querySelector('.nv[data-go="hub"]');
+  /* keep the bucket sub-hub entry active while inside its prioritisation deep-dive */
+  if (p === 'prio'){
+    const hb = document.querySelector('.nv[data-go="b1"]');
     if (hb) hb.classList.add('on');
   }
   document.getElementById('pgTitle').textContent = pgTitleFor(p);
@@ -5570,9 +5654,9 @@ function mtgDetail(m){
 }
 /* ========================= ENTRY HUB + BUCKETS ========================= */
 const HUB_CARDS = [
-  {go:'b1', ic:'◫', titleK:'b1Title', descK:'hcd1', ctaK:'hcta1', tags:['pgMeetings','pgCalendar','pgKanban','pgDecisions']},
-  {go:'b2', ic:'◧', titleK:'b2Title', descK:'hcd2', ctaK:'hcta2', tags:['pgOverview','pgEconomy','pgMarkets','pgCropMap','pgNews']},
-  {go:'b3', ic:'▦', titleK:'b3Title', descK:'hcd3', ctaK:'hcta3', tags:['pgUseCases']}
+  {go:'prio', ic:'◫', titleK:'b1Title', descK:'hcd1', ctaK:'hcta1', tags:['pgMeetings','pgCalendar','pgKanban','pgDecisions']},
+  {go:'overview', ic:'◧', titleK:'b2Title', descK:'hcd2', ctaK:'hcta2', tags:['pgOverview','pgEconomy','pgMarkets','pgCropMap','pgNews']},
+  {go:'usecases', ic:'▦', titleK:'b3Title', descK:'hcd3', ctaK:'hcta3', tags:['pgUseCases']}
 ];
 const BUCKET_LINKS = {
   b1:[
@@ -6032,6 +6116,7 @@ document.getElementById('regen').onclick = () => renderBrief();
 
 tickClock(); setInterval(tickClock, 20000);
 renderAll();
+go('hub');   /* start on the standalone entry chooser (chrome hidden) */
 initMap();
 </script>
 </body>
