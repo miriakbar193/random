@@ -9,8 +9,9 @@ REM   Mock AI:  run-local.cmd
 REM   Live AI:  set CURSOR_API_KEY=crsr_your_real_key   (then)   run-local.cmd
 cd /d "%~dp0"
 
-REM --- remember settings: load local-config.txt if present and no key already set ---
-if not defined CURSOR_API_KEY if exist "local-config.txt" (
+REM --- remember settings: always load local-config.txt if present ---
+REM (also carries optional corporate-network settings: HTTPS_PROXY, NODE_EXTRA_CA_CERTS, NODE_OPTIONS)
+if exist "local-config.txt" (
   echo ==^> Loading settings from local-config.txt
   for /f "usebackq eol=# tokens=1,* delims==" %%A in ("local-config.txt") do set "%%A=%%B"
 )

@@ -9,8 +9,9 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# Remember settings: load local-config.txt if present and no key already set.
-if [ -z "${CURSOR_API_KEY:-}" ] && [ -f local-config.txt ]; then
+# Remember settings: always load local-config.txt if present.
+# (also carries optional corporate-network settings: HTTPS_PROXY, NODE_EXTRA_CA_CERTS, NODE_OPTIONS)
+if [ -f local-config.txt ]; then
   echo "==> Loading settings from local-config.txt"
   set -a; . ./local-config.txt; set +a
 fi
