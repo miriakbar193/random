@@ -6190,7 +6190,7 @@ function kbCard(t){
     : `<div class="ksrc">◆ ${esc(T('kbStandalone'))}</div>`;
   const opts = KB_COLS.map(([v,k]) =>
     `<option value="${v}"${v === t.status ? ' selected' : ''}>${esc(T(k))}</option>`).join('');
-  return `<div class="kc ${esc(t.pri)}">
+  return `<div class="kc kc-open ${esc(t.pri)}" draggable="true" data-card="${esc(t.id)}">
     <div class="kbadges">${critB(t.pri)}<span class="chp">${esc(topN(t.topic))}</span>${riskI(t.risk)}</div>
     <div class="kt">${esc(tx(t.t))}</div>
     <div class="kmeta"><b>${esc(t.owner)}</b> · ${esc(tx(t.role))}<br>${esc(T('kbDue'))}: ${esc(dfmt(t.due))}</div>
@@ -6213,7 +6213,7 @@ function renderKanban(){
   document.getElementById('kbBoard').innerHTML = KB_COLS.map(([st,k]) => {
     const cards = items.filter(t => t.status === st);
     const body = cards.length ? cards.map(kbCard).join('') : `<div class="kb-empty">—</div>`;
-    return `<div class="kb-col ${st}">
+    return `<div class="kb-col ${st}" data-status="${st}">
       <div class="kb-ch"><span class="kb-dot"></span><b>${esc(T(k))}</b><span class="cnt">${cards.length}</span></div>
       ${body}</div>`;
   }).join('');
@@ -6225,8 +6225,84 @@ function renderKanban(){
       if (t){ t.status = sel.value; renderKanban(); }
     });
   board.querySelectorAll('.ksrc.lk').forEach(el =>
-    el.onclick = () => go('mtg-' + el.dataset.mtg));
+    el.onclick = e => { e.stopPropagation(); go('mtg-' + el.dataset.mtg); });
+  /* click a card (except its controls) to open the detail/edit view */
+  board.querySelectorAll('.kc[data-card]').forEach(card =>
+    card.addEventListener('click', e => {
+      if (e.target.closest('select') || e.target.closest('.ksrc.lk')) return;
+      openTodoDetail(card.dataset.card);
+    }));
+  bindKanbanDnd();
   document.getElementById('kb').textContent = (F.todos || []).length;
+}
+/* Drag a card into another column → update its status in place. */
+let dragTodo = null;
+function bindKanbanDnd(){
+  const board = document.getElementById('kbBoard');
+  if (!board) return;
+  board.querySelectorAll('.kc[draggable]').forEach(card => {
+    card.addEventListener('dragstart', e => {
+      dragTodo = card.dataset.card; card.classList.add('dragging');
+      if (e.dataTransfer){ e.dataTransfer.effectAllowed = 'move'; try{ e.dataTransfer.setData('text/plain', dragTodo); }catch(_){} }
+    });
+    card.addEventListener('dragend', () => { card.classList.remove('dragging'); dragTodo = null;
+      board.querySelectorAll('.drop-on').forEach(x => x.classList.remove('drop-on')); });
+  });
+  board.querySelectorAll('.kb-col').forEach(col => {
+    col.addEventListener('dragover', e => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; col.classList.add('drop-on'); });
+    col.addEventListener('dragleave', () => col.classList.remove('drop-on'));
+    col.addEventListener('drop', e => {
+      e.preventDefault(); col.classList.remove('drop-on');
+      const id = dragTodo || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
+      const t = id && (F.todos || []).find(x => x.id === id); if (!t) return;
+      t.status = col.dataset.status; renderKanban(); showToast(T('edSaved'));
+    });
+  });
+}
+/* ----- Kanban task detail + editor ----- */
+function openTodoDetail(id){
+  const t = (F.todos || []).find(x => x.id === id); if (!t) return;
+  editKind = 'todo'; editId = id;
+  const m = t.mtg ? mtgById(t.mtg) : null;
+  document.getElementById('editIc').textContent = '▥';
+  document.getElementById('editKick').textContent = T('kbDetailKick');
+  document.getElementById('editDlgTitle').textContent = tx(t.t);
+  document.getElementById('editMeta').textContent = t.owner + ' · ' + tx(t.role);
+  document.getElementById('editClose').setAttribute('aria-label', T('edClose'));
+  const meta = `<div class="ed-meta-row">
+    <span class="ed-mini"><b>${esc(T('kbOwner'))}:</b> ${esc(t.owner)}</span>
+    <span class="ed-mini"><b>${esc(T('kbDue'))}:</b> ${esc(dfmt(t.due))}</span>
+    <span class="ed-mini"><b>${esc(T('kbSource'))}:</b> ${m ? esc(tx(m.t)) : esc(T('kbStandalone'))}</span>
+  </div>`;
+  const openMtg = m ? `<div class="ed-sec"><span class="ed-link" id="edOpenMtg">▣ ${esc(T('kbOpenMtg'))} →</span></div>` : '';
+  document.getElementById('editBody').innerHTML = meta + `
+    <div class="ed-sec"><div class="ed-row">
+      <div><div class="ed-t">${esc(T('edPriority'))}</div>${edSelect('edCrit', CRIT_OPTS(), t.pri)}</div>
+      <div><div class="ed-t">${esc(T('edRisk'))}</div>${edSelect('edRiskSel', RISK_OPTS(), t.risk)}</div>
+    </div></div>
+    <div class="ed-sec"><div class="ed-row">
+      <div><div class="ed-t">${esc(T('edTopic'))}</div>${edSelect('edTopicOne', Object.keys(MTOP).map(k => [k, topN(k)]), t.topic)}</div>
+      <div><div class="ed-t">${esc(T('edStatus'))}</div>${edSelect('edStatusSel', STATUS_OPTS(), t.status)}</div>
+    </div></div>` + openMtg;
+  document.getElementById('editFoot').innerHTML =
+    `<span class="disc">${T('edDemoNote')}</span><div class="sp" style="flex:1"></div>
+     <button class="btn" id="edCancelBtn">${esc(T('edCancel'))}</button>
+     <button class="btn pri" id="edSaveBtn">${esc(T('edSave'))}</button>`;
+  document.getElementById('edCancelBtn').onclick = closeEdit;
+  document.getElementById('edSaveBtn').onclick = saveTodoEdit;
+  const om = document.getElementById('edOpenMtg');
+  if (om) om.onclick = () => { closeEdit(); go('mtg-' + t.mtg); };
+  openEditModal();
+}
+function saveTodoEdit(){
+  const t = (F.todos || []).find(x => x.id === editId); if (!t) return;
+  t.pri = document.getElementById('edCrit').value;
+  t.risk = document.getElementById('edRiskSel').value;
+  t.topic = document.getElementById('edTopicOne').value;
+  t.status = document.getElementById('edStatusSel').value;
+  closeEdit();
+  renderKanban(); renderMeetings(); renderPrio(); reflowPage();
+  showToast(T('edSaved'));
 }
 
 /* ========================= MINISTER'S CALENDAR =========================
