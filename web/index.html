@@ -849,6 +849,114 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 .cal-item.sel{box-shadow:inset 0 0 0 1px rgba(15,165,79,.25)}
 .doc-row{transition:.12s} .doc-row:hover{background:#F7FBF8}
 
+/* ---------- INTERACTIVITY: editor modal, drag-and-drop, search (exec hub) ---------- */
+.edit-ic{background:var(--kt-dark)}
+.edit-dlg{max-width:560px}
+.ed-sec{margin-bottom:16px}
+.ed-sec:last-child{margin-bottom:0}
+.ed-t{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-2); margin-bottom:8px}
+.ed-sel{width:100%; font-family:inherit; font-size:13px; font-weight:600; color:var(--ink); background:var(--surface);
+  border:1px solid var(--line); border-radius:8px; padding:9px 11px; cursor:pointer}
+.ed-sel:focus{outline:none; border-color:var(--kt-mid); box-shadow:0 0 0 3px rgba(15,165,79,.12)}
+.ed-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+@media(max-width:520px){.ed-row{grid-template-columns:1fr}}
+.ed-chips{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; min-height:26px; align-items:center}
+.ed-chip{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; padding:4px 6px 4px 10px;
+  border-radius:12px; background:#EEF4F0; color:var(--kt-dark); border:1px solid var(--kt-light)}
+.ed-chip button{border:0; background:rgba(11,107,51,.14); color:var(--kt-dark); width:16px; height:16px; border-radius:50%;
+  cursor:pointer; font-size:12px; line-height:1; display:grid; place-items:center; padding:0}
+.ed-chip button:hover{background:var(--down); color:#fff}
+.ed-none{font-size:11.5px; color:var(--ink-3)}
+.ed-add{display:flex; gap:8px}
+.ed-add select{flex:1 1 auto}
+.ed-meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px}
+.ed-mini{font-size:11px; color:var(--ink-3); background:var(--bg); border:1px solid var(--line);
+  border-radius:8px; padding:7px 10px; line-height:1.4}
+.ed-mini b{color:var(--ink-2); font-weight:600}
+.ed-link{color:var(--kt-green); cursor:pointer; font-weight:600}
+.ed-link:hover{text-decoration:underline}
+.ed-foot .disc{margin:0}
+/* editable eisenhower chip: main navigates, pencil opens editor */
+.eis-chip{padding-right:6px}
+.ec-main{display:flex; align-items:center; gap:8px; flex:1 1 auto; min-width:0; background:none; border:0;
+  cursor:pointer; text-align:left; padding:0; font:inherit; color:inherit}
+.ec-edit{flex:0 0 24px; width:24px; height:24px; border:1px solid var(--line); background:var(--surface); color:var(--ink-3);
+  border-radius:6px; cursor:pointer; font-size:12px; line-height:1; display:grid; place-items:center; transition:.12s}
+.ec-edit:hover{border-color:var(--kt-mid); color:var(--kt-dark); background:#F1F8F3}
+.eis-chip[draggable="true"]{cursor:grab}
+.eis-chip.dragging{opacity:.45}
+.eis-q.drop-on{border-color:var(--kt-green); box-shadow:0 0 0 3px rgba(15,165,79,.14); background:#F5FBF7}
+/* draggable kanban cards + clickable detail */
+.kc[draggable="true"]{cursor:grab}
+.kc.dragging{opacity:.45}
+.kc-open{cursor:pointer}
+.kb-col.drop-on{border-color:var(--kt-green); box-shadow:inset 0 0 0 2px rgba(15,165,79,.25); background:#EEF6F0}
+/* priority pill in the agenda row */
+.ag-pri{margin-right:2px}
+/* topbar global search */
+.tb-search{position:relative; flex:0 1 320px; min-width:120px}
+.tb-search input{width:100%; font-family:inherit; font-size:12.5px; color:var(--ink); background:var(--bg);
+  border:1px solid var(--line); border-radius:8px; padding:8px 30px 8px 32px}
+.tb-search input:focus{outline:none; border-color:var(--kt-mid); background:var(--surface); box-shadow:0 0 0 3px rgba(15,165,79,.1)}
+.tb-search .ts-ic{position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--ink-3); font-size:13px; pointer-events:none}
+.tb-search .ts-x{position:absolute; right:6px; top:50%; transform:translateY(-50%); border:0; background:transparent;
+  color:var(--ink-3); cursor:pointer; font-size:15px; width:22px; height:22px; border-radius:50%; display:none}
+.tb-search .ts-x:hover{background:#E3ECE6; color:var(--ink)}
+.tb-search.has .ts-x{display:grid; place-items:center}
+.ts-panel{position:absolute; top:calc(100% + 8px); left:0; right:0; min-width:300px; max-height:min(70vh,460px); overflow-y:auto;
+  background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:0 18px 44px rgba(8,44,26,.22);
+  z-index:80; display:none; padding:6px}
+.ts-panel.on{display:block}
+.ts-cat{font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-3); padding:9px 10px 5px}
+.ts-res{display:block; width:100%; text-align:left; border:0; background:transparent; cursor:pointer; padding:8px 10px;
+  border-radius:8px; transition:.1s}
+.ts-res:hover, .ts-res.act{background:#F1F8F3}
+.ts-res .ts-rt{font-size:12.5px; font-weight:600; color:var(--ink); line-height:1.35}
+.ts-res .ts-rm{font-size:10.5px; color:var(--ink-3); margin-top:2px}
+.ts-res .ts-rt mark, .ts-res .ts-rm mark{background:#FCE9B8; color:inherit; border-radius:2px; padding:0 1px}
+.ts-empty{padding:16px 12px; text-align:center; color:var(--ink-3); font-size:12px}
+.ts-tag{display:inline-block; font-size:9px; font-weight:800; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--kt-dark); background:#EEF4F0; border-radius:8px; padding:1px 6px; margin-left:6px; vertical-align:middle}
+@media(max-width:1024px){.tb-search{flex-basis:200px}}
+@media(max-width:820px){.clock{display:none} .tb-search{flex:1 1 auto}}
+/* inline list filter (meetings, kanban) */
+.list-filter{position:relative; margin-bottom:12px}
+.list-filter input{width:100%; font-family:inherit; font-size:12.5px; color:var(--ink); background:var(--bg);
+  border:1px solid var(--line); border-radius:8px; padding:9px 12px 9px 32px}
+.list-filter input:focus{outline:none; border-color:var(--kt-mid); background:var(--surface); box-shadow:0 0 0 3px rgba(15,165,79,.1)}
+.list-filter .lf-ic{position:absolute; left:11px; top:50%; transform:translateY(-50%); color:var(--ink-3); font-size:13px; pointer-events:none}
+.list-empty{padding:22px 12px; text-align:center; color:var(--ink-3); font-size:12.5px}
+/* document review */
+.dr-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start}
+@media(max-width:900px){.dr-grid{grid-template-columns:1fr}}
+.dr-drop{border:2px dashed var(--line); border-radius:12px; padding:26px 18px; text-align:center; cursor:pointer;
+  transition:.14s; background:#FAFCFB}
+.dr-drop:hover{border-color:var(--kt-mid); background:#F5FBF7}
+.dr-drop.drag{border-color:var(--kt-green); background:#EEF6F0}
+.dr-drop-ic{font-size:26px; color:var(--kt-green)}
+.dr-drop-t{font-size:13px; font-weight:700; color:var(--ink); margin-top:8px}
+.dr-drop-h{font-size:11px; color:var(--ink-3); margin-top:5px; line-height:1.45}
+.dr-or{text-align:center; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em;
+  color:var(--ink-3); margin:14px 0}
+.dr-ta{width:100%; font-family:inherit; font-size:12.5px; color:var(--ink); background:var(--surface); line-height:1.5;
+  border:1px solid var(--line); border-radius:8px; padding:11px 12px; resize:vertical; min-height:150px}
+.dr-ta:focus{outline:none; border-color:var(--kt-mid); box-shadow:0 0 0 3px rgba(15,165,79,.1)}
+.dr-bar{display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap}
+.dr-count{font-size:11px; color:var(--ink-3)}
+.dr-count.warn{color:var(--warn); font-weight:600}
+.dr-file{font-size:11.5px; color:var(--ink-2); margin-top:9px} .dr-file b{color:var(--ink); font-weight:600}
+.dr-result .card-b{min-height:120px}
+.dr-sec{margin-bottom:14px}
+.dr-sec:last-child{margin-bottom:0}
+.dr-sec-t{display:flex; align-items:center; gap:7px; font-size:11px; font-weight:800; text-transform:uppercase;
+  letter-spacing:.05em; color:var(--kt-dark); margin-bottom:7px}
+.dr-sec-b{font-size:12.5px; color:var(--ink); line-height:1.6}
+.dr-sec-b p{margin:0 0 7px} .dr-sec-b ul{margin:0; padding-left:18px} .dr-sec-b li{margin:0 0 5px; line-height:1.5}
+.dr-place{color:var(--ink-3); font-size:12.5px; text-align:center; padding:26px 12px; line-height:1.6}
+.dr-err{background:#FDECEA; border:1px solid #F3B4AE; color:#8A1D16; border-radius:9px; padding:12px 14px;
+  font-size:12px; line-height:1.5}
+.dr-loading{display:flex; align-items:center; gap:9px; color:var(--ink-2); font-size:12.5px; padding:14px 2px}
+
 /* ---------- STANDALONE ENTRY (HUB) MODE ----------
    When the entry chooser is active the whole dashboard chrome is hidden and
    the page becomes a clean full-screen splash on the KTN dark-green brand. */
@@ -1142,7 +1250,7 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
   </div>
 
   <div class="sec-t"><h2 data-i18n="prioMatrixH"></h2><div class="ln"></div>
-    <span class="note" data-i18n="prioMatrixNote"></span></div>
+    <span class="note" id="prioMatrixNote" data-i18n="prioMatrixNote"></span></div>
   <div class="eis" id="eisGrid"></div>
 
   <div class="sec-t"><h2 data-i18n="prioAgendaH"></h2><div class="ln"></div>
@@ -1533,6 +1641,24 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
 
 <!-- Toast (share confirmation) -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Shared inline editor modal (meeting prioritisation + Kanban task detail) -->
+<div class="doc-modal edit-modal" id="editModal" aria-hidden="true">
+  <div class="doc-scrim" id="editScrim"></div>
+  <div class="doc-dlg edit-dlg" role="dialog" aria-modal="true" aria-labelledby="editDlgTitle">
+    <div class="doc-dlg-h">
+      <div class="doc-dlg-ic edit-ic" id="editIc">✎</div>
+      <div class="doc-dlg-tt">
+        <div class="doc-dlg-kick" id="editKick"></div>
+        <h3 id="editDlgTitle"></h3>
+        <div class="doc-dlg-meta" id="editMeta"></div>
+      </div>
+      <button class="doc-x" id="editClose"><span>×</span></button>
+    </div>
+    <div class="doc-dlg-b" id="editBody"></div>
+    <div class="doc-dlg-f edit-foot" id="editFoot"></div>
+  </div>
+</div>
 
 <!-- ===================== MEETINGS (index) ===================== -->
 <section class="page" id="p-meetings">
@@ -3574,7 +3700,38 @@ az:{
   egCwTitle:"Ölkə üzrə bitki su tələbi məlumat bazası", egCwDl:"Excel yüklə", egCwK2:"Toplam su tələbi", egCwK3:"Toplam yağış miqdarı", egCwK4:"Toplam su defisiti",
   egCwMap:"Ölkə üzrə su ehtiyacı xəritəsi", egCwC1:"Rayon üzrə günlük yağış və su ehtiyacı miqdarının dinamikası", egCwC2:"Rayonlar üzrə aylıq yağış və su ehtiyacı miqdarlarının müqayisəsi",
   egCwDemand:"Toplam su tələbi, ton", egCwRain:"Toplam yağış miqdarı, ton", egCwDemandMm:"Rayon üzrə su tələbi miqdarı, mm", egCwRainMm:"Rayon üzrə yağış miqdarı, mm",
-  egCwDesc:"Təsvir", egCwPix:"Piksel rəngi", egCwField:"Sahə rəngi"
+  egCwDesc:"Təsvir", egCwPix:"Piksel rəngi", egCwField:"Sahə rəngi",
+  /* exec-hub interactivity: meeting editor */
+  prioEdit:"Redaktə et", prioDragHint:"İpucu: iclas kartlarını kvadrantlar arasında dartıb prioriteti dəyişə bilərsiniz.",
+  edMtgKick:"İclas prioriteti", edMtgTitle:"Prioriteti redaktə et",
+  edQuadrant:"Kvadrant (vaciblik / təcillik)", edPriority:"Prioritet / kritiklik", edRisk:"Risk səviyyəsi",
+  edReadiness:"Hazırlıq", edTopics:"Mövzular", edTopicAdd:"Mövzu əlavə et…", edNoTopics:"Mövzu seçilməyib",
+  edStatus:"Status", edTopic:"Mövzu", edSave:"Yadda saxla", edCancel:"Ləğv et", edClose:"Bağla",
+  edSaved:"Dəyişikliklər yadda saxlanıldı", edDemoNote:"<b>Qeyd:</b> dəyişikliklər yalnız cari sessiyada saxlanılır (nümayiş).",
+  /* Kanban task detail */
+  kbDetailKick:"Tapşırıq təfərrüatı", kbEdit:"Redaktə et", kbOpenMtg:"Mənbə iclası aç",
+  kbCardHint:"Kartı açmaq üçün klikləyin; sütunlar arasında dartıb köçürə bilərsiniz.",
+  /* document review */
+  navDocReview:"Sənəd təhlili", pgDocReview:"Sənəd təhlili", dDocReview:"Sənədi yükləyin — Nazir baxışından icra təhlili.",
+  drH:"Sənəd təhlili", drSub:"Kənd Təsərrüfatı Naziri baxımından icra icmalı",
+  drInputH:"Sənəd", drResultH:"İcra təhlili", drAiBadge:"Süni intellekt · nümayiş",
+  drDropT:"Sənədi bura dartın və ya klikləyib seçin", drDropH:".txt / .md etibarlı oxunur; digər formatlar mümkün olduqda mətn kimi oxunur.",
+  drOr:"və ya", drPasteT:"Mətni yapışdırın", drPastePh:"Sənəd mətnini bura yapışdırın…",
+  drReview:"Sənədi təhlil et", drClear:"Təmizlə", drChars:"simvol",
+  drTruncated:"Sənəd təhlil üçün {n} simvola qədər qısaldıldı.",
+  drReviewing:"İcra təhlili hazırlanır…",
+  drSecSummary:"İcra icmalı", drSecPoints:"Əsas məqamlar", drSecRisks:"Risklər və narahatlıqlar",
+  drSecActions:"Tövsiyə olunan qərar və addımlar", drSecQuestions:"Nazirin verə biləcəyi suallar", drSecDelegation:"Həvalə təklifi",
+  drEmpty:"Sənədi yükləyərək və ya mətni yapışdıraraq təqdim edin, sonra təhlili işə salın.",
+  drNoText:"Təhlil ediləcək sənəd mətni yoxdur.",
+  drReadErr:"Bu fayl mətn kimi oxuna bilmədi. Zəhmət olmasa .txt/.md yükləyin və ya mətni yapışdırın.",
+  drDemoTag:"Nümayiş / süni intellekt cavabı", drFileLbl:"Fayl",
+  drDemo:"<b>Qeyd:</b> nümayiş rejimində (mock) cavab öncədən hazırlanmış nümunə mətndir. Server real model açarı ilə konfiqurasiya edildikdə təhlil avtomatik olaraq həqiqi olacaq.",
+  /* search */
+  searchPh:"İclas, tapşırıq, sənəd, mövzu axtar…", searchAria:"Qlobal axtarış",
+  searchNo:"Nəticə tapılmadı", searchClear:"Təmizlə",
+  srMeetings:"İclaslar", srTasks:"Tapşırıqlar", srDocs:"Sənədlər", srTopics:"Mövzular",
+  mtgFilterPh:"İclasları süz…", kbSearchPh:"Tapşırıq axtar…", filterNone:"Uyğun nəticə yoxdur."
 },
 en:{
   brand:"Ministry of Agriculture", brandSub:"Republic of Azerbaijan", brandShort:"Ministry of Agriculture",
@@ -3771,7 +3928,38 @@ en:{
   egCwTitle:"National crop water demand database", egCwDl:"Download Excel", egCwK2:"Total water demand", egCwK3:"Total rainfall", egCwK4:"Total water deficit",
   egCwMap:"National water demand map", egCwC1:"Daily rainfall and water demand by district", egCwC2:"Monthly rainfall vs water demand by district",
   egCwDemand:"Total water demand, t", egCwRain:"Total rainfall, t", egCwDemandMm:"Water demand by district, mm", egCwRainMm:"Rainfall by district, mm",
-  egCwDesc:"Legend", egCwPix:"Pixel colour", egCwField:"Field colour"
+  egCwDesc:"Legend", egCwPix:"Pixel colour", egCwField:"Field colour",
+  /* exec-hub interactivity: meeting editor */
+  prioEdit:"Edit", prioDragHint:"Tip: drag meeting cards between quadrants to re-prioritise.",
+  edMtgKick:"Meeting priority", edMtgTitle:"Edit priority",
+  edQuadrant:"Quadrant (importance / urgency)", edPriority:"Priority / criticality", edRisk:"Risk level",
+  edReadiness:"Readiness", edTopics:"Topics", edTopicAdd:"Add topic…", edNoTopics:"No topics selected",
+  edStatus:"Status", edTopic:"Topic", edSave:"Save", edCancel:"Cancel", edClose:"Close",
+  edSaved:"Changes saved", edDemoNote:"<b>Note:</b> changes are kept in memory for this session only (demonstration).",
+  /* Kanban task detail */
+  kbDetailKick:"Task detail", kbEdit:"Edit", kbOpenMtg:"Open source meeting",
+  kbCardHint:"Click a card to open it; drag cards between columns to change status.",
+  /* document review */
+  navDocReview:"Document review", pgDocReview:"Document review", dDocReview:"Upload a document for an executive review from the Minister's perspective.",
+  drH:"Document review", drSub:"executive review from the perspective of the Minister of Agriculture",
+  drInputH:"Document", drResultH:"Executive review", drAiBadge:"AI · demo",
+  drDropT:"Drag a document here, or click to choose a file", drDropH:".txt / .md are read reliably; other types are read as text on a best-effort basis.",
+  drOr:"or", drPasteT:"Paste text", drPastePh:"Paste the document text here…",
+  drReview:"Review document", drClear:"Clear", drChars:"characters",
+  drTruncated:"Document truncated to {n} characters for review.",
+  drReviewing:"Preparing the executive review…",
+  drSecSummary:"Executive summary", drSecPoints:"Key points", drSecRisks:"Risks & concerns",
+  drSecActions:"Recommended decisions & actions", drSecQuestions:"Questions the Minister should ask", drSecDelegation:"Suggested delegation",
+  drEmpty:"Provide a document by uploading a file or pasting text, then run the review.",
+  drNoText:"There is no document text to review yet.",
+  drReadErr:"This file could not be read as text. Please upload a .txt/.md file or paste the text.",
+  drDemoTag:"Demonstration / AI response", drFileLbl:"File",
+  drDemo:"<b>Note:</b> in demonstration (mock) mode the reply is canned sample text. Once the server is configured with a live model key, the review is produced automatically for real.",
+  /* search */
+  searchPh:"Search meetings, tasks, documents, topics…", searchAria:"Global search",
+  searchNo:"No results found", searchClear:"Clear",
+  srMeetings:"Meetings", srTasks:"Tasks", srDocs:"Documents", srTopics:"Topics",
+  mtgFilterPh:"Filter meetings…", kbSearchPh:"Search tasks…", filterNone:"No matching items."
 },
 ru:{
   brand:"Министерство сельского хозяйства", brandSub:"Азербайджанская Республика", brandShort:"Министерство сельского хозяйства",
@@ -3968,7 +4156,38 @@ ru:{
   egCwTitle:"База данных потребности культур в воде по стране", egCwDl:"Скачать Excel", egCwK2:"Общая потребность в воде", egCwK3:"Общее количество осадков", egCwK4:"Общий водный дефицит",
   egCwMap:"Карта потребности в воде по стране", egCwC1:"Динамика суточных осадков и потребности в воде по району", egCwC2:"Сравнение месячных осадков и потребности в воде по районам",
   egCwDemand:"Общая потребность в воде, т", egCwRain:"Общее количество осадков, т", egCwDemandMm:"Потребность в воде по району, мм", egCwRainMm:"Осадки по району, мм",
-  egCwDesc:"Описание", egCwPix:"Цвет пикселя", egCwField:"Цвет поля"
+  egCwDesc:"Описание", egCwPix:"Цвет пикселя", egCwField:"Цвет поля",
+  /* exec-hub interactivity: meeting editor */
+  prioEdit:"Изменить", prioDragHint:"Совет: перетаскивайте карточки совещаний между квадрантами, чтобы изменить приоритет.",
+  edMtgKick:"Приоритет совещания", edMtgTitle:"Изменить приоритет",
+  edQuadrant:"Квадрант (важность / срочность)", edPriority:"Приоритет / критичность", edRisk:"Уровень риска",
+  edReadiness:"Готовность", edTopics:"Темы", edTopicAdd:"Добавить тему…", edNoTopics:"Темы не выбраны",
+  edStatus:"Статус", edTopic:"Тема", edSave:"Сохранить", edCancel:"Отмена", edClose:"Закрыть",
+  edSaved:"Изменения сохранены", edDemoNote:"<b>Примечание:</b> изменения хранятся только в текущей сессии (демонстрация).",
+  /* Kanban task detail */
+  kbDetailKick:"Детали задачи", kbEdit:"Изменить", kbOpenMtg:"Открыть совещание-источник",
+  kbCardHint:"Нажмите на карточку, чтобы открыть её; перетаскивайте карточки между колонками, чтобы изменить статус.",
+  /* document review */
+  navDocReview:"Обзор документа", pgDocReview:"Обзор документа", dDocReview:"Загрузите документ для исполнительного обзора с точки зрения министра.",
+  drH:"Обзор документа", drSub:"исполнительный обзор с точки зрения министра сельского хозяйства",
+  drInputH:"Документ", drResultH:"Исполнительный обзор", drAiBadge:"ИИ · демо",
+  drDropT:"Перетащите документ сюда или нажмите, чтобы выбрать файл", drDropH:".txt / .md читаются надёжно; другие форматы читаются как текст по возможности.",
+  drOr:"или", drPasteT:"Вставить текст", drPastePh:"Вставьте текст документа сюда…",
+  drReview:"Проанализировать документ", drClear:"Очистить", drChars:"символов",
+  drTruncated:"Документ сокращён до {n} символов для анализа.",
+  drReviewing:"Готовится исполнительный обзор…",
+  drSecSummary:"Резюме для руководства", drSecPoints:"Ключевые моменты", drSecRisks:"Риски и опасения",
+  drSecActions:"Рекомендуемые решения и действия", drSecQuestions:"Вопросы, которые министру следует задать", drSecDelegation:"Предложение по делегированию",
+  drEmpty:"Предоставьте документ, загрузив файл или вставив текст, затем запустите анализ.",
+  drNoText:"Пока нет текста документа для анализа.",
+  drReadErr:"Не удалось прочитать этот файл как текст. Пожалуйста, загрузите файл .txt/.md или вставьте текст.",
+  drDemoTag:"Демонстрация / ответ ИИ", drFileLbl:"Файл",
+  drDemo:"<b>Примечание:</b> в демонстрационном режиме (mock) ответ — это заранее подготовленный образец текста. После настройки сервера с реальным ключом модели обзор будет формироваться автоматически.",
+  /* search */
+  searchPh:"Поиск совещаний, задач, документов, тем…", searchAria:"Глобальный поиск",
+  searchNo:"Ничего не найдено", searchClear:"Очистить",
+  srMeetings:"Совещания", srTasks:"Задачи", srDocs:"Документы", srTopics:"Темы",
+  mtgFilterPh:"Фильтр совещаний…", kbSearchPh:"Поиск задач…", filterNone:"Нет подходящих элементов."
 }};
 
 /* ========================= STATE & HELPERS ========================= */
@@ -5713,10 +5932,12 @@ const PRIO_BRIEF = {
 };
 let prioOpt = false;   /* "Optimise my calendar" toggle: chronological vs priority order */
 function prioLevel(m){
+  if (m.crit) return m.crit;   /* Minister-set priority overrides the derived level */
   const c = mtgCrit(m);
   if (c && c !== 'none') return c;
   return (m.imp && m.urg) ? 'high' : (m.imp ? 'medium' : 'low');
 }
+function mtgRisk(m){ return m.risk || 'med'; }
 function delegateOf(m){
   if (!m.delegate) return null;
   const a = (m.attendees || []).find(x => x.n === m.delegate);
@@ -5733,14 +5954,18 @@ function renderPrio(){
                 ['q-niu','eisNIU',quad(false,true)], ['q-ninu','eisNINU',quad(false,false)]];
   document.getElementById('eisGrid').innerHTML = QDEF.map(([cls,lblK,ms]) => {
     const chips = ms.length ? ms.map(m => `
-      <button class="eis-chip ${esc(prioLevel(m))}" data-go="mtg-${esc(m.id)}">
-        <span class="ec-tm">${esc(m.dt.slice(11,16))}</span>
-        <span class="ec-t">${esc(tx(m.t))}</span></button>`).join('')
+      <div class="eis-chip ${esc(prioLevel(m))}" draggable="true" data-mid="${esc(m.id)}">
+        <button class="ec-main" data-go="mtg-${esc(m.id)}">
+          <span class="ec-tm">${esc(m.dt.slice(11,16))}</span>
+          <span class="ec-t">${esc(tx(m.t))}</span></button>
+        <button class="ec-edit" data-medit="${esc(m.id)}" title="${esc(T('prioEdit'))}" aria-label="${esc(T('prioEdit'))}">✎</button>
+      </div>`).join('')
       : `<div class="eq-empty">${esc(T('eisEmpty'))}</div>`;
-    return `<div class="eis-q ${cls}">
+    return `<div class="eis-q ${cls}" data-imp="${cls==='q-iu'||cls==='q-inu'?1:0}" data-urg="${cls==='q-iu'||cls==='q-niu'?1:0}">
       <div class="eq-h">${esc(T(lblK))}<span class="cnt">${ms.length}</span></div>
       <div class="eq-body">${chips}</div></div>`;
   }).join('');
+  document.getElementById('prioMatrixNote').textContent = T('prioMatrixNote') + ' · ' + T('prioDragHint');
 
   const RANK = {critical:4,high:3,medium:2,low:1,none:0};
   const ag = list.slice();
@@ -5758,9 +5983,10 @@ function renderPrio(){
       <div class="ag-time"><b>${esc(m.dt.slice(11,16))}</b><small>${esc(m.end || '')}</small></div>
       <div class="ag-b">
         <div class="ag-top"><div class="ag-t">${esc(tx(m.t))}</div>
+          <span class="ag-pri">${critB(prioLevel(m))}</span>
           <span class="rdy ${esc(rdy)}">${esc(T('rdyLabel'))}: ${esc(T(RDY[rdy] || 'rdyMed'))}</span></div>
         <div class="ag-sum">✦ ${esc(tx(m.aisum))}</div>
-        <div class="ag-tags" style="margin-top:9px">${tags}</div>
+        <div class="ag-tags" style="margin-top:9px">${tags}${riskI(mtgRisk(m))}</div>
         <div class="ag-foot"><div class="ag-dlg">◧ ${esc(T('prioDelegate'))}: ${delHtml}</div></div>
       </div></button>`;
   }).join('') + `</div>`;
@@ -5768,6 +5994,37 @@ function renderPrio(){
   document.getElementById('prioAgendaNote').textContent = T('prioAgendaNote');
   document.getElementById('prioOpt').classList.toggle('done', prioOpt);
   bindGo();
+  bindEisDnd();
+  document.querySelectorAll('#eisGrid [data-medit]').forEach(b =>
+    b.onclick = e => { e.preventDefault(); e.stopPropagation(); openMtgEdit(b.dataset.medit); });
+}
+
+/* Drag a meeting chip into another quadrant → update its importance/urgency. */
+let dragMtg = null;
+function bindEisDnd(){
+  const grid = document.getElementById('eisGrid');
+  if (!grid) return;
+  grid.querySelectorAll('.eis-chip[draggable]').forEach(chip => {
+    chip.addEventListener('dragstart', e => {
+      dragMtg = chip.dataset.mid;
+      chip.classList.add('dragging');
+      if (e.dataTransfer){ e.dataTransfer.effectAllowed = 'move'; try{ e.dataTransfer.setData('text/plain', dragMtg); }catch(_){} }
+    });
+    chip.addEventListener('dragend', () => { chip.classList.remove('dragging'); dragMtg = null;
+      grid.querySelectorAll('.drop-on').forEach(x => x.classList.remove('drop-on')); });
+  });
+  grid.querySelectorAll('.eis-q').forEach(q => {
+    q.addEventListener('dragover', e => { e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'move'; q.classList.add('drop-on'); });
+    q.addEventListener('dragleave', () => q.classList.remove('drop-on'));
+    q.addEventListener('drop', e => {
+      e.preventDefault(); q.classList.remove('drop-on');
+      const id = dragMtg || (e.dataTransfer && e.dataTransfer.getData('text/plain'));
+      const m = id && mtgById(id); if (!m) return;
+      m.imp = q.dataset.imp === '1'; m.urg = q.dataset.urg === '1';
+      renderPrio();
+      showToast(T('edSaved'));
+    });
+  });
 }
 
 function renderMeetings(){
@@ -6059,6 +6316,103 @@ function shareSend(){
   showToast(T('shareSuccess').replace('{n}', recN));
 }
 
+/* ========================= SHARED INLINE EDITOR =========================
+   One modal drives two flows: meeting prioritisation (Eisenhower matrix) and
+   Kanban task detail/edit. Both edit shared FEED data in memory. */
+let editKind = null, editId = null, editTopics = [];
+
+const CRIT_OPTS = () => [['critical',T('priCritical')],['high',T('priHigh')],['medium',T('priMedium')],['low',T('priLow')]];
+const RISK_OPTS = () => [['high',T('sevHigh')],['med',T('sevMed')],['low',T('sevLow')]];
+const RDY_OPTS  = () => [['high',T('rdyHigh')],['medium',T('rdyMed')],['low',T('rdyLow')]];
+const QUAD_OPTS = () => [['1|1',T('eisIU')],['1|0',T('eisINU')],['0|1',T('eisNIU')],['0|0',T('eisNINU')]];
+const STATUS_OPTS = () => KB_COLS.map(([v,k]) => [v, T(k)]);
+const TOPIC_OPTS = (cur) => [['', T('edTopic')], ...Object.keys(MTOP).map(k => [k, topN(k)]).filter(o => true)];
+
+function edSelect(id, opts, cur){
+  return `<select id="${esc(id)}" class="ed-sel">` + opts.map(([v,l]) =>
+    `<option value="${esc(v)}"${String(v) === String(cur) ? ' selected' : ''}>${esc(l)}</option>`).join('') + `</select>`;
+}
+function edTopicsBlock(){
+  const chips = editTopics.length
+    ? editTopics.map((t,i) => `<span class="ed-chip">${esc(topN(t))}<button data-rmtopic="${i}" aria-label="×">×</button></span>`).join('')
+    : `<span class="ed-none">${esc(T('edNoTopics'))}</span>`;
+  const avail = Object.keys(MTOP).filter(k => !editTopics.includes(k));
+  const add = avail.length
+    ? `<div class="ed-add">${edSelect('edTopicSel', [['', T('edTopicAdd')], ...avail.map(k => [k, topN(k)])], '')}
+        <button class="btn sm" id="edTopicAddBtn">+ ${esc(T('shareAdd'))}</button></div>`
+    : '';
+  return `<div class="ed-chips" id="edTopicChips">${chips}</div>${add}`;
+}
+function bindEditTopics(){
+  const chips = document.getElementById('edTopicChips');
+  if (chips) chips.querySelectorAll('[data-rmtopic]').forEach(b =>
+    b.onclick = () => { editTopics.splice(+b.dataset.rmtopic, 1); refreshEditTopics(); });
+  const addBtn = document.getElementById('edTopicAddBtn');
+  if (addBtn) addBtn.onclick = () => {
+    const sel = document.getElementById('edTopicSel');
+    if (sel && sel.value){ editTopics.push(sel.value); refreshEditTopics(); }
+  };
+}
+function refreshEditTopics(){
+  const holder = document.getElementById('edTopicChips');
+  if (!holder) return;
+  holder.parentElement.innerHTML = `<div class="ed-t">${esc(T('edTopics'))}</div>${edTopicsBlock()}`;
+  bindEditTopics();
+}
+function openEditModal(){
+  const md = document.getElementById('editModal');
+  md.classList.add('on'); md.setAttribute('aria-hidden', 'false');
+}
+function closeEdit(){
+  const md = document.getElementById('editModal');
+  md.classList.remove('on'); md.setAttribute('aria-hidden', 'true');
+  editKind = null; editId = null; editTopics = [];
+}
+/* Re-apply the active page's visibility after a render that rebuilds page nodes. */
+function reflowPage(){
+  document.querySelectorAll('.page').forEach(s => s.classList.toggle('on', s.id === 'p-' + PAGE));
+}
+
+/* ----- meeting prioritisation editor (matrix) ----- */
+function openMtgEdit(id){
+  const m = mtgById(id); if (!m) return;
+  editKind = 'mtg'; editId = id; editTopics = (m.tags || []).slice();
+  document.getElementById('editIc').textContent = '✎';
+  document.getElementById('editKick').textContent = T('edMtgKick');
+  document.getElementById('editDlgTitle').textContent = tx(m.t);
+  document.getElementById('editMeta').textContent = dtfmt(m.dt) + ' · ' + mtgLoc(m);
+  document.getElementById('editClose').setAttribute('aria-label', T('edClose'));
+  const quad = (m.imp ? 1 : 0) + '|' + (m.urg ? 1 : 0);
+  document.getElementById('editBody').innerHTML = `
+    <div class="ed-sec"><div class="ed-t">${esc(T('edQuadrant'))}</div>${edSelect('edQuad', QUAD_OPTS(), quad)}</div>
+    <div class="ed-sec"><div class="ed-row">
+      <div><div class="ed-t">${esc(T('edPriority'))}</div>${edSelect('edCrit', CRIT_OPTS(), prioLevel(m))}</div>
+      <div><div class="ed-t">${esc(T('edRisk'))}</div>${edSelect('edRiskSel', RISK_OPTS(), mtgRisk(m))}</div>
+    </div></div>
+    <div class="ed-sec"><div class="ed-t">${esc(T('edReadiness'))}</div>${edSelect('edRdy', RDY_OPTS(), m.readiness || 'medium')}</div>
+    <div class="ed-sec"><div class="ed-t">${esc(T('edTopics'))}</div>${edTopicsBlock()}</div>`;
+  document.getElementById('editFoot').innerHTML =
+    `<span class="disc">${T('edDemoNote')}</span><div class="sp" style="flex:1"></div>
+     <button class="btn" id="edCancelBtn">${esc(T('edCancel'))}</button>
+     <button class="btn pri" id="edSaveBtn">${esc(T('edSave'))}</button>`;
+  bindEditTopics();
+  document.getElementById('edCancelBtn').onclick = closeEdit;
+  document.getElementById('edSaveBtn').onclick = saveMtgEdit;
+  openEditModal();
+}
+function saveMtgEdit(){
+  const m = mtgById(editId); if (!m) return;
+  const q = (document.getElementById('edQuad').value || '0|0').split('|');
+  m.imp = q[0] === '1'; m.urg = q[1] === '1';
+  m.crit = document.getElementById('edCrit').value;
+  m.risk = document.getElementById('edRiskSel').value;
+  m.readiness = document.getElementById('edRdy').value;
+  m.tags = editTopics.slice();
+  closeEdit();
+  renderPrio(); renderMeetings(); reflowPage();
+  showToast(T('edSaved'));
+}
+
 /* ========================= BOOT ========================= */
 function bindGo(){
   document.querySelectorAll('[data-go]').forEach(b => {
@@ -6103,11 +6457,13 @@ document.getElementById('docClose').onclick = closeDoc;
 document.getElementById('docScrim').onclick = closeDoc;
 document.getElementById('shareClose').onclick = closeShare;
 document.getElementById('shareScrim').onclick = closeShare;
+document.getElementById('editClose').onclick = closeEdit;
+document.getElementById('editScrim').onclick = closeEdit;
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-share]');
   if (el){ e.preventDefault(); openShare(el.dataset.share); }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); closeEdit(); } });
 document.getElementById('chatClear').onclick = () => { CHAT.length = 0; renderChat(); };
 document.getElementById('regen').onclick = () => renderBrief();
 ['ss','y','ip','im'].forEach(id => document.getElementById(id).addEventListener('input', simWheat));
