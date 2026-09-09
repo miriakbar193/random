@@ -1132,6 +1132,7 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
     <button class="nv" data-bucket="b1" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
     <div class="sb-lbl" data-bucket="b1" data-i18n="navAI"></div>
     <button class="nv" data-bucket="b1" data-go="ai"><span class="ic">✦</span><span data-i18n="pgAI"></span></button>
+    <button class="nv" data-bucket="b1" data-go="docreview"><span class="ic">▦</span><span data-i18n="pgDocReview"></span></button>
     <button class="nv" data-bucket="b1" data-go="decisions"><span class="ic">◫</span><span data-i18n="pgDecisions"></span><span class="bdg" id="db">0</span></button>
     <button class="nv" data-bucket="b1" data-go="simulator"><span class="ic">◑</span><span data-i18n="pgSim"></span></button>
 
@@ -1448,6 +1449,42 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
   <div class="sec-t"><h2 data-i18n="secAiCap"></h2><div class="ln"></div></div>
   <div class="grid g-3" id="aiCaps"></div>
   <div class="disc" style="margin-top:16px" data-i18n="discAi"></div>
+</section>
+
+<!-- ===================== DOCUMENT REVIEW ===================== -->
+<section class="page" id="p-docreview">
+  <div class="ai-hero">
+    <h3 data-i18n="drH"></h3>
+    <p data-i18n="drSub"></p>
+  </div>
+  <div class="dr-grid" style="margin-top:14px">
+    <div class="card">
+      <div class="card-h"><h3 data-i18n="drInputH"></h3></div>
+      <div class="card-b">
+        <div class="dr-drop" id="drDrop" tabindex="0" role="button">
+          <div class="dr-drop-ic">⬆</div>
+          <div class="dr-drop-t" data-i18n="drDropT"></div>
+          <div class="dr-drop-h" data-i18n="drDropH"></div>
+        </div>
+        <input type="file" id="drFile" accept=".txt,.md,.markdown,.csv,.json,.log,.rtf,text/*" style="display:none">
+        <div class="dr-file" id="drFileInfo" style="display:none"></div>
+        <div class="dr-or" data-i18n="drOr"></div>
+        <div class="ed-t" data-i18n="drPasteT"></div>
+        <textarea id="drText" class="dr-ta" placeholder=""></textarea>
+        <div class="dr-bar">
+          <button class="btn pri" id="drReviewBtn" data-i18n="drReview"></button>
+          <button class="btn" id="drClearBtn" data-i18n="drClear"></button>
+          <span class="dr-count" id="drCount"></span>
+        </div>
+      </div>
+    </div>
+    <div class="card dr-result">
+      <div class="card-h"><h3 data-i18n="drResultH"></h3><div class="sp"></div>
+        <span class="ai-badge" data-i18n="drAiBadge"></span></div>
+      <div class="card-b" id="drResult"></div>
+    </div>
+  </div>
+  <div class="disc" style="margin-top:16px" data-i18n="drDemo"></div>
 </section>
 
 <!-- ===================== DECISIONS ===================== -->
@@ -4197,7 +4234,7 @@ let BUCKET = 'b1';   /* which entry bucket the dashboard is currently scoped to 
 let ovBucket = 'all', nwBucket = 'all', nwTag = 'all', mapCrop = 'all';
 /* Which entry bucket each dashboard page belongs to (drives sidebar scoping). */
 const PAGE_BUCKET = {
-  b1:'b1', prio:'b1', meetings:'b1', calendar:'b1', kanban:'b1', decisions:'b1', ai:'b1', simulator:'b1',
+  b1:'b1', prio:'b1', meetings:'b1', calendar:'b1', kanban:'b1', decisions:'b1', ai:'b1', docreview:'b1', simulator:'b1',
   b2:'b2', overview:'b2', economy:'b2', markets:'b2', cropmap:'b2', news:'b2',
   b3:'b3', usecases:'b3'
 };
@@ -4288,7 +4325,7 @@ function pgTitleFor(p){
   const m = {hub:'pgHub',b1:'b1Title',b2:'b2Title',b3:'b3Title',prio:'prioMatrixH',
     overview:'pgOverview',economy:'pgEconomy',markets:'pgMarkets',cropmap:'pgCropMap',
     news:'pgNews',ai:'pgAI',decisions:'pgDecisions',simulator:'pgSim',usecases:'pgUseCases',
-    calendar:'pgCalendar',meetings:'pgMeetings',kanban:'pgKanban'};
+    calendar:'pgCalendar',meetings:'pgMeetings',kanban:'pgKanban',docreview:'pgDocReview'};
   return T(m[p] || 'pgOverview');
 }
 function go(p){
@@ -5006,6 +5043,115 @@ function renderAI(){
       <div style="font-size:13px;font-weight:600;line-height:1.35">${esc(tx(c.t))}</div>
       <div class="mini" style="margin-top:6px">${esc(tx(c.d))}</div>
     </div>`).join('');
+}
+
+/* ========================= DOCUMENT REVIEW =========================
+   Upload or paste a document, then request an executive review from the
+   perspective of the Minister of Agriculture. The request is routed through
+   the same POST api/chat endpoint the assistant uses, so it returns canned
+   text in LLM_MOCK mode and a real, structured review once a live model is
+   configured on the server. Nothing is persisted. */
+const DR_MAX = 6500;   /* client-side cap so a single message stays well under the 8000-char limit */
+let drFileName = '', drLastReply = '', drLastModel = '', drLastNote = '';
+const DR_INSTR = {
+  az:"Siz Azərbaycan Respublikası Kənd Təsərrüfatı Nazirinin analitik köməkçisisiniz. Aşağıdakı sənədi məhz Nazirin baxımından icra səviyyəsində nəzərdən keçirin. Cavabı dəqiq bu altı bölmə başlığı ilə, hər biri ayrıca sətirdə '## ' prefiksi ilə qaytarın: '## İcra icmalı', '## Əsas məqamlar', '## Risklər və narahatlıqlar', '## Tövsiyə olunan qərar və addımlar', '## Nazirin verə biləcəyi suallar', '## Həvalə təklifi'. Qısa, konkret və icra yönümlü olun; mümkün olduqda maddələrdən istifadə edin.",
+  en:"You are the analytical assistant to the Minister of Agriculture of Azerbaijan. Review the document below at executive level, strictly from the Minister's perspective. Return the answer using exactly these six section headings, each on its own line prefixed with '## ': '## Executive summary', '## Key points', '## Risks & concerns', '## Recommended decisions & actions', '## Questions the Minister should ask', '## Suggested delegation'. Be concise, concrete and decision-oriented; use bullet points where helpful.",
+  ru:"Вы — аналитический помощник Министра сельского хозяйства Азербайджана. Проанализируйте приведённый ниже документ на исполнительном уровне, строго с точки зрения Министра. Верните ответ, используя ровно эти шесть заголовков разделов, каждый на отдельной строке с префиксом '## ': '## Резюме для руководства', '## Ключевые моменты', '## Риски и опасения', '## Рекомендуемые решения и действия', '## Вопросы, которые министру следует задать', '## Предложение по делегированию'. Будьте кратки, конкретны и ориентированы на решения; при необходимости используйте маркированные списки."
+};
+function drDocLen(){ return (document.getElementById('drText').value || '').length; }
+function drBusy(b){
+  const r = document.getElementById('drReviewBtn'), c = document.getElementById('drClearBtn');
+  if (r) r.disabled = b; if (c) c.disabled = b;
+}
+function drUpdateCount(){
+  const n = drDocLen(), el = document.getElementById('drCount');
+  if (!el) return;
+  el.textContent = nf(n) + ' ' + T('drChars');
+  el.classList.toggle('warn', n > DR_MAX);
+}
+function drUpdateFile(){
+  const el = document.getElementById('drFileInfo');
+  if (!el) return;
+  if (drFileName){ el.style.display = 'block'; el.innerHTML = `▤ ${esc(T('drFileLbl'))}: <b>${esc(drFileName)}</b>`; }
+  else el.style.display = 'none';
+}
+function drReadFile(file){
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    document.getElementById('drText').value = String(reader.result || '');
+    drFileName = file.name; drUpdateFile(); drUpdateCount();
+  };
+  reader.onerror = () => {
+    document.getElementById('drResult').innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`;
+  };
+  try { reader.readAsText(file); }
+  catch (e){ document.getElementById('drResult').innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`; }
+}
+function drClear(){
+  document.getElementById('drText').value = '';
+  drFileName = ''; drLastReply = ''; drLastModel = ''; drLastNote = '';
+  const f = document.getElementById('drFile'); if (f) f.value = '';
+  drUpdateFile(); drUpdateCount(); drRenderResult();
+}
+/* Split the reply into sections on markdown-style headings; falls back to a
+   single block (e.g. in mock mode, where the canned reply has no headings). */
+function drParse(text){
+  const lines = String(text).split(/\r?\n/);
+  const secs = []; let cur = null;
+  lines.forEach(ln => {
+    const h = ln.match(/^\s{0,3}#{1,4}\s+(.+?)\s*$/) || ln.match(/^\s*\*\*(.+?)\*\*\s*:?\s*$/);
+    if (h){ cur = {title:h[1].trim(), body:[]}; secs.push(cur); }
+    else if (cur){ cur.body.push(ln); }
+    else { cur = {title:null, body:[ln]}; secs.push(cur); }
+  });
+  return secs.filter(s => s.title || s.body.join('').trim());
+}
+function drRenderResult(){
+  const result = document.getElementById('drResult');
+  if (!result) return;
+  if (!drLastReply){ result.innerHTML = `<div class="dr-place">${esc(T('drEmpty'))}</div>`; return; }
+  const secs = drParse(drLastReply);
+  const structured = secs.filter(s => s.title);
+  const demo = drLastModel === 'mock' ? `<div style="margin-bottom:10px"><span class="ts-tag">${esc(T('drDemoTag'))}</span></div>` : '';
+  const noteHtml = drLastNote ? `<div class="dr-count warn" style="margin-bottom:10px">${esc(drLastNote)}</div>` : '';
+  const body = structured.length >= 2
+    ? secs.map(s => `<div class="dr-sec">${s.title ? `<div class="dr-sec-t">◆ ${esc(s.title)}</div>` : ''}
+        <div class="dr-sec-b">${mdToHtml(s.body.join('\n'))}</div></div>`).join('')
+    : `<div class="dr-sec"><div class="dr-sec-t">◆ ${esc(T('drResultH'))}</div>
+        <div class="dr-sec-b">${mdToHtml(drLastReply)}</div></div>`;
+  result.innerHTML = demo + noteHtml + body;
+}
+async function drReview(){
+  const raw = (document.getElementById('drText').value || '').trim();
+  const result = document.getElementById('drResult');
+  if (!raw){ result.innerHTML = `<div class="dr-err">${esc(T('drNoText'))}</div>`; return; }
+  let doc = raw; drLastNote = '';
+  if (doc.length > DR_MAX){ doc = doc.slice(0, DR_MAX); drLastNote = T('drTruncated').replace('{n}', nf(DR_MAX)); }
+  drBusy(true);
+  result.innerHTML = `<div class="dr-loading"><span class="typing"><i></i><i></i><i></i></span>${esc(T('drReviewing'))}</div>`;
+  const content = tx(DR_INSTR) + "\n\n=== DOCUMENT START ===\n" + doc + "\n=== DOCUMENT END ===";
+  let ek = 'chatErr';
+  try {
+    const r = await fetch('api/chat', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({lang:LG, messages:[{role:'user', content}], context:chatContext()})
+    });
+    if (!r.ok){ ek = r.status === 503 ? 'chatErrCfg' : (r.status === 502 ? 'chatErrUp' : 'chatErrHttp'); throw new Error('HTTP ' + r.status); }
+    const j = await r.json();
+    if (j.error || !j.reply){ ek = 'chatErrUp'; throw new Error(j.error || 'empty reply'); }
+    drLastReply = j.reply; drLastModel = j.model || '';
+    drRenderResult();
+  } catch (e){
+    drLastReply = '';
+    result.innerHTML = `<div class="dr-err">${esc(T(ek))}</div>`;
+  }
+  drBusy(false);
+}
+function renderDocReview(){
+  const ta = document.getElementById('drText');
+  if (ta) ta.placeholder = T('drPastePh');
+  drUpdateCount(); drUpdateFile(); drRenderResult();
 }
 
 /* ========================= USE CASES =========================
@@ -5873,7 +6019,7 @@ function mtgDetail(m){
 }
 /* ========================= ENTRY HUB + BUCKETS ========================= */
 const HUB_CARDS = [
-  {go:'prio', ic:'◫', titleK:'b1Title', descK:'hcd1', ctaK:'hcta1', tags:['pgMeetings','pgCalendar','pgKanban','pgDecisions']},
+  {go:'prio', ic:'◫', titleK:'b1Title', descK:'hcd1', ctaK:'hcta1', tags:['pgMeetings','pgCalendar','pgKanban','pgDocReview','pgDecisions']},
   {go:'overview', ic:'◧', titleK:'b2Title', descK:'hcd2', ctaK:'hcta2', tags:['pgOverview','pgEconomy','pgMarkets','pgCropMap','pgNews']},
   {go:'usecases', ic:'▦', titleK:'b3Title', descK:'hcd3', ctaK:'hcta3', tags:['pgUseCases']}
 ];
@@ -5884,7 +6030,8 @@ const BUCKET_LINKS = {
     {go:'calendar', ic:'◷', titleK:'pgCalendar', descK:'dCalendar'},
     {go:'kanban', ic:'▥', titleK:'pgKanban', descK:'dKanban'},
     {go:'decisions', ic:'◫', titleK:'pgDecisions', descK:'dDecisions'},
-    {go:'ai', ic:'✦', titleK:'pgAI', descK:'dAi'}
+    {go:'ai', ic:'✦', titleK:'pgAI', descK:'dAi'},
+    {go:'docreview', ic:'▦', titleK:'pgDocReview', descK:'dDocReview'}
   ],
   b2:[
     {go:'overview', ic:'◧', titleK:'pgOverview', descK:'dOverview'},
@@ -6424,7 +6571,7 @@ function renderAll(){
   applyStatic(); renderHub(); renderBuckets(); renderPrio();
   renderHero(); renderKpi(); renderTicker(); renderNews();
   renderBrief(); renderAlerts(); renderDec(); renderEcon(); renderMkt();
-  renderAI(); renderDash(); renderMeetings(); renderKanban(); renderCalendar();
+  renderAI(); renderDocReview(); renderDash(); renderMeetings(); renderKanban(); renderCalendar();
   renderMapChrome(); renderCharts(); renderUcCharts(); bindGo();
   if (MAP) drawMap(); else if (document.getElementById('mapfb').style.display === 'block') fallbackMap();
 }
@@ -6466,6 +6613,22 @@ document.addEventListener('click', e => {
 document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); closeEdit(); } });
 document.getElementById('chatClear').onclick = () => { CHAT.length = 0; renderChat(); };
 document.getElementById('regen').onclick = () => renderBrief();
+/* document review wiring */
+document.getElementById('drReviewBtn').onclick = drReview;
+document.getElementById('drClearBtn').onclick = drClear;
+document.getElementById('drText').addEventListener('input', drUpdateCount);
+document.getElementById('drFile').addEventListener('change', e => { if (e.target.files && e.target.files[0]) drReadFile(e.target.files[0]); });
+(function(){
+  const drop = document.getElementById('drDrop');
+  drop.onclick = () => document.getElementById('drFile').click();
+  drop.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); document.getElementById('drFile').click(); } });
+  ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('drag'); }));
+  ['dragleave','dragend'].forEach(ev => drop.addEventListener(ev, () => drop.classList.remove('drag')));
+  drop.addEventListener('drop', e => {
+    e.preventDefault(); drop.classList.remove('drag');
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) drReadFile(e.dataTransfer.files[0]);
+  });
+})();
 ['ss','y','ip','im'].forEach(id => document.getElementById(id).addEventListener('input', simWheat));
 ['it','yu','ws','cx'].forEach(id => document.getElementById(id).addEventListener('input', simIrr));
 ['rn','el','rf','wp'].forEach(id => document.getElementById(id).addEventListener('input', simDr));
