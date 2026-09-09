@@ -1,0 +1,6 @@
+# Normalise to LF in the repo so diffs stay clean and the Linux image build matches local.
+* text=auto eol=lf
+
+*.jpg binary
+*.png binary
+*.svg text eol=lf

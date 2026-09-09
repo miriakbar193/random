@@ -1,0 +1,117 @@
+# Helm values for Nazir Paneli on Platform McKinsey Deployer K8s PaaS.
+#
+# Deployer provisions its own chart and its own values file into the
+# provisioned repo. Treat this file as the app-specific input to that chart:
+# reconcile the key names against the provisioned chart before the first sync
+# and delete anything the chart does not read. Every `TODO` below is a value
+# that only exists once the Project Workspace and the Deployer service have
+# been provisioned — do not guess them.
+#
+# See DEPLOY.md in this folder for the order of operations.
+
+# Two pods for availability. Note that the chat rate limit in server/app.py is
+# per process, so the effective ceiling is replicaCount x RATE_LIMIT_REQUESTS
+# per minute.
+replicaCount: 2
+
+image:
+  # TODO(platform): JFrog registry path issued with the Deployer service, e.g.
+  # the value the provisioned CI workflow pushes to.
+  repository: TODO-jfrog-registry-path/nazir-paneli
+  # TODO(ci): set by the image build job after the Wiz scan passes. Always an
+  # immutable digest or a build-specific tag — never `latest`.
+  tag: TODO-image-tag
+  pullPolicy: IfNotPresent
+
+# TODO(platform): pull secret name created by the Deployer service.
+imagePullSecrets:
+  - name: TODO-jfrog-pull-secret
+
+service:
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  # TODO(platform): the *.apps.mckinsey.com host is fixed when the app URL
+  # prefix is set in the Deployer service. McKinsey ID sign-in is attached by
+  # the platform, not by this file.
+  host: TODO-app-url-prefix.apps.mckinsey.com
+  annotations:
+    # The chat handler caps a request body at 512 KiB; stop anything larger at
+    # the edge so it never reaches a pod.
+    nginx.ingress.kubernetes.io/proxy-body-size: 1m
+
+containerPort: 8000
+
+# Non-secret configuration. The endpoint values stay empty until an LLM gateway
+# is approved for the engagement; with them empty the dashboard serves normally
+# and POST /api/chat answers 503.
+env:
+  # TODO(engagement): approved gateway base URL, e.g. https://<host>/v1
+  LLM_BASE_URL: ""
+  # TODO(engagement): model or Azure deployment name
+  LLM_MODEL: ""
+  # Optional; some Azure OpenAI deployments require an api-version.
+  LLM_API_VERSION: ""
+  # Never 1 in a deployed environment.
+  LLM_MOCK: "0"
+
+# LLM_API_KEY is the only secret this app takes. It comes from the Vault
+# instance provisioned with the workspace and is never committed, never baked
+# into the image and never echoed in a response or a log line.
+secretEnv:
+  LLM_API_KEY:
+    # TODO(platform): Vault path and key, or the name of the Kubernetes secret
+    # the provisioned Vault sync writes. Match whichever mechanism the
+    # Deployer chart supports (external-secrets, vault-agent annotation, or a
+    # synced secret reference).
+    secretName: TODO-vault-synced-secret
+    secretKey: TODO-llm-api-key
+
+# This app persists nothing: no database, no S3 bucket, no session store. The
+# panel's data ships inside web/index.html and the chat context is supplied by
+# the browser on each turn. If the provisioned chart expects storage settings,
+# leave them unset.
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 192Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Matches the image: uid 10001, application files root-owned and read-only to
+# the runtime user.
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  # readOnlyRootFilesystem: true also works, but only with a writable /tmp
+  # mounted in. Enable it once the chart's volume keys are known.
+
+readinessProbe:
+  httpGet:
+    path: /api/health
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+livenessProbe:
+  httpGet:
+    path: /api/health
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 30
+  timeoutSeconds: 3
+  failureThreshold: 3
