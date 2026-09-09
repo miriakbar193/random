@@ -848,6 +848,109 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 /* calendar polish */
 .cal-item.sel{box-shadow:inset 0 0 0 1px rgba(15,165,79,.25)}
 .doc-row{transition:.12s} .doc-row:hover{background:#F7FBF8}
+
+/* ---------- ENTRY HUB + BUCKETS ---------- */
+.hub-hero h1{font-size:24px}
+.hub-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:18px}
+.hub-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--sh); overflow:hidden; text-align:left; width:100%; padding:0; cursor:pointer;
+  font:inherit; color:inherit; display:flex; flex-direction:column; transition:.16s}
+.hub-card:hover{box-shadow:var(--sh-2); transform:translateY(-2px); border-color:var(--kt-mid)}
+.hub-card .hc-top{height:120px; position:relative; display:grid; place-items:center; overflow:hidden;
+  background:linear-gradient(140deg,#0E462A 0%,#115533 55%,#0a7a3a 100%)}
+.hub-card .hc-top::after{content:""; position:absolute; right:-46px; top:-56px; width:190px; height:190px;
+  border-radius:50%; background:radial-gradient(circle,rgba(107,193,130,.4),transparent 68%)}
+.hub-card .hc-ic{font-size:44px; color:#fff; position:relative; z-index:1; line-height:1}
+.hub-card .hc-b{padding:16px 18px 18px; display:flex; flex-direction:column; flex:1}
+.hub-card .hc-t{font-size:15.5px; font-weight:700; letter-spacing:-.01em}
+.hub-card .hc-d{font-size:12px; color:var(--ink-3); margin-top:6px; line-height:1.5; flex:1}
+.hub-card .hc-cta{margin-top:14px; display:inline-flex; align-items:center; gap:7px; align-self:flex-start;
+  border:1px dashed var(--kt-green); color:var(--kt-green); font-weight:700; font-size:11.5px;
+  padding:7px 14px; border-radius:8px; transition:.14s}
+.hub-card:hover .hc-cta{background:var(--kt-green); color:#fff; border-style:solid}
+.hub-card .hc-tags{display:flex; flex-wrap:wrap; gap:5px; margin-top:11px}
+.hub-card .hc-tag{font-size:9.5px; font-weight:700; color:var(--ink-3); background:var(--bg);
+  border:1px solid var(--line); border-radius:12px; padding:2px 8px}
+
+.bk-bar{margin-bottom:14px}
+.bk-hero h1{font-size:20px}
+.bk-hero.b2{background:linear-gradient(122deg,#0b3a6b 0%,#0d5a86 46%,#0DB9E7 100%)}
+.bk-hero.b3{background:linear-gradient(122deg,#5a3a08 0%,#8A5A08 46%,#E08A15 100%)}
+.subhub-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px}
+.blink{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sh);
+  text-align:left; width:100%; padding:15px 16px; cursor:pointer; font:inherit; color:inherit;
+  display:flex; flex-direction:column; transition:.16s}
+.blink:hover{box-shadow:var(--sh-2); transform:translateY(-1px); border-color:var(--kt-mid)}
+.blink.feat{border-color:var(--kt-green); box-shadow:0 0 0 1px rgba(15,165,79,.25),var(--sh)}
+.blink .bl-h{display:flex; align-items:center; gap:10px}
+.blink .bl-ic{width:34px; height:34px; flex:0 0 34px; border-radius:9px; display:grid; place-items:center;
+  background:#EAF6EE; color:var(--kt-dark); font-size:17px}
+.blink.feat .bl-ic{background:var(--kt-green); color:#fff}
+.blink .bl-t{font-size:13.5px; font-weight:700; line-height:1.3}
+.blink .bl-d{font-size:11.5px; color:var(--ink-3); margin-top:9px; line-height:1.5; flex:1}
+.blink .bl-f{margin-top:11px; font-size:10.5px; font-weight:700; color:var(--kt-green)}
+
+/* ---------- MEETING PRIORITISATION ---------- */
+.prio-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:7px 0 5px}
+.prio-head h1{font-size:22px; letter-spacing:-.02em}
+.prio-opt{margin-left:auto}
+.prio-opt.done{background:#0d9245; border-color:#0d9245}
+.prio-brief{margin-top:16px}
+.eis{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.eis-q{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sh);
+  padding:13px 14px; min-height:118px; position:relative}
+.eis-q::before{content:""; position:absolute; left:0; top:12px; bottom:12px; width:3px; border-radius:2px}
+.eis-q.q-iu::before{background:var(--pri-critical)}
+.eis-q.q-inu::before{background:var(--kt-green)}
+.eis-q.q-niu::before{background:var(--warn)}
+.eis-q.q-ninu::before{background:var(--ink-3)}
+.eis-q .eq-h{display:flex; align-items:center; gap:8px; font-size:11px; font-weight:800; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--ink-2); padding-left:8px}
+.eis-q .eq-h .cnt{margin-left:auto; background:var(--bg); border:1px solid var(--line); border-radius:10px;
+  font-size:10px; font-weight:700; padding:0 7px; color:var(--ink-3)}
+.eis-q .eq-body{display:flex; flex-direction:column; gap:7px; margin-top:11px; padding-left:8px}
+.eis-chip{display:flex; align-items:center; gap:8px; width:100%; text-align:left; cursor:pointer;
+  border:1px solid var(--line); border-left-width:4px; border-radius:8px; background:var(--surface);
+  padding:7px 10px; font:inherit; color:inherit; transition:.14s}
+.eis-chip:hover{background:#F7FBF8; border-color:var(--kt-mid)}
+.eis-chip.critical{border-left-color:var(--pri-critical)}
+.eis-chip.high{border-left-color:var(--pri-high)}
+.eis-chip.medium{border-left-color:var(--pri-medium)}
+.eis-chip.low{border-left-color:var(--pri-low)}
+.eis-chip .ec-tm{font-size:10.5px; font-weight:700; color:var(--ink-3); font-variant-numeric:tabular-nums; flex:0 0 auto}
+.eis-chip .ec-t{font-size:12px; font-weight:600; line-height:1.3; overflow:hidden}
+.eis-q .eq-empty{padding-left:8px; margin-top:12px; color:var(--ink-3); font-size:11.5px}
+
+.agn{display:flex; flex-direction:column; gap:10px}
+.agn-row{display:grid; grid-template-columns:66px 1fr; gap:14px; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--sh); overflow:hidden;
+  text-align:left; width:100%; padding:0; cursor:pointer; font:inherit; color:inherit; transition:.16s}
+.agn-row:hover{box-shadow:var(--sh-2); border-color:var(--kt-mid)}
+.agn-row .ag-time{background:var(--bg); border-right:1px solid var(--line); padding:14px 8px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px}
+.agn-row .ag-time b{font-size:14px; font-variant-numeric:tabular-nums; letter-spacing:-.01em}
+.agn-row .ag-time small{font-size:10px; color:var(--ink-3)}
+.agn-row .ag-b{padding:13px 15px 14px}
+.agn-row .ag-top{display:flex; align-items:flex-start; gap:10px}
+.agn-row .ag-t{font-size:13.5px; font-weight:700; line-height:1.3; flex:1}
+.agn-row .ag-sum{font-size:12px; color:var(--ink-2); margin-top:6px; line-height:1.5}
+.agn-row .ag-foot{display:flex; align-items:center; gap:14px; margin-top:10px; flex-wrap:wrap}
+.agn-row .ag-dlg{display:flex; align-items:center; gap:7px; font-size:11px; color:var(--ink-3)}
+.agn-row .ag-dlg .av{width:22px; height:22px; flex:0 0 22px; border-radius:50%; font-size:9px; font-weight:700;
+  color:#fff; display:grid; place-items:center; background:linear-gradient(140deg,var(--kt-green),#0a7a3a)}
+.agn-row .ag-dlg b{color:var(--ink-2); font-weight:600}
+.rdy{display:inline-flex; align-items:center; gap:5px; font-size:10px; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; padding:3px 9px; border-radius:20px; flex:0 0 auto}
+.rdy::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor}
+.rdy.high{color:var(--pri-low); background:rgba(11,107,51,.1)}
+.rdy.medium{color:var(--warn); background:rgba(224,138,21,.12)}
+.rdy.low{color:var(--pri-critical); background:rgba(196,43,34,.1)}
+.agn-row .ag-tags{display:flex; gap:5px; flex-wrap:wrap}
+
+@media(max-width:900px){
+  .hub-grid,.subhub-grid{grid-template-columns:1fr}
+  .eis{grid-template-columns:1fr}
+}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -876,13 +979,16 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     </div>
   </div>
   <nav class="sb-nav">
+    <div class="sb-lbl" data-i18n="navStart"></div>
+    <button class="nv on" data-go="hub"><span class="ic">⌂</span><span data-i18n="pgHub"></span></button>
+
     <div class="sb-lbl" data-i18n="navPlan"></div>
     <button class="nv" data-go="calendar"><span class="ic">◷</span><span data-i18n="pgCalendar"></span></button>
     <button class="nv" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
     <button class="nv" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
 
     <div class="sb-lbl" data-i18n="navExec"></div>
-    <button class="nv on" data-go="overview"><span class="ic">◧</span><span data-i18n="pgOverview"></span></button>
+    <button class="nv" data-go="overview"><span class="ic">◧</span><span data-i18n="pgOverview"></span></button>
     <button class="nv" data-go="economy"><span class="ic">◈</span><span data-i18n="pgEconomy"></span></button>
     <button class="nv" data-go="markets"><span class="ic">◇</span><span data-i18n="pgMarkets"></span></button>
     <button class="nv" data-go="cropmap"><span class="ic">◉</span><span data-i18n="pgCropMap"></span></button>
@@ -925,8 +1031,75 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 
 <main id="main"><div class="wrap">
 
+<!-- ===================== HUB (entry landing) ===================== -->
+<section class="page on" id="p-hub">
+  <div class="hero hub-hero">
+    <div class="hl">
+      <div class="eyebrow" data-i18n="hubEyebrow"></div>
+      <h1 id="hubGreet"></h1>
+      <p data-i18n="hubSub"></p>
+    </div>
+  </div>
+  <div class="hub-grid" id="hubGrid"></div>
+  <div class="disc" style="margin-top:16px" data-i18n="hubDemo"></div>
+</section>
+
+<!-- ===================== BUCKET SUB-HUBS ===================== -->
+<section class="page" id="p-b1">
+  <div class="bk-bar"><button class="btn sm" data-go="hub">← <span data-i18n="hubBack"></span></button></div>
+  <div class="hero bk-hero b1"><div class="hl">
+    <div class="eyebrow" data-i18n="b1Kick"></div>
+    <h1 data-i18n="b1Title"></h1><p data-i18n="b1Desc"></p></div></div>
+  <div class="subhub-grid" id="b1Grid"></div>
+</section>
+
+<section class="page" id="p-b2">
+  <div class="bk-bar"><button class="btn sm" data-go="hub">← <span data-i18n="hubBack"></span></button></div>
+  <div class="hero bk-hero b2"><div class="hl">
+    <div class="eyebrow" data-i18n="b2Kick"></div>
+    <h1 data-i18n="b2Title"></h1><p data-i18n="b2Desc"></p></div></div>
+  <div class="subhub-grid" id="b2Grid"></div>
+</section>
+
+<section class="page" id="p-b3">
+  <div class="bk-bar"><button class="btn sm" data-go="hub">← <span data-i18n="hubBack"></span></button></div>
+  <div class="hero bk-hero b3"><div class="hl">
+    <div class="eyebrow" data-i18n="b3Kick"></div>
+    <h1 data-i18n="b3Title"></h1><p data-i18n="b3Desc"></p></div></div>
+  <div class="subhub-grid" id="b3Grid"></div>
+</section>
+
+<!-- ===================== MEETING PRIORITISATION DEEP-DIVE ===================== -->
+<section class="page" id="p-prio">
+  <div class="bk-bar"><button class="btn sm" data-go="b1">← <span data-i18n="prioBack"></span></button></div>
+  <div class="hero prio-hero"><div class="hl" style="width:100%">
+    <div class="eyebrow" data-i18n="prioKick"></div>
+    <div class="prio-head">
+      <h1 id="prioSchedule"></h1>
+      <button class="btn pri prio-opt" id="prioOpt"><span>⚙</span><span data-i18n="prioOptimize"></span></button>
+    </div>
+    <p data-i18n="prioSub"></p>
+  </div></div>
+
+  <div class="card prio-brief">
+    <div class="card-h"><h3 data-i18n="prioBriefH"></h3><div class="sp"></div>
+      <span class="ai-badge" data-i18n="prioAiBadge"></span></div>
+    <div class="brief" id="prioBrief"></div>
+  </div>
+
+  <div class="sec-t"><h2 data-i18n="prioMatrixH"></h2><div class="ln"></div>
+    <span class="note" data-i18n="prioMatrixNote"></span></div>
+  <div class="eis" id="eisGrid"></div>
+
+  <div class="sec-t"><h2 data-i18n="prioAgendaH"></h2><div class="ln"></div>
+    <span class="note" id="prioAgendaNote"></span></div>
+  <div id="prioAgenda"></div>
+
+  <div class="disc" style="margin-top:16px" data-i18n="prioDemo"></div>
+</section>
+
 <!-- ===================== OVERVIEW ===================== -->
-<section class="page on" id="p-overview">
+<section class="page" id="p-overview">
   <div class="hero">
     <div class="hl">
       <div class="eyebrow" data-i18n="heroEyebrow"></div>
@@ -2633,6 +2806,8 @@ window.FEED = {
      dt:"2026-09-08T09:00", end:"10:30", virtual:false,
      loc:{az:"Nazirlik, Bakı", en:"Ministry HQ, Baku", ru:"Министерство, Баку"},
      tags:["irrigation","climate"],
+     imp:true, urg:true, readiness:"high", delegate:"Rəşad Məmmədov",
+     aisum:{az:"Aran su anbarları beşillik ortadan ~11% aşağıdır; 2027 mövsümü üçün müasir suvarma subsidiyasının (400/200 AZN/ha) təsdiqi və ~15 000 ha keçid təcili qərar tələb edir.",en:"Aran reservoirs are ~11% below the five-year average; confirming the modern-irrigation subsidy (400/200 AZN/ha) and ~15,000 ha of conversion is an urgent decision for the 2027 season.",ru:"Водохранилища Арана ~на 11% ниже среднепятилетнего; для сезона 2027 срочно нужно утвердить субсидию на современное орошение (400/200 AZN/га) и перевести ~15 000 га."},
      docs:[
        {id:"m1-d1", type:"agenda", fmt:"PDF", pages:2, mod:"2026-09-07",
         t:{az:"Şura gündəliyi — suvarma və su idarəçiliyi",en:"Council agenda — irrigation & water management",ru:"Повестка совета — орошение и управление водными ресурсами"},
@@ -2679,6 +2854,8 @@ window.FEED = {
      t:{az:"Fermer subsidiya mexanizminin baxışı", en:"Farmer subsidy mechanism review", ru:"Обзор механизма фермерских субсидий"},
      dt:"2026-09-08T14:30", end:"15:30", virtual:true, loc:null,
      tags:["subsidy","digital"],
+     imp:true, urg:false, readiness:"high", delegate:"Aygün Hüseynova",
+     aisum:{az:"30% əkin avansı üçün geri qaytarma qaydası və ilk mövsüm zərf həddi tələb olunur; hər süni intellekt işarəsi əl ilə apellyasiya kanalı ilə tamamlanmalıdır.",en:"The 30% sowing advance needs a clawback rule and a first-season envelope cap; every AI flag must be paired with a manual appeal channel.",ru:"Для 30% посевного аванса нужны правило возврата и предел объёма на первый сезон; каждую отметку ИИ следует сопровождать ручным каналом апелляции."},
      docs:[
        {id:"m2-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-07",
         t:{az:"Gündəlik — fermer subsidiya mexanizminin baxışı",en:"Agenda — farmer subsidy mechanism review",ru:"Повестка — обзор механизма фермерских субсидий"},
@@ -2721,6 +2898,8 @@ window.FEED = {
      dt:"2026-09-08T11:00", end:"12:15", virtual:false,
      loc:{az:"Mərkəzi Taxıl Qərargahı, Bakı", en:"Central Grain HQ, Baku", ru:"Центральный зерновой штаб, Баку"},
      tags:["grain","climate"],
+     imp:true, urg:true, readiness:"high", delegate:"Elçin Qasımov",
+     aisum:{az:"CBOT buğdası ildə ~43% bahalaşıb, özünütəminat 55%; IV rüb satınalma pəncərəsi indi açılmalı və Qazaxıstanla paralel danışıqlar aparılmalıdır.",en:"CBOT wheat is up ~43% y/y with self-sufficiency at 55%; the Q4 procurement window should open now, with parallel talks with Kazakhstan.",ru:"Пшеница CBOT +~43% г/г при самообеспеченности 55%; окно закупок IV квартала следует открыть сейчас с параллельными переговорами с Казахстаном."},
      docs:[
        {id:"m3-d1", type:"agenda", fmt:"PDF", pages:2, mod:"2026-09-06",
         t:{az:"Gündəlik — buğda üzrə özünütəminat strategiyası",en:"Agenda — wheat self-sufficiency strategy",ru:"Повестка — стратегия самообеспеченности пшеницей"},
@@ -2762,6 +2941,8 @@ window.FEED = {
      dt:"2026-09-07T10:00", end:"11:00", virtual:false,
      loc:{az:"AZPROMO, Bakı", en:"AZPROMO, Baku", ru:"AZPROMO, Баку"},
      tags:["export","coop"],
+     imp:true, urg:false, readiness:"high", delegate:"Nigar Əliyeva",
+     aisum:{az:"İlin əvvəlindən aqrar ixrac artıb; Körfəz bazarına çıxış üçün fitosanitar maneənin aradan qaldırılması prioritetdir.",en:"Agri-exports are up year-to-date; clearing the phytosanitary bottleneck for Gulf market access is the priority.",ru:"Агроэкспорт вырос с начала года; приоритет — устранение фитосанитарного узкого места для доступа на рынок Залива."},
      docs:[
        {id:"m4-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-04",
         t:{az:"Gündəlik — aqrar ixracın təşviqi və bazara çıxış",en:"Agenda — agri-export promotion & market access",ru:"Повестка — продвижение агроэкспорта и доступ к рынкам"},
@@ -2802,6 +2983,8 @@ window.FEED = {
      t:{az:"Çəyirtkə və zərərvericilərə qarşı hazırlıq", en:"Locust & pest control preparedness", ru:"Готовность к борьбе с саранчой и вредителями"},
      dt:"2026-09-08T16:00", end:"17:00", virtual:true, loc:null,
      tags:["pest","climate"],
+     imp:false, urg:true, readiness:"medium", delegate:"Tural Vəliyev",
+     aisum:{az:"Aran zonasında çəyirtkə riski mövsümi olaraq artır; eAgro monitorinqi və dərmanlama ehtiyatlarının regional hazırlığı təsdiqlənməlidir.",en:"Locust risk rises seasonally in the Aran zone; eAgro monitoring and regional readiness of spraying stocks should be confirmed.",ru:"Риск саранчи сезонно растёт в Аранской зоне; следует подтвердить мониторинг eAgro и региональную готовность запасов средств опрыскивания."},
      docs:[
        {id:"m5-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-03",
         t:{az:"Gündəlik — çəyirtkə və zərərvericilərə qarşı hazırlıq",en:"Agenda — locust & pest control preparedness",ru:"Повестка — готовность к борьбе с саранчой и вредителями"},
@@ -2844,6 +3027,8 @@ window.FEED = {
      dt:"2026-09-09T13:00", end:"14:00", virtual:false,
      loc:{az:"eAgro Mərkəzi, Bakı", en:"eAgro Center, Baku", ru:"Центр eAgro, Баку"},
      tags:["digital","subsidy"],
+     imp:true, urg:false, readiness:"medium", delegate:"Kamran Rəhimov",
+     aisum:{az:"eAgro / EKTİS tətbiqi subsidiya və məlumat inteqrasiyasını genişləndirir; qalan modulların yayımı və məlumat keyfiyyəti diqqət tələb edir.",en:"The eAgro/EKTIS rollout expands subsidy and data integration; releasing the remaining modules and data quality need attention.",ru:"Внедрение eAgro/ЕКТИС расширяет интеграцию субсидий и данных; требуется внимание к выпуску оставшихся модулей и качеству данных."},
      docs:[
        {id:"m6-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-02",
         t:{az:"Gündəlik — rəqəmsal eAgro / EKTİS tətbiqi",en:"Agenda — digital eAgro / EKTIS rollout",ru:"Повестка — внедрение цифровой eAgro / ЕКТИС"},
@@ -2885,6 +3070,8 @@ window.FEED = {
      dt:"2026-09-05T10:30", end:"11:30", virtual:false,
      loc:{az:"Gəncə regional ofisi", en:"Ganja regional office", ru:"Гянджинский региональный офис"},
      tags:["veterinary","land"],
+     imp:true, urg:false, readiness:"medium", delegate:"Səbinə Abbasova",
+     aisum:{az:"Baytarlıq nəzarəti və torpaq islahatı üzrə addımlar uzlaşdırılır; sənədləşmə və məsuliyyət bölgüsü aydınlaşdırılmalıdır.",en:"Veterinary control and land-reform steps are being aligned; documentation and ownership split need clarifying.",ru:"Согласуются шаги по ветеринарному контролю и земельной реформе; требуется уточнить документацию и распределение ответственности."},
      docs:[
        {id:"m7-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-01",
         t:{az:"Gündəlik — heyvandarlıq, baytarlıq və torpaq islahatı",en:"Agenda — livestock, veterinary & land reform",ru:"Повестка — животноводство, ветеринария и земельная реформа"},
@@ -2926,6 +3113,8 @@ window.FEED = {
      dt:"2026-09-08T15:45", end:"16:45", virtual:false,
      loc:{az:"Sabirabad rayon idarəsi", en:"Sabirabad district office", ru:"Управление Сабирабадского района"},
      tags:["cotton","export"],
+     imp:false, urg:false, readiness:"medium", delegate:"Ceyhun Bayramov",
+     aisum:{az:"Pambıq klasteri və toxuculuq dəyər zənciri inkişaf etdirilir; ixrac və emal əlaqələri orta müddətli prioritetdir.",en:"The cotton cluster and textile value chain are being developed; export and processing linkages are a medium-term priority.",ru:"Развиваются хлопковый кластер и текстильная цепочка; экспортные и перерабатывающие связи — среднесрочный приоритет."},
      docs:[
        {id:"m8-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-06",
         t:{az:"Gündəlik — pambıq klasteri və toxuculuq dəyər zənciri",en:"Agenda — cotton cluster & textile value chain",ru:"Повестка — хлопковый кластер и текстильная цепочка создания стоимости"},
@@ -2968,6 +3157,8 @@ window.FEED = {
      dt:"2026-09-09T09:30", end:"10:45", virtual:false,
      loc:{az:"Zaqatala regional ofisi", en:"Zaqatala regional office", ru:"Загатальский региональный офис"},
      tags:["hazelnut","viticulture"],
+     imp:false, urg:false, readiness:"high", delegate:"Zaur Mikayılov",
+     aisum:{az:"Fındıq və üzümçülük ixracı üzrə imkanlar güclüdür; keyfiyyət standartları və brendləşmə ixracı artıra bilər.",en:"Hazelnut and viticulture export opportunities are strong; quality standards and branding can lift exports.",ru:"Экспортные возможности фундука и виноградарства сильны; стандарты качества и брендинг могут увеличить экспорт."},
      docs:[
        {id:"m9-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-07",
         t:{az:"Gündəlik — fındıq və üzümçülük ixrac sektorları",en:"Agenda — hazelnut & viticulture export sectors",ru:"Повестка — экспортные секторы фундука и виноградарства"},
@@ -3010,6 +3201,8 @@ window.FEED = {
      dt:"2026-09-09T11:30", end:"12:45", virtual:false,
      loc:{az:"Ağdam aqroparkı", en:"Aghdam agropark", ru:"Агдамский агропарк"},
      tags:["karabakh","irrigation"],
+     imp:true, urg:false, readiness:"medium", delegate:"Vüqar Səmədli",
+     aisum:{az:"Qarabağ və Şərqi Zəngəzurun aqrar dirçəlişi suvarma və torpaq bölgüsü ilə irəliləyir; infrastruktur ardıcıllığı vacibdir.",en:"The agrarian revival of Karabakh and East Zangezur advances via irrigation and land allocation; infrastructure sequencing is key.",ru:"Аграрное возрождение Карабаха и Восточного Зангезура продвигается через орошение и распределение земли; важна последовательность инфраструктуры."},
      docs:[
        {id:"m10-d1", type:"agenda", fmt:"PDF", pages:2, mod:"2026-09-07",
         t:{az:"Gündəlik — Qarabağ və Şərqi Zəngəzurun aqrar dirçəlişi",en:"Agenda — Karabakh & East Zangezur agricultural revival",ru:"Повестка — аграрное возрождение Карабаха и Восточного Зангезура"},
@@ -3052,6 +3245,8 @@ window.FEED = {
      dt:"2026-09-10T10:00", end:"11:15", virtual:false,
      loc:{az:"Nazirlik, Bakı", en:"Ministry HQ, Baku", ru:"Министерство, Баку"},
      tags:["agropark","foodsec"],
+     imp:true, urg:true, readiness:"low", delegate:"Samir Tağıyev",
+     aisum:{az:"Aqroparklar, kooperativlər və ərzaq ehtiyatları üzrə koordinasiya tələb olunur; strateji ehtiyat həcmləri təsdiqlənməlidir.",en:"Coordination is needed across agroparks, cooperatives and food reserves; strategic-reserve volumes should be confirmed.",ru:"Требуется координация по агропаркам, кооперативам и продовольственным резервам; следует подтвердить объёмы стратегического резерва."},
      docs:[
        {id:"m11-d1", type:"agenda", fmt:"PDF", pages:1, mod:"2026-09-08",
         t:{az:"Gündəlik — aqroparklar, kooperativlər və ərzaq ehtiyatları",en:"Agenda — agroparks, cooperatives & food reserves",ru:"Повестка — агропарки, кооперативы и продовольственные резервы"},
@@ -3133,6 +3328,43 @@ const I18N = {
 az:{
   brand:"Kənd Təsərrüfatı Nazirliyi", brandSub:"Azərbaycan Respublikası", brandShort:"Kənd Təsərrüfatı Nazirliyi",
   userName:"Nazir", userRole:"Kənd təsərrüfatı naziri",
+  navStart:"Başlanğıc", pgHub:"Baş səhifə",
+  hubEyebrow:"Nazirin iş məkanı", hubSub:"Baxmaq istədiyiniz sahəni seçin — hər kart müvafiq dərin təhlilə aparır.",
+  hubDemo:"<b>Qeyd:</b> bu giriş səhifəsi mövcud bölmələri üç istiqamətə qruplaşdırır. Bütün məzmun nümayiş məqsədilə hazırlanmışdır.",
+  hubBack:"Baş səhifəyə qayıt",
+  b1Kick:"İstiqamət 1", b1Title:"Qərar və İclas Kəşfiyyatı",
+  b1Desc:"İclasların süni intellekt icmalı, prioritetləşdirmə, təqvim, fəaliyyət lövhəsi və qərar dəstəyi.",
+  b2Kick:"İstiqamət 2", b2Title:"Sektor və İqtisadiyyat Analitikası",
+  b2Desc:"Əsas göstəricilər, aqrar iqtisadiyyat, bazarlar, əkin xəritəsi və xəbərlər.",
+  b3Kick:"İstiqamət 3", b3Title:"eAgro Əməliyyat Modulları",
+  b3Desc:"10 eAgro istifadə ssenarisi — fermer reytinqi, iqlim, bitki sağlamlığı, su stresi və digər analitik modullar.",
+  hcd1:"Sabahkı iclasları prioritetləşdirin və qərarlara hazırlaşın.",
+  hcd2:"Sektorun vəziyyətini göstəricilər və bazarlarla izləyin.",
+  hcd3:"eAgro analitik modullarına və istifadə ssenarilərinə keçin.",
+  hcta1:"Daha yaxşı qərar ver →", hcta2:"Sektoru təhlil et →", hcta3:"Modullara keç →",
+  dPrio:"Günün iclaslarının icmalı, Eisenhower matrisi və hazırlıq göstəriciləri.",
+  dMeetings:"İclasların siyahısı, transkripsiya və süni intellekt təhlili.",
+  dCalendar:"Nazirin günlük iş qrafiki və iclas sənədləri.",
+  dKanban:"İclas tapşırıqları və strateji izləmə lövhəsi.",
+  dDecisions:"Nazirin təsdiqini gözləyən qərarlar.",
+  dAi:"Süni intellekt köməkçisi və ssenari alətləri.",
+  dOverview:"Əsas göstəricilər, brifinq və xəbər icmalı.",
+  dEconomy:"Aqrar iqtisadiyyatın göstəriciləri və istehsal məlumatları.",
+  dMarkets:"Əmtəə qiymətləri və bazar hərəkətləri.",
+  dCropmap:"Ölkə üzrə əkin sahələrinin interaktiv xəritəsi.",
+  dNews:"Aqrar sahə üzrə xəbər lenti.", blOpen:"Aç →",
+  prioBack:"Kəşfiyyat mərkəzinə qayıt", prioKick:"Qərar və İclas Kəşfiyyatı",
+  prioSchedWord:"Günün iş qrafiki", prioMtgWord:"iclas",
+  prioSub:"Bu icra görünüşü sabahkı iclasları prioritet və hazırlıq üzrə cəmləşdirir. Bütün məzmun nümayiş məqsədlidir.",
+  prioOptimize:"Təqvimimi optimallaşdır",
+  prioOptToast:"Təqvim prioritet üzrə yenidən sıralandı", prioResetToast:"Təqvim vaxt ardıcıllığına qaytarıldı",
+  prioBriefH:"Sabahkı gün üçün süni intellekt icmalı", prioAiBadge:"Süni intellekt · nümayiş",
+  prioMatrixH:"İclasların prioritetləşdirilməsi", prioMatrixNote:"Vaciblik və təcilliyə görə əsas addımların dəstəklənməsi.",
+  prioAgendaH:"Günün gündəliyi", prioAgendaNote:"Hər iclas üçün icmal, hazırlıq və həvalə təklifi.",
+  prioDemo:"<b>Qeyd:</b> iclasların prioritetləşdirilməsi, hazırlıq və icmallar nümayiş məqsədilə hazırlanmış süni intellekt məlumatlarıdır.",
+  eisIU:"Vacib və Təcili", eisINU:"Vacib, Təcili deyil", eisNIU:"Vacib deyil, Təcili", eisNINU:"Nə vacib, nə təcili",
+  eisEmpty:"Bu kvadrantda iclas yoxdur",
+  rdyLabel:"Hazırlıq", rdyHigh:"Yüksək", rdyMed:"Orta", rdyLow:"Aşağı", prioDelegate:"Həvalə təklifi",
   navPlan:"Planlaşdırma", navExec:"İdarəetmə", navAI:"Süni intellekt", navOps:"Əməliyyat panelləri",
   pgOverview:"İcmal", pgEconomy:"Aqrar iqtisadiyyat", pgMarkets:"Bazarlar və qiymətlər",
   pgCropMap:"Əkin xəritəsi", pgNews:"Xəbərlər", pgAI:"Süni intellekt alətləri",
@@ -3292,6 +3524,43 @@ az:{
 en:{
   brand:"Ministry of Agriculture", brandSub:"Republic of Azerbaijan", brandShort:"Ministry of Agriculture",
   userName:"Minister", userRole:"Minister of Agriculture",
+  navStart:"Start", pgHub:"Home",
+  hubEyebrow:"Minister's workspace", hubSub:"Choose the area you wish to see — each card opens the matching deep dive.",
+  hubDemo:"<b>Note:</b> this entry page groups the existing sections into three streams. All content is demonstration data.",
+  hubBack:"Back to home",
+  b1Kick:"Stream 1", b1Title:"Decision & Meeting Intelligence",
+  b1Desc:"AI summaries and prioritisation of meetings, calendar, action board and decision support.",
+  b2Kick:"Stream 2", b2Title:"Sector & Economy Analytics",
+  b2Desc:"Headline indicators, agrarian economy, markets, crop map and news.",
+  b3Kick:"Stream 3", b3Title:"eAgro Operational Modules",
+  b3Desc:"10 eAgro use cases — farmer rating, climate, plant health, water stress and other analytics.",
+  hcd1:"Prioritise tomorrow's meetings and prepare for decisions.",
+  hcd2:"Track the state of the sector with indicators and markets.",
+  hcd3:"Jump into the eAgro analytics modules and use cases.",
+  hcta1:"Make a better decision →", hcta2:"Analyse the sector →", hcta3:"Open the modules →",
+  dPrio:"Summary of the day's meetings, Eisenhower matrix and readiness indicators.",
+  dMeetings:"Meeting list, transcript and AI analysis.",
+  dCalendar:"The Minister's daily schedule and meeting documents.",
+  dKanban:"Meeting tasks and strategic tracking board.",
+  dDecisions:"Decisions awaiting the Minister's approval.",
+  dAi:"AI assistant and scenario tools.",
+  dOverview:"Headline indicators, briefing and news summary.",
+  dEconomy:"Agrarian economy indicators and production data.",
+  dMarkets:"Commodity prices and market moves.",
+  dCropmap:"Interactive national crop-area map.",
+  dNews:"Agriculture news feed.", blOpen:"Open →",
+  prioBack:"Back to intelligence hub", prioKick:"Decision & Meeting Intelligence",
+  prioSchedWord:"The day's schedule", prioMtgWord:"meetings",
+  prioSub:"This executive view groups tomorrow's meetings by priority and readiness. All content is demonstration data.",
+  prioOptimize:"Optimise my calendar",
+  prioOptToast:"Calendar re-ordered by priority", prioResetToast:"Calendar restored to chronological order",
+  prioBriefH:"AI summary for tomorrow", prioAiBadge:"AI · demo",
+  prioMatrixH:"Meeting prioritisation", prioMatrixNote:"Supporting key actions by importance and urgency.",
+  prioAgendaH:"The day's agenda", prioAgendaNote:"Per-meeting summary, readiness and suggested delegate.",
+  prioDemo:"<b>Note:</b> meeting prioritisation, readiness and summaries are AI demonstration data.",
+  eisIU:"Important & Urgent", eisINU:"Important, Not Urgent", eisNIU:"Not Important, Urgent", eisNINU:"Not Important, Not Urgent",
+  eisEmpty:"No meetings in this quadrant",
+  rdyLabel:"Readiness", rdyHigh:"High", rdyMed:"Medium", rdyLow:"Low", prioDelegate:"Suggested to delegate to",
   navPlan:"Planning", navExec:"Executive", navAI:"Artificial intelligence", navOps:"Operational dashboards",
   pgOverview:"Overview", pgEconomy:"Agricultural economy", pgMarkets:"Markets & prices",
   pgCropMap:"Crop map", pgNews:"News", pgAI:"AI tools",
@@ -3451,6 +3720,43 @@ en:{
 ru:{
   brand:"Министерство сельского хозяйства", brandSub:"Азербайджанская Республика", brandShort:"Министерство сельского хозяйства",
   userName:"Министр", userRole:"Министр сельского хозяйства",
+  navStart:"Начало", pgHub:"Главная",
+  hubEyebrow:"Рабочее пространство министра", hubSub:"Выберите раздел, который хотите увидеть — каждая карточка открывает соответствующий детальный обзор.",
+  hubDemo:"<b>Примечание:</b> эта стартовая страница группирует существующие разделы в три направления. Весь контент — демонстрационные данные.",
+  hubBack:"На главную",
+  b1Kick:"Направление 1", b1Title:"Аналитика решений и совещаний",
+  b1Desc:"ИИ-сводки и приоритизация совещаний, календарь, доска действий и поддержка решений.",
+  b2Kick:"Направление 2", b2Title:"Аналитика сектора и экономики",
+  b2Desc:"Ключевые показатели, аграрная экономика, рынки, карта посевов и новости.",
+  b3Kick:"Направление 3", b3Title:"Операционные модули eAgro",
+  b3Desc:"10 сценариев eAgro — рейтинг фермеров, климат, здоровье растений, водный стресс и другая аналитика.",
+  hcd1:"Приоритизируйте завтрашние совещания и готовьтесь к решениям.",
+  hcd2:"Следите за состоянием сектора по показателям и рынкам.",
+  hcd3:"Переходите к аналитическим модулям и сценариям eAgro.",
+  hcta1:"Принять лучшее решение →", hcta2:"Проанализировать сектор →", hcta3:"Открыть модули →",
+  dPrio:"Обзор совещаний дня, матрица Эйзенхауэра и индикаторы готовности.",
+  dMeetings:"Список совещаний, транскрипт и ИИ-анализ.",
+  dCalendar:"Ежедневный график министра и документы совещаний.",
+  dKanban:"Доска задач совещаний и стратегического отслеживания.",
+  dDecisions:"Решения, ожидающие утверждения министром.",
+  dAi:"ИИ-помощник и инструменты сценариев.",
+  dOverview:"Ключевые показатели, брифинг и сводка новостей.",
+  dEconomy:"Показатели аграрной экономики и данные производства.",
+  dMarkets:"Цены на товары и движения рынка.",
+  dCropmap:"Интерактивная карта посевных площадей страны.",
+  dNews:"Лента аграрных новостей.", blOpen:"Открыть →",
+  prioBack:"Назад в центр аналитики", prioKick:"Аналитика решений и совещаний",
+  prioSchedWord:"График дня", prioMtgWord:"совещаний",
+  prioSub:"Это исполнительное представление группирует завтрашние совещания по приоритету и готовности. Весь контент — демонстрационные данные.",
+  prioOptimize:"Оптимизировать календарь",
+  prioOptToast:"Календарь пересортирован по приоритету", prioResetToast:"Календарь восстановлен в хронологическом порядке",
+  prioBriefH:"ИИ-сводка на завтра", prioAiBadge:"ИИ · демо",
+  prioMatrixH:"Приоритизация совещаний", prioMatrixNote:"Поддержка ключевых действий по важности и срочности.",
+  prioAgendaH:"Повестка дня", prioAgendaNote:"По каждому совещанию — сводка, готовность и предложенный делегат.",
+  prioDemo:"<b>Примечание:</b> приоритизация совещаний, готовность и сводки — демонстрационные данные ИИ.",
+  eisIU:"Важно и срочно", eisINU:"Важно, не срочно", eisNIU:"Не важно, срочно", eisNINU:"Не важно, не срочно",
+  eisEmpty:"В этом квадранте нет совещаний",
+  rdyLabel:"Готовность", rdyHigh:"Высокая", rdyMed:"Средняя", rdyLow:"Низкая", prioDelegate:"Рекомендуется делегировать",
   navPlan:"Планирование", navExec:"Управление", navAI:"Искусственный интеллект", navOps:"Операционные панели",
   pgOverview:"Обзор", pgEconomy:"Аграрная экономика", pgMarkets:"Рынки и цены",
   pgCropMap:"Карта посевов", pgNews:"Новости", pgAI:"Инструменты ИИ",
@@ -3610,7 +3916,7 @@ ru:{
 
 /* ========================= STATE & HELPERS ========================= */
 let LG = localStorage.getItem('np_lang') || 'az';
-let PAGE = 'overview';
+let PAGE = 'hub';
 let ovBucket = 'all', nwBucket = 'all', nwTag = 'all', mapCrop = 'all';
 let kbCrit = 'all', kbTopic = 'all';
 const CAL_DEFAULT_DAY = '2026-09-08';   /* representative busy day for the demonstration calendar */
@@ -3685,7 +3991,8 @@ function pgTitleFor(p){
     const m = mtgById(p.slice(4));
     if (m) return tx(m.t);
   }
-  const m = {overview:'pgOverview',economy:'pgEconomy',markets:'pgMarkets',cropmap:'pgCropMap',
+  const m = {hub:'pgHub',b1:'b1Title',b2:'b2Title',b3:'b3Title',prio:'prioMatrixH',
+    overview:'pgOverview',economy:'pgEconomy',markets:'pgMarkets',cropmap:'pgCropMap',
     news:'pgNews',ai:'pgAI',decisions:'pgDecisions',simulator:'pgSim',usecases:'pgUseCases',
     calendar:'pgCalendar',meetings:'pgMeetings',kanban:'pgKanban'};
   return T(m[p] || 'pgOverview');
@@ -3698,6 +4005,11 @@ function go(p){
   if (p.indexOf('mtg-') === 0){
     const mb = document.querySelector('.nv[data-go="meetings"]');
     if (mb) mb.classList.add('on');
+  }
+  /* keep the Home entry active while inside the bucket / prioritisation layer */
+  if (['b1','b2','b3','prio'].includes(p)){
+    const hb = document.querySelector('.nv[data-go="hub"]');
+    if (hb) hb.classList.add('on');
   }
   document.getElementById('pgTitle').textContent = pgTitleFor(p);
   /* keep the use-case group expanded while the reader is inside it */
@@ -5256,6 +5568,124 @@ function mtgDetail(m){
     <div class="disc" style="margin-top:16px">${T('mtgDemo')}</div>
   </section>`;
 }
+/* ========================= ENTRY HUB + BUCKETS ========================= */
+const HUB_CARDS = [
+  {go:'b1', ic:'◫', titleK:'b1Title', descK:'hcd1', ctaK:'hcta1', tags:['pgMeetings','pgCalendar','pgKanban','pgDecisions']},
+  {go:'b2', ic:'◧', titleK:'b2Title', descK:'hcd2', ctaK:'hcta2', tags:['pgOverview','pgEconomy','pgMarkets','pgCropMap','pgNews']},
+  {go:'b3', ic:'▦', titleK:'b3Title', descK:'hcd3', ctaK:'hcta3', tags:['pgUseCases']}
+];
+const BUCKET_LINKS = {
+  b1:[
+    {go:'prio', ic:'◔', titleK:'prioMatrixH', descK:'dPrio', feat:true},
+    {go:'meetings', ic:'▣', titleK:'pgMeetings', descK:'dMeetings'},
+    {go:'calendar', ic:'◷', titleK:'pgCalendar', descK:'dCalendar'},
+    {go:'kanban', ic:'▥', titleK:'pgKanban', descK:'dKanban'},
+    {go:'decisions', ic:'◫', titleK:'pgDecisions', descK:'dDecisions'},
+    {go:'ai', ic:'✦', titleK:'pgAI', descK:'dAi'}
+  ],
+  b2:[
+    {go:'overview', ic:'◧', titleK:'pgOverview', descK:'dOverview'},
+    {go:'economy', ic:'◈', titleK:'pgEconomy', descK:'dEconomy'},
+    {go:'markets', ic:'◇', titleK:'pgMarkets', descK:'dMarkets'},
+    {go:'cropmap', ic:'◉', titleK:'pgCropMap', descK:'dCropmap'},
+    {go:'news', ic:'▤', titleK:'pgNews', descK:'dNews'}
+  ]
+};
+function renderHub(){
+  document.getElementById('hubGreet').textContent = greet();
+  document.getElementById('hubGrid').innerHTML = HUB_CARDS.map(c => `
+    <button class="hub-card" data-go="${esc(c.go)}">
+      <div class="hc-top"><div class="hc-ic">${c.ic}</div></div>
+      <div class="hc-b">
+        <div class="hc-t">${esc(T(c.titleK))}</div>
+        <div class="hc-d">${esc(T(c.descK))}</div>
+        <div class="hc-tags">${c.tags.map(t => `<span class="hc-tag">${esc(T(t))}</span>`).join('')}</div>
+        <span class="hc-cta">${esc(T(c.ctaK))} →</span>
+      </div>
+    </button>`).join('');
+}
+function bLink(l){
+  return `<button class="blink${l.feat ? ' feat' : ''}" data-go="${esc(l.go)}">
+    <div class="bl-h"><div class="bl-ic">${l.ic}</div><div class="bl-t">${esc(T(l.titleK))}</div></div>
+    <div class="bl-d">${esc(T(l.descK))}</div>
+    <div class="bl-f">${esc(T('blOpen'))}</div></button>`;
+}
+function renderBuckets(){
+  document.getElementById('b1Grid').innerHTML = BUCKET_LINKS.b1.map(bLink).join('');
+  document.getElementById('b2Grid').innerHTML = BUCKET_LINKS.b2.map(bLink).join('');
+  document.getElementById('b3Grid').innerHTML = (F.dash || []).map(d => `
+    <button class="blink" data-go="uc-${esc(d.id)}">
+      <div class="bl-h"><div class="bl-ic">▦</div><div class="bl-t">${esc(tx(d.t))}</div></div>
+      <div class="bl-d">${esc(tx(d.d))}</div>
+      <div class="bl-f">${esc(T('blOpen'))}</div></button>`).join('');
+}
+
+/* ========================= MEETING PRIORITISATION ========================= */
+const PRIO_DAY = '2026-09-08';   /* representative busy day used for the prioritisation view */
+const PRIO_BRIEF = {
+  az:"Bu icra icmalında sabahkı beş iclas Zati-alinizə təqdim olunur: suvarma və su idarəçiliyi şurasından başlayaraq, buğda üzrə özünütəminat strategiyası, fermer subsidiya mexanizminin baxışı, çəyirtkə və zərərvericilərə qarşı hazırlıq, və pambıq klasteri müzakirələri ilə tamamlanır. Ən təcili qərarlar müasir suvarma subsidiyasının bölgüsü və dördüncü rüb buğda satınalması ilə bağlıdır.",
+  en:"In this executive brief we present Your Excellency the day's five meetings: beginning with the irrigation and water-management council, followed by the wheat self-sufficiency strategy, the farmer subsidy mechanism review, locust and pest-control preparedness, and concluding with the cotton cluster discussions. The most urgent decisions concern the modern-irrigation subsidy split and the fourth-quarter wheat procurement.",
+  ru:"В этом исполнительном обзоре мы представляем Вашему Превосходительству пять встреч дня: начиная с совета по орошению и управлению водными ресурсами, затем стратегия самообеспеченности пшеницей, обзор механизма фермерских субсидий, готовность к борьбе с саранчой и вредителями и, наконец, обсуждения хлопкового кластера. Самые срочные решения касаются распределения субсидии на современное орошение и закупки пшеницы в четвёртом квартале."
+};
+let prioOpt = false;   /* "Optimise my calendar" toggle: chronological vs priority order */
+function prioLevel(m){
+  const c = mtgCrit(m);
+  if (c && c !== 'none') return c;
+  return (m.imp && m.urg) ? 'high' : (m.imp ? 'medium' : 'low');
+}
+function delegateOf(m){
+  if (!m.delegate) return null;
+  const a = (m.attendees || []).find(x => x.n === m.delegate);
+  return a ? {n:a.n, r:a.r} : {n:m.delegate, r:null};
+}
+function renderPrio(){
+  const list = mtgsForDay(PRIO_DAY);
+  document.getElementById('prioSchedule').textContent =
+    T('prioSchedWord') + ' · ' + dfmt(PRIO_DAY) + ' · ' + list.length + ' ' + T('prioMtgWord');
+  document.getElementById('prioBrief').innerHTML = `<p>${esc(tx(PRIO_BRIEF))}</p>`;
+
+  const quad = (imp, urg) => list.filter(m => !!m.imp === imp && !!m.urg === urg);
+  const QDEF = [['q-iu','eisIU',quad(true,true)], ['q-inu','eisINU',quad(true,false)],
+                ['q-niu','eisNIU',quad(false,true)], ['q-ninu','eisNINU',quad(false,false)]];
+  document.getElementById('eisGrid').innerHTML = QDEF.map(([cls,lblK,ms]) => {
+    const chips = ms.length ? ms.map(m => `
+      <button class="eis-chip ${esc(prioLevel(m))}" data-go="mtg-${esc(m.id)}">
+        <span class="ec-tm">${esc(m.dt.slice(11,16))}</span>
+        <span class="ec-t">${esc(tx(m.t))}</span></button>`).join('')
+      : `<div class="eq-empty">${esc(T('eisEmpty'))}</div>`;
+    return `<div class="eis-q ${cls}">
+      <div class="eq-h">${esc(T(lblK))}<span class="cnt">${ms.length}</span></div>
+      <div class="eq-body">${chips}</div></div>`;
+  }).join('');
+
+  const RANK = {critical:4,high:3,medium:2,low:1,none:0};
+  const ag = list.slice();
+  if (prioOpt) ag.sort((a,b) => (RANK[prioLevel(b)] - RANK[prioLevel(a)]) || a.dt.localeCompare(b.dt));
+  else ag.sort((a,b) => a.dt.localeCompare(b.dt));
+  const RDY = {high:'rdyHigh',medium:'rdyMed',low:'rdyLow'};
+  document.getElementById('prioAgenda').innerHTML = `<div class="agn">` + ag.map(m => {
+    const del = delegateOf(m);
+    const rdy = m.readiness || 'medium';
+    const tags = m.tags.map(t => `<span class="chp">${esc(topN(t))}</span>`).join('');
+    const delHtml = del
+      ? `<span class="av">${esc(initials(del.n))}</span><b>${esc(del.n)}</b>${del.r ? ' · ' + esc(tx(del.r)) : ''}`
+      : '—';
+    return `<button class="agn-row" data-go="mtg-${esc(m.id)}">
+      <div class="ag-time"><b>${esc(m.dt.slice(11,16))}</b><small>${esc(m.end || '')}</small></div>
+      <div class="ag-b">
+        <div class="ag-top"><div class="ag-t">${esc(tx(m.t))}</div>
+          <span class="rdy ${esc(rdy)}">${esc(T('rdyLabel'))}: ${esc(T(RDY[rdy] || 'rdyMed'))}</span></div>
+        <div class="ag-sum">✦ ${esc(tx(m.aisum))}</div>
+        <div class="ag-tags" style="margin-top:9px">${tags}</div>
+        <div class="ag-foot"><div class="ag-dlg">◧ ${esc(T('prioDelegate'))}: ${delHtml}</div></div>
+      </div></button>`;
+  }).join('') + `</div>`;
+
+  document.getElementById('prioAgendaNote').textContent = T('prioAgendaNote');
+  document.getElementById('prioOpt').classList.toggle('done', prioOpt);
+  bindGo();
+}
+
 function renderMeetings(){
   document.getElementById('mtgList').innerHTML = (F.meetings || []).map(mtgRow).join('');
   document.getElementById('mtgPages').innerHTML = (F.meetings || []).map(mtgDetail).join('');
@@ -5553,7 +5983,8 @@ function bindGo(){
   });
 }
 function renderAll(){
-  applyStatic(); renderHero(); renderKpi(); renderTicker(); renderNews();
+  applyStatic(); renderHub(); renderBuckets(); renderPrio();
+  renderHero(); renderKpi(); renderTicker(); renderNews();
   renderBrief(); renderAlerts(); renderDec(); renderEcon(); renderMkt();
   renderAI(); renderDash(); renderMeetings(); renderKanban(); renderCalendar();
   renderMapChrome(); renderCharts(); renderUcCharts(); bindGo();
@@ -5576,6 +6007,11 @@ document.getElementById('q').addEventListener('input', e => {
   e.target.style.height = 'auto';
   e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
 });
+document.getElementById('prioOpt').onclick = () => {
+  prioOpt = !prioOpt;
+  renderPrio();
+  showToast(T(prioOpt ? 'prioOptToast' : 'prioResetToast'));
+};
 document.getElementById('calPrev').onclick = () => calShift(-1);
 document.getElementById('calNext').onclick = () => calShift(1);
 document.getElementById('calToday').onclick = () => { calDay = CAL_DEFAULT_DAY; calSel = null; renderCalendar(); };
