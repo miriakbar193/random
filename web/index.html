@@ -1163,6 +1163,12 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
     <span data-i18n="brandShort"></span>
     <b id="pgTitle"></b>
   </div>
+  <div class="tb-search" id="tbSearch">
+    <span class="ts-ic">⌕</span>
+    <input type="text" id="gsInput" placeholder="" autocomplete="off" aria-label="">
+    <button class="ts-x" id="gsClear" aria-label="">×</button>
+    <div class="ts-panel" id="gsPanel"></div>
+  </div>
   <div class="sp"></div>
   <div class="clock">
     <b id="clk">—</b>
@@ -1702,6 +1708,8 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
   <div class="card">
     <div class="card-h"><h3 data-i18n="mtgH"></h3><span class="sub" data-i18n="mtgSub"></span>
       <div class="sp"></div><span class="ai-badge" data-i18n="mtgAiBadge"></span></div>
+    <div style="padding:12px 16px 0"><div class="list-filter"><span class="lf-ic">⌕</span>
+      <input type="text" id="mtgFilter" placeholder=""></div></div>
     <div class="mtg-list" id="mtgList"></div>
   </div>
   <div class="disc" style="margin-top:16px" data-i18n="mtgDemo"></div>
@@ -1718,6 +1726,8 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
       <div class="kb-bar">
         <div class="fg"><span data-i18n="kbFilterCrit"></span><div class="filt" id="kbCritFilt"></div></div>
         <div class="fg"><span data-i18n="kbFilterTopic"></span><div class="filt" id="kbTopicFilt"></div></div>
+        <div class="fg" style="flex:1 1 180px; min-width:150px"><div class="list-filter" style="margin:0">
+          <span class="lf-ic">⌕</span><input type="text" id="kbSearch" placeholder=""></div></div>
       </div>
     </div>
   </div>
@@ -4249,7 +4259,7 @@ function applyBucketScope(bucket){
     el.style.display = (!bucket || el.dataset.bucket === bucket) ? '' : 'none';
   });
 }
-let kbCrit = 'all', kbTopic = 'all';
+let kbCrit = 'all', kbTopic = 'all', kbQuery = '', mtgQuery = '';
 const CAL_DEFAULT_DAY = '2026-09-08';   /* representative busy day for the demonstration calendar */
 let calDay = CAL_DEFAULT_DAY;           /* currently displayed day (YYYY-MM-DD) */
 let calSel = null;                      /* selected meeting id in the day view */
@@ -4308,6 +4318,9 @@ function applyStatic(){
   document.querySelectorAll('.lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === LG));
   document.getElementById('pgTitle').textContent = pgTitleFor(PAGE);
   document.getElementById('q').placeholder = T('askPlaceholder');
+  const gi = document.getElementById('gsInput');
+  gi.placeholder = T('searchPh'); gi.setAttribute('aria-label', T('searchAria'));
+  document.getElementById('gsClear').setAttribute('aria-label', T('searchClear'));
   document.getElementById('navBtn').setAttribute('aria-label', T('navMenu'));
   document.getElementById('fver').textContent = 'v' + F.meta.version + ' · ' + F.meta.synced.slice(0,10);
   document.getElementById('nb').textContent = F.news.length;
@@ -6174,10 +6187,20 @@ function bindEisDnd(){
   });
 }
 
+function mtgHay(m){
+  return [tx(m.t), tx(m.loc), tx(m.aisum), ...(m.tags || []).map(topN),
+    ...(m.attendees || []).map(a => a.n)].join(' ').toLowerCase();
+}
 function renderMeetings(){
-  document.getElementById('mtgList').innerHTML = (F.meetings || []).map(mtgRow).join('');
+  const ph = document.getElementById('mtgFilter'); if (ph) ph.placeholder = T('mtgFilterPh');
+  const q = (mtgQuery || '').trim().toLowerCase();
+  const list = (F.meetings || []).filter(m => !q || mtgHay(m).includes(q));
+  document.getElementById('mtgList').innerHTML = list.length
+    ? list.map(mtgRow).join('')
+    : `<div class="list-empty">${esc(T('filterNone'))}</div>`;
   document.getElementById('mtgPages').innerHTML = (F.meetings || []).map(mtgDetail).join('');
   document.getElementById('mb').textContent = (F.meetings || []).length;
+  bindGo(); reflowPage();
 }
 
 /* ========================= KANBAN / ACTION BOARD =========================
@@ -6199,10 +6222,16 @@ function kbCard(t){
   </div>`;
 }
 function kbFiltered(){
-  return (F.todos || []).filter(t =>
-    (kbCrit === 'all' || t.pri === kbCrit) && (kbTopic === 'all' || t.topic === kbTopic));
+  const q = (kbQuery || '').trim().toLowerCase();
+  return (F.todos || []).filter(t => {
+    if (kbCrit !== 'all' && t.pri !== kbCrit) return false;
+    if (kbTopic !== 'all' && t.topic !== kbTopic) return false;
+    if (q && ![tx(t.t), t.owner, tx(t.role), topN(t.topic)].join(' ').toLowerCase().includes(q)) return false;
+    return true;
+  });
 }
 function renderKanban(){
+  const ks = document.getElementById('kbSearch'); if (ks) ks.placeholder = T('kbSearchPh');
   const crOpts = [['all',T('fAll')],['critical',T('priCritical')],['high',T('priHigh')],['medium',T('priMedium')],['low',T('priLow')]];
   filtBtns('kbCritFilt', kbCrit, crOpts, v => { kbCrit = v; renderKanban(); });
   const topics = [...new Set((F.todos || []).map(t => t.topic))];
@@ -6636,6 +6665,73 @@ function saveMtgEdit(){
   showToast(T('edSaved'));
 }
 
+/* ========================= GLOBAL SEARCH =========================
+   Client-side search across meetings, to-dos, documents and topics in the
+   inline FEED data. Selecting a result navigates to the relevant page/detail. */
+const KB_STATUS_K = {todo:'colTodo',doing:'colDoing',blocked:'colBlocked',done:'colDone'};
+let gsResults = [];
+function gsHl(text, q){
+  const s = esc(String(text || ''));
+  if (!q) return s;
+  const rx = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+  return s.replace(rx, '<mark>$1</mark>');
+}
+function gsQuery(raw){
+  const q = (raw || '').trim();
+  const panel = document.getElementById('gsPanel');
+  const wrap = document.getElementById('tbSearch');
+  wrap.classList.toggle('has', !!q);
+  if (q.length < 2){ panel.classList.remove('on'); panel.innerHTML = ''; gsResults = []; return; }
+  const ql = q.toLowerCase();
+  const has = s => String(s || '').toLowerCase().includes(ql);
+  const res = {meetings:[], tasks:[], docs:[], topics:[]};
+  (F.meetings || []).forEach(m => {
+    if (has(mtgHay(m))) res.meetings.push({title:tx(m.t), meta:dtfmt(m.dt) + ' · ' + mtgLoc(m), act:() => go('mtg-' + m.id)});
+    (m.docs || []).forEach(dc => {
+      if (has([tx(dc.t), ...(dc.body || []).map(tx)].join(' ')))
+        res.docs.push({title:tx(dc.t), meta:tx(m.t) + ' · ' + dc.fmt,
+          act:() => { go('mtg-' + m.id); setTimeout(() => openDoc(m.id, dc.id), 80); }});
+    });
+  });
+  (F.todos || []).forEach(t => {
+    if (has([tx(t.t), t.owner, tx(t.role), topN(t.topic)].join(' ')))
+      res.tasks.push({title:tx(t.t), meta:t.owner + ' · ' + T(KB_STATUS_K[t.status] || 'colTodo'),
+        act:() => { kbCrit = 'all'; kbTopic = 'all'; kbQuery = ''; go('kanban'); renderKanban(); setTimeout(() => openTodoDetail(t.id), 80); }});
+  });
+  Object.keys(MTOP).forEach(k => {
+    if (has(topN(k))) res.topics.push({title:topN(k), meta:T('srTopics'),
+      act:() => { kbCrit = 'all'; kbTopic = k; kbQuery = ''; go('kanban'); renderKanban(); }});
+  });
+  gsRender(res, q);
+}
+function gsRender(res, q){
+  const panel = document.getElementById('gsPanel');
+  const cats = [['meetings','srMeetings'],['tasks','srTasks'],['docs','srDocs'],['topics','srTopics']];
+  gsResults = [];
+  let html = '';
+  cats.forEach(([key,lbl]) => {
+    const arr = res[key].slice(0, 6);
+    if (!arr.length) return;
+    html += `<div class="ts-cat">${esc(T(lbl))}</div>`;
+    arr.forEach(r => {
+      const idx = gsResults.length; gsResults.push(r);
+      html += `<button class="ts-res" data-idx="${idx}">
+        <div class="ts-rt">${gsHl(r.title, q)}</div>
+        <div class="ts-rm">${gsHl(r.meta, q)}</div></button>`;
+    });
+  });
+  panel.innerHTML = gsResults.length ? html : `<div class="ts-empty">${esc(T('searchNo'))}</div>`;
+  panel.classList.add('on');
+  panel.querySelectorAll('.ts-res').forEach(b =>
+    b.onclick = () => { const r = gsResults[+b.dataset.idx]; gsClose(); const i = document.getElementById('gsInput'); i.value = ''; document.getElementById('tbSearch').classList.remove('has'); r.act(); });
+}
+function gsClose(){ document.getElementById('gsPanel').classList.remove('on'); }
+function gsClear(){
+  const i = document.getElementById('gsInput'); i.value = '';
+  document.getElementById('tbSearch').classList.remove('has');
+  gsResults = []; gsClose(); i.focus();
+}
+
 /* ========================= BOOT ========================= */
 function bindGo(){
   document.querySelectorAll('[data-go]').forEach(b => {
@@ -6686,9 +6782,21 @@ document.addEventListener('click', e => {
   const el = e.target.closest('[data-share]');
   if (el){ e.preventDefault(); openShare(el.dataset.share); }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); closeEdit(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); closeEdit(); gsClose(); } });
 document.getElementById('chatClear').onclick = () => { CHAT.length = 0; renderChat(); };
 document.getElementById('regen').onclick = () => renderBrief();
+/* global search wiring */
+document.getElementById('gsInput').addEventListener('input', e => gsQuery(e.target.value));
+document.getElementById('gsInput').addEventListener('focus', e => { if (e.target.value.trim()) gsQuery(e.target.value); });
+document.getElementById('gsInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && gsResults.length){ e.preventDefault(); const r = gsResults[0];
+    gsClose(); e.target.value = ''; document.getElementById('tbSearch').classList.remove('has'); r.act(); }
+});
+document.getElementById('gsClear').onclick = gsClear;
+document.addEventListener('click', e => { if (!e.target.closest('#tbSearch')) gsClose(); });
+/* list filters */
+document.getElementById('mtgFilter').addEventListener('input', e => { mtgQuery = e.target.value; renderMeetings(); });
+document.getElementById('kbSearch').addEventListener('input', e => { kbQuery = e.target.value; renderKanban(); });
 /* document review wiring */
 document.getElementById('drReviewBtn').onclick = drReview;
 document.getElementById('drClearBtn').onclick = drClear;
