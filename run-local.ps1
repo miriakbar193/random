@@ -10,8 +10,18 @@ Set-Location $PSScriptRoot
 
 $port = if ($env:PORT) { $env:PORT } else { "8000" }
 
+# Find a Python launcher: prefer the 'py' launcher, fall back to 'python'/'python3'.
+$pyExe = $null; $pyArgs = @()
+if     (Get-Command py      -ErrorAction SilentlyContinue) { $pyExe = "py";      $pyArgs = @("-3") }
+elseif (Get-Command python  -ErrorAction SilentlyContinue) { $pyExe = "python" }
+elseif (Get-Command python3 -ErrorAction SilentlyContinue) { $pyExe = "python3" }
+if (-not $pyExe) {
+    Write-Error "No Python found. Install Python 3.10+ from https://www.python.org/downloads/ (check 'Add to PATH')."
+    exit 1
+}
+
 Write-Host "==> Setting up Python environment (.venv)"
-if (-not (Test-Path .venv)) { py -3 -m venv .venv }
+if (-not (Test-Path .venv)) { & $pyExe @pyArgs -m venv .venv }
 & .\.venv\Scripts\python.exe -m pip install --quiet -r server\requirements.txt
 
 $bridge = $null
