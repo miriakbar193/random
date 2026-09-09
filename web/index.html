@@ -15,6 +15,7 @@
   --ink:#12281E; --ink-2:#4A5C53; --ink-3:#7B8B83;
   --bg:#F4F6F4; --surface:#FFFFFF; --line:#E4E9E5;
   --up:#0FA54F; --down:#D0342C; --warn:#E08A15;
+  --pri-critical:#C42B22; --pri-high:#E08A15; --pri-medium:#0D8FB8; --pri-low:#0B6B33;
   --r:10px; --sh:0 1px 2px rgba(14,70,42,.06), 0 4px 14px rgba(14,70,42,.05);
   --sh-2:0 2px 6px rgba(14,70,42,.08), 0 10px 30px rgba(14,70,42,.08);
   --sbw:266px;
@@ -757,6 +758,96 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 .doc-page p{margin:0 0 12px} .doc-page p:last-child{margin:0}
 .doc-dlg-f{padding:11px 18px; border-top:1px solid var(--line)}
 .doc-dlg-f .disc{margin:0}
+
+/* ---------- SHARE MODAL (share meeting outputs) ---------- */
+.share-dlg{width:min(560px,calc(100vw - 32px))}
+.share-ic{background:linear-gradient(140deg,var(--kt-green),#0a7a3a); font-size:20px}
+.share-foot{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.share-foot .disc{margin:0; flex:1 1 180px; min-width:0}
+.sh-sec{margin-bottom:18px}
+.sh-sec:last-child{margin-bottom:0}
+.sh-t{font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-2); margin-bottom:9px}
+.sh-hint{font-weight:500; text-transform:none; letter-spacing:0; color:var(--ink-3); font-size:10.5px}
+.sh-recs{display:flex; flex-direction:column; gap:2px}
+.sh-rec{display:flex; align-items:center; gap:10px; padding:7px 9px; border-radius:8px; cursor:pointer; transition:.12s}
+.sh-rec:hover{background:#F7FBF8}
+.sh-rec input{accent-color:var(--kt-green); width:15px; height:15px; flex:0 0 15px; cursor:pointer}
+.sh-rec .av{width:28px; height:28px; border-radius:50%; flex:0 0 28px; display:grid; place-items:center;
+  background:linear-gradient(140deg,var(--kt-green),#0a7a3a); color:#fff; font-size:10.5px; font-weight:600}
+.sh-rec .av-x{background:#EEF4F0; color:var(--kt-dark); font-weight:800}
+.sh-rn{display:flex; flex-direction:column; line-height:1.3; min-width:0}
+.sh-rn b{font-size:12.5px; font-weight:600; color:var(--ink)}
+.sh-rn small{font-size:10.5px; color:var(--ink-3)}
+.sh-add{display:flex; gap:8px; margin-top:9px}
+.sh-add input{flex:1 1 auto; min-width:0; font-family:inherit; font-size:12.5px; padding:8px 11px;
+  border:1px solid var(--line); border-radius:8px; color:var(--ink); background:var(--surface)}
+.sh-add input:focus{outline:none; border-color:var(--kt-mid); box-shadow:0 0 0 3px rgba(15,165,79,.12)}
+.sh-opts{display:grid; grid-template-columns:1fr 1fr; gap:6px}
+.sh-opt{display:flex; align-items:center; gap:9px; padding:9px 11px; border:1px solid var(--line); border-radius:8px;
+  cursor:pointer; font-size:12.5px; font-weight:600; color:var(--ink); transition:.12s}
+.sh-opt:hover{border-color:var(--kt-mid); background:#F7FBF8}
+.sh-opt input{accent-color:var(--kt-green); width:15px; height:15px; flex:0 0 15px; cursor:pointer}
+.sh-opt:has(input:checked){border-color:var(--kt-green); background:#F1F8F3}
+.sh-msg{width:100%; font-family:inherit; font-size:12.5px; padding:10px 12px; border:1px solid var(--line);
+  border-radius:8px; color:var(--ink); background:var(--surface); resize:vertical; line-height:1.5}
+.sh-msg:focus{outline:none; border-color:var(--kt-mid); box-shadow:0 0 0 3px rgba(15,165,79,.12)}
+.sh-chan{display:flex; gap:8px}
+.sh-ch{flex:1 1 0; display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:10px 12px;
+  border:1px solid var(--line); background:var(--surface); border-radius:8px; cursor:pointer; font-family:inherit;
+  font-size:12.5px; font-weight:600; color:var(--ink-2); transition:.13s}
+.sh-ch:hover{border-color:var(--kt-mid); color:var(--kt-dark)}
+.sh-ch.on{border-color:var(--kt-green); background:#F1F8F3; color:var(--kt-dark); box-shadow:0 0 0 3px rgba(15,165,79,.1)}
+.sh-done{text-align:center; padding:26px 18px}
+.sh-done-ic{width:54px; height:54px; border-radius:50%; margin:0 auto 14px; display:grid; place-items:center;
+  background:linear-gradient(140deg,var(--kt-green),#0a7a3a); color:#fff; font-size:26px; font-weight:700;
+  box-shadow:0 6px 18px rgba(15,165,79,.35)}
+.sh-done-t{font-size:16px; font-weight:700; color:var(--ink); letter-spacing:-.01em}
+.sh-done-sub{font-size:12px; color:var(--ink-2); margin-top:7px; max-width:380px; margin-left:auto; margin-right:auto; line-height:1.55}
+.sh-done-meta{font-size:11px; color:var(--ink-3); margin-top:11px}
+.sh-done-meta b{color:var(--kt-dark)}
+
+/* ---------- TOAST ---------- */
+.toast{position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(16px); z-index:200;
+  background:var(--kt-dark); color:#fff; font-size:12.5px; font-weight:600; padding:12px 20px; border-radius:10px;
+  box-shadow:0 10px 30px rgba(8,44,26,.35); opacity:0; pointer-events:none; transition:opacity .22s, transform .22s;
+  max-width:calc(100vw - 32px); display:flex; align-items:center; gap:9px}
+.toast::before{content:"✓"; color:var(--kt-mid); font-weight:800}
+.toast.on{opacity:1; transform:translateX(-50%) translateY(0)}
+
+/* ---------- DESIGN POLISH (task 2) ---------- */
+.nv.on{position:relative}
+.nv.on::before{content:""; position:absolute; left:-10px; top:6px; bottom:6px; width:3px; border-radius:0 3px 3px 0; background:var(--az-blue)}
+.card{transition:box-shadow .16s}
+.mtg-detbar{display:flex; align-items:center; gap:10px; margin-bottom:14px}
+/* meeting detail: transcript readability + AI panel */
+.tr .turn{display:flex; gap:11px}
+.tr .turn::before{content:""; flex:0 0 3px; align-self:stretch; border-radius:3px; background:var(--kt-light)}
+.tr .turn>div, .tr .turn>span{min-width:0}
+.tr .turn .tx{flex:1 1 auto}
+.tr .turn{flex-wrap:wrap}
+.tr .sp{flex:1 1 100%}
+.ai-sec{background:#FAFCFB; border:1px solid var(--line); border-radius:9px; padding:12px 13px}
+.ai-side .card-b{display:flex; flex-direction:column; gap:12px}
+.ai-side .card-b hr{display:none}
+.ai-sec .ai-t{margin-bottom:9px; color:var(--kt-dark)}
+.ai-todos{list-style:none; padding-left:0 !important; margin:0}
+.ai-todos li{margin:0 0 8px; padding:9px 11px; background:var(--surface); border:1px solid var(--line);
+  border-radius:8px; border-left:3px solid var(--kt-mid); line-height:1.45}
+.ai-todos li:last-child{margin-bottom:0}
+.ai-todos li.critical{border-left-color:var(--pri-critical)} .ai-todos li.high{border-left-color:var(--pri-high)}
+.ai-todos li.medium{border-left-color:var(--pri-medium)} .ai-todos li.low{border-left-color:var(--kt-mid)}
+.ai-todo-t{font-size:12px; font-weight:600; color:var(--ink); margin:6px 0 5px; line-height:1.4}
+.ai-todo-h{display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+.ai-todo-m{font-size:10.5px; color:var(--ink-3)}
+/* kanban card hover lift + tighter column headers */
+.kc{transition:box-shadow .15s, transform .15s}
+.kc:hover{box-shadow:var(--sh-2); transform:translateY(-1px)}
+.kb-col .kb-ch{border-bottom:1px solid var(--line); margin-bottom:9px}
+.kb-col.todo{border-top:2px solid var(--kt-grey)} .kb-col.doing{border-top:2px solid var(--az-blue)}
+.kb-col.blocked{border-top:2px solid var(--down)} .kb-col.done{border-top:2px solid var(--kt-green)}
+/* calendar polish */
+.cal-item.sel{box-shadow:inset 0 0 0 1px rgba(15,165,79,.25)}
+.doc-row{transition:.12s} .doc-row:hover{background:#F7FBF8}
 </style>
 
 <!--[if gte mso 9]><xml>
@@ -785,6 +876,11 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     </div>
   </div>
   <nav class="sb-nav">
+    <div class="sb-lbl" data-i18n="navPlan"></div>
+    <button class="nv" data-go="calendar"><span class="ic">◷</span><span data-i18n="pgCalendar"></span></button>
+    <button class="nv" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
+    <button class="nv" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
+
     <div class="sb-lbl" data-i18n="navExec"></div>
     <button class="nv on" data-go="overview"><span class="ic">◧</span><span data-i18n="pgOverview"></span></button>
     <button class="nv" data-go="economy"><span class="ic">◈</span><span data-i18n="pgEconomy"></span></button>
@@ -800,13 +896,6 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     <div class="sb-lbl" data-i18n="navOps"></div>
     <button class="nv grp" id="ucToggle" data-go="usecases"><span class="ic">▦</span><span data-i18n="pgUseCases"></span><span class="bdg">10</span><span class="chev">›</span></button>
     <div class="sb-sub" id="ucNav"></div>
-
-    <div class="sb-lbl" data-i18n="navSchedule"></div>
-    <button class="nv" data-go="calendar"><span class="ic">◷</span><span data-i18n="pgCalendar"></span></button>
-
-    <div class="sb-lbl" data-i18n="navMeetings"></div>
-    <button class="nv" data-go="meetings"><span class="ic">▣</span><span data-i18n="pgMeetings"></span><span class="bdg" id="mb">0</span></button>
-    <button class="nv" data-go="kanban"><span class="ic">▥</span><span data-i18n="pgKanban"></span><span class="bdg" id="kb">0</span></button>
   </nav>
   <div class="sb-foot">
     <div data-i18n="footEnv"></div>
@@ -1196,6 +1285,27 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
     <div class="doc-dlg-f"><span class="disc" id="docDlgDemo"></span></div>
   </div>
 </div>
+
+<!-- Share meeting outputs modal -->
+<div class="doc-modal share-modal" id="shareModal" aria-hidden="true">
+  <div class="doc-scrim" id="shareScrim"></div>
+  <div class="doc-dlg share-dlg" role="dialog" aria-modal="true" aria-labelledby="shareDlgTitle">
+    <div class="doc-dlg-h">
+      <div class="doc-dlg-ic share-ic">↗</div>
+      <div class="doc-dlg-tt">
+        <div class="doc-dlg-kick" id="shareDlgKick"></div>
+        <h3 id="shareDlgTitle"></h3>
+        <div class="doc-dlg-meta" id="shareDlgMeta"></div>
+      </div>
+      <button class="doc-x" id="shareClose"><span>×</span></button>
+    </div>
+    <div class="doc-dlg-b" id="shareDlgBody"></div>
+    <div class="doc-dlg-f share-foot" id="shareFoot"></div>
+  </div>
+</div>
+
+<!-- Toast (share confirmation) -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ===================== MEETINGS (index) ===================== -->
 <section class="page" id="p-meetings">
@@ -2847,7 +2957,7 @@ const I18N = {
 az:{
   brand:"Kənd Təsərrüfatı Nazirliyi", brandSub:"Azərbaycan Respublikası", brandShort:"Kənd Təsərrüfatı Nazirliyi",
   userName:"Nazir", userRole:"Kənd təsərrüfatı naziri",
-  navExec:"İdarəetmə", navAI:"Süni intellekt", navOps:"Əməliyyat panelləri",
+  navPlan:"Planlaşdırma", navExec:"İdarəetmə", navAI:"Süni intellekt", navOps:"Əməliyyat panelləri",
   pgOverview:"İcmal", pgEconomy:"Aqrar iqtisadiyyat", pgMarkets:"Bazarlar və qiymətlər",
   pgCropMap:"Əkin xəritəsi", pgNews:"Xəbərlər", pgAI:"Süni intellekt alətləri",
   pgDecisions:"Qərar gözləyənlər", pgSim:"Ssenari modelləşdirməsi", pgUseCases:"İstifadə ssenariləri",
@@ -2857,6 +2967,20 @@ az:{
   mtgTranscript:"Transkripsiya", mtgAnalysis:"Süni intellekt təhlili",
   mtgActions:"Əsas qərarlar və addımlar", mtgPeople:"Məsul şəxslər", mtgTodos:"İcra tapşırıqları", mtgTopics:"Mövzular",
   mtgAiBadge:"Süni intellekt · nümayiş", mtgOwns:"Cavabdehlik",
+  shareBtn:"Paylaş", shareKick:"Nəticələrin paylaşımı", shareTitle:"İclas nəticələrini paylaş",
+  shareMeta:"İştirakçılara icmal, addımlar və sənədləri göndərin",
+  shareRecipients:"Alıcılar", shareRecipientsHint:"İştirakçılar avtomatik seçilib — istəmədiyinizi çıxarın",
+  shareAddPh:"Yeni alıcı (e-poçt və ya ad)", shareAdd:"Əlavə et", shareCustom:"əlavə edildi",
+  shareWhat:"Nə paylaşılsın", shareOptSummary:"İcra icmalı", shareOptActions:"Əsas qərar və addımlar",
+  shareOptTodos:"İcra tapşırıqları", shareOptDocs:"Sənədlər",
+  shareMsg:"Mesaj (istəyə bağlı)", shareMsgPh:"İştirakçılar üçün qısa qeyd əlavə edin…",
+  shareChannel:"Kanal", shareEmail:"E-poçt", shareLink:"Təhlükəsiz keçid",
+  shareSend:"Göndər", shareCancel:"Ləğv et", shareDone:"Bağla", shareClose:"Bağla",
+  shareDemo:"<b>Nümayiş:</b> real e-poçt və ya keçid göndərilmir — bu, demonstrasiya davranışıdır.",
+  shareNoRec:"Ən azı bir alıcı seçin.", shareNoContent:"Ən azı bir bölmə seçin.",
+  shareSuccess:"{n} iştirakçı ilə paylaşıldı", shareSuccessVia:"Kanal",
+  shareSuccessSub:"Seçilmiş nəticələr göndərildi. Bu, nümayiş davranışıdır — heç bir məlumat cihazdan çıxmadı.",
+  shareOfWhich:"paylaşılan bölmələr",
   mtgDemo:"<b>Qeyd:</b> transkripsiya və təhlil nümayiş məqsədilə hazırlanmış məlumatlardır. İstismar mühitində transkripsiya iclas qeydlərindən, təhlil isə süni intellekt modeli tərəfindən avtomatik yaradılacaq.",
   navSchedule:"Cədvəl və təqvim", pgCalendar:"Təqvim",
   calH:"Nazirin təqvimi", calSub:"günlük iş qrafiki və iclas sənədləri",
@@ -2992,7 +3116,7 @@ az:{
 en:{
   brand:"Ministry of Agriculture", brandSub:"Republic of Azerbaijan", brandShort:"Ministry of Agriculture",
   userName:"Minister", userRole:"Minister of Agriculture",
-  navExec:"Executive", navAI:"Artificial intelligence", navOps:"Operational dashboards",
+  navPlan:"Planning", navExec:"Executive", navAI:"Artificial intelligence", navOps:"Operational dashboards",
   pgOverview:"Overview", pgEconomy:"Agricultural economy", pgMarkets:"Markets & prices",
   pgCropMap:"Crop map", pgNews:"News", pgAI:"AI tools",
   pgDecisions:"Decision inbox", pgSim:"Scenario simulator", pgUseCases:"Use cases",
@@ -3002,6 +3126,20 @@ en:{
   mtgTranscript:"Transcription", mtgAnalysis:"AI analysis",
   mtgActions:"Key actions", mtgPeople:"Key responsible people", mtgTodos:"To-dos", mtgTopics:"Topics",
   mtgAiBadge:"AI-generated · demo", mtgOwns:"Responsibility",
+  shareBtn:"Share", shareKick:"Share outputs", shareTitle:"Share meeting outputs",
+  shareMeta:"Send the summary, actions and documents to participants",
+  shareRecipients:"Recipients", shareRecipientsHint:"Attendees are pre-selected — deselect anyone you wish to omit",
+  shareAddPh:"Add recipient (email or name)", shareAdd:"Add", shareCustom:"added",
+  shareWhat:"What to share", shareOptSummary:"Executive summary", shareOptActions:"Key actions",
+  shareOptTodos:"To-dos", shareOptDocs:"Documents",
+  shareMsg:"Message (optional)", shareMsgPh:"Add a short note for participants…",
+  shareChannel:"Channel", shareEmail:"Email", shareLink:"Secure link",
+  shareSend:"Send", shareCancel:"Cancel", shareDone:"Done", shareClose:"Close",
+  shareDemo:"<b>Demonstration:</b> no real email or link is sent — this is demonstration behaviour.",
+  shareNoRec:"Select at least one recipient.", shareNoContent:"Select at least one section.",
+  shareSuccess:"Shared with {n} participants", shareSuccessVia:"Channel",
+  shareSuccessSub:"The selected outputs have been shared. This is demonstration behaviour — nothing left this device.",
+  shareOfWhich:"sections shared",
   mtgDemo:"<b>Note:</b> the transcription and analysis are demonstration data. In production the transcription would come from meeting minutes and the analysis would be generated automatically by an AI model.",
   navSchedule:"Schedule & calendar", pgCalendar:"Calendar",
   calH:"Minister's calendar", calSub:"daily schedule & meeting documents",
@@ -3137,7 +3275,7 @@ en:{
 ru:{
   brand:"Министерство сельского хозяйства", brandSub:"Азербайджанская Республика", brandShort:"Министерство сельского хозяйства",
   userName:"Министр", userRole:"Министр сельского хозяйства",
-  navExec:"Управление", navAI:"Искусственный интеллект", navOps:"Операционные панели",
+  navPlan:"Планирование", navExec:"Управление", navAI:"Искусственный интеллект", navOps:"Операционные панели",
   pgOverview:"Обзор", pgEconomy:"Аграрная экономика", pgMarkets:"Рынки и цены",
   pgCropMap:"Карта посевов", pgNews:"Новости", pgAI:"Инструменты ИИ",
   pgDecisions:"Решения на рассмотрении", pgSim:"Моделирование сценариев", pgUseCases:"Сценарии использования",
@@ -3147,6 +3285,20 @@ ru:{
   mtgTranscript:"Транскрипция", mtgAnalysis:"ИИ-анализ",
   mtgActions:"Ключевые решения", mtgPeople:"Ответственные лица", mtgTodos:"Поручения", mtgTopics:"Темы",
   mtgAiBadge:"ИИ · демо", mtgOwns:"Зона ответственности",
+  shareBtn:"Поделиться", shareKick:"Отправка итогов", shareTitle:"Поделиться итогами совещания",
+  shareMeta:"Отправьте резюме, решения и документы участникам",
+  shareRecipients:"Получатели", shareRecipientsHint:"Участники выбраны автоматически — снимите отметку с лишних",
+  shareAddPh:"Новый получатель (e-mail или имя)", shareAdd:"Добавить", shareCustom:"добавлен",
+  shareWhat:"Что отправить", shareOptSummary:"Резюме для руководства", shareOptActions:"Ключевые решения",
+  shareOptTodos:"Поручения", shareOptDocs:"Документы",
+  shareMsg:"Сообщение (необязательно)", shareMsgPh:"Короткое сообщение участникам…",
+  shareChannel:"Канал", shareEmail:"E-mail", shareLink:"Защищённая ссылка",
+  shareSend:"Отправить", shareCancel:"Отмена", shareDone:"Готово", shareClose:"Закрыть",
+  shareDemo:"<b>Демонстрация:</b> реальное письмо или ссылка не отправляются — это демонстрационное поведение.",
+  shareNoRec:"Выберите хотя бы одного получателя.", shareNoContent:"Выберите хотя бы один раздел.",
+  shareSuccess:"Отправлено {n} участникам", shareSuccessVia:"Канал",
+  shareSuccessSub:"Выбранные итоги отправлены. Это демонстрационное поведение — данные не покидали устройство.",
+  shareOfWhich:"разделов отправлено",
   mtgDemo:"<b>Примечание:</b> транскрипция и анализ являются демонстрационными данными. В эксплуатации транскрипция формировалась бы из протокола совещания, а анализ — автоматически ИИ-моделью.",
   navSchedule:"Расписание и календарь", pgCalendar:"Календарь",
   calH:"Календарь министра", calSub:"дневное расписание и документы совещаний",
@@ -4870,8 +5022,10 @@ function mtgRow(m){
     <div class="mtags">${tags}<span class="mtg-open">${esc(T('mtgOpen'))} →</span></div></button>`;
 }
 function mtgTodoItem(t){
-  return `<li>${esc(t.t)} — ${critB(t.pri)} <span class="chp">${esc(topN(t.topic))}</span>
-    <span style="font-size:10.5px;color:var(--ink-3)">${esc(T('kbOwner'))}: ${esc(t.owner)} · ${esc(T('kbDue'))}: ${esc(dfmt(t.due))}</span></li>`;
+  return `<li class="${esc(t.pri)}">
+    <div class="ai-todo-h">${critB(t.pri)}<span class="chp">${esc(topN(t.topic))}</span></div>
+    <div class="ai-todo-t">${esc(t.t)}</div>
+    <div class="ai-todo-m">${esc(T('kbOwner'))}: ${esc(t.owner)} · ${esc(T('kbDue'))}: ${esc(dfmt(t.due))}</div></li>`;
 }
 function mtgDetail(m){
   const turns = m.transcript.map(tn => `<div class="turn">
@@ -4888,7 +5042,9 @@ function mtgDetail(m){
     <div><div class="pn">${esc(a.n)}</div><div class="prole">${esc(a.r)}</div></div></div>`).join('');
   const hr = `<hr style="border:0;border-top:1px solid var(--line);margin:14px 0">`;
   return `<section class="page" id="p-mtg-${esc(m.id)}">
-    <div style="margin-bottom:14px"><button class="btn sm" data-go="meetings">← ${esc(T('mtgBack'))}</button></div>
+    <div class="mtg-detbar"><button class="btn sm" data-go="meetings">← ${esc(T('mtgBack'))}</button>
+      <div class="sp" style="flex:1"></div>
+      <button class="btn pri sm" data-share="${esc(m.id)}">↗ ${esc(T('shareBtn'))}</button></div>
     <div class="card" style="margin-bottom:16px">
       <div class="card-h"><h3>${esc(tx(m.t))}</h3><div class="sp"></div>
         <span class="sub">${esc(dtfmt(m.dt))} · ${esc(mtgLoc(m))}</span></div>
@@ -4909,7 +5065,7 @@ function mtgDetail(m){
           <div class="card-b">
             <div class="ai-sec"><div class="ai-t">◫ ${esc(T('mtgActions'))}</div><ul>${actions}</ul></div>${hr}
             <div class="ai-sec"><div class="ai-t">◧ ${esc(T('mtgPeople'))}</div><div class="ppl">${people}</div></div>${hr}
-            <div class="ai-sec"><div class="ai-t">✓ ${esc(T('mtgTodos'))}</div><ul>${todos}</ul></div>${hr}
+            <div class="ai-sec"><div class="ai-t">✓ ${esc(T('mtgTodos'))}</div><ul class="ai-todos">${todos}</ul></div>${hr}
             <div class="ai-sec"><div class="ai-t">▤ ${esc(T('mtgTopics'))}</div><div class="mtags">${topics}</div></div>
           </div>
         </div>
@@ -5061,7 +5217,8 @@ function renderCalDocs(){
   }).join('') || `<div class="cal-docs-empty">—</div>`;
   panel.innerHTML = `<div class="cal-docs-head">
       <div class="cdh-t">${esc(tx(m.t))}</div>
-      <div class="cdh-open"><button class="btn sm" data-go="mtg-${esc(m.id)}">${esc(T('calOpenMtg'))} →</button></div>
+      <div class="cdh-open"><button class="btn sm" data-go="mtg-${esc(m.id)}">${esc(T('calOpenMtg'))} →</button>
+        <button class="btn pri sm" data-share="${esc(m.id)}">↗ ${esc(T('shareBtn'))}</button></div>
     </div>${rows}`;
   panel.querySelectorAll('.doc-view').forEach(b =>
     b.onclick = () => openDoc(m.id, b.dataset.doc));
@@ -5087,6 +5244,123 @@ function openDoc(mtgId, docId){
 function closeDoc(){
   const md = document.getElementById('docModal');
   md.classList.remove('on'); md.setAttribute('aria-hidden', 'true');
+}
+
+/* ========================= SHARE MEETING OUTPUTS =========================
+   Lets the Minister share a meeting's outputs with its participants. Recipients
+   are pre-populated from the meeting attendees. Sending is demonstration only —
+   nothing leaves the browser. */
+let shareMtg = null;                 /* current meeting id */
+let shareExtra = [];                 /* free-text recipients added in the dialog */
+let shareChannel = 'email';          /* email | link */
+const SHARE_OPTS = [['summary','shareOptSummary'],['actions','shareOptActions'],
+  ['todos','shareOptTodos'],['docs','shareOptDocs']];
+
+function shareToastTimer(){ return window._shareToastTimer; }
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('on');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => el.classList.remove('on'), 3600);
+}
+
+function openShare(mtgId){
+  const m = mtgById(mtgId); if (!m) return;
+  shareMtg = mtgId; shareExtra = []; shareChannel = 'email';
+  const md = document.getElementById('shareModal');
+  document.getElementById('shareDlgKick').textContent = T('shareKick');
+  document.getElementById('shareDlgTitle').textContent = tx(m.t);
+  document.getElementById('shareDlgMeta').textContent = dtfmt(m.dt) + ' · ' + mtgLoc(m);
+  document.getElementById('shareClose').setAttribute('aria-label', T('shareClose'));
+  renderShareBody();
+  md.classList.add('on'); md.setAttribute('aria-hidden', 'false');
+}
+function closeShare(){
+  const md = document.getElementById('shareModal');
+  md.classList.remove('on'); md.setAttribute('aria-hidden', 'true');
+  shareMtg = null;
+}
+function shareRecipientRows(m){
+  const att = m.attendees.map((a,i) => `<label class="sh-rec">
+    <input type="checkbox" class="sh-reci" data-i="${i}" checked>
+    <span class="av">${esc(initials(a.n))}</span>
+    <span class="sh-rn"><b>${esc(a.n)}</b><small>${esc(a.r)}</small></span></label>`).join('');
+  const extra = shareExtra.map((r,i) => `<label class="sh-rec sh-rec-x">
+    <input type="checkbox" class="sh-recx" data-x="${i}" checked>
+    <span class="av av-x">+</span>
+    <span class="sh-rn"><b>${esc(r)}</b><small>${esc(T('shareCustom'))}</small></span></label>`).join('');
+  return att + extra;
+}
+function renderShareBody(){
+  const m = mtgById(shareMtg); if (!m) return;
+  const optRows = SHARE_OPTS.map(([v,k]) =>
+    `<label class="sh-opt"><input type="checkbox" class="sh-content" data-v="${v}" checked><span>${esc(T(k))}</span></label>`).join('');
+  const body = `
+    <div class="sh-sec">
+      <div class="sh-t">${esc(T('shareRecipients'))} <span class="sh-hint">· ${esc(T('shareRecipientsHint'))}</span></div>
+      <div class="sh-recs" id="shRecs">${shareRecipientRows(m)}</div>
+      <div class="sh-add">
+        <input type="text" id="shAddIn" placeholder="${esc(T('shareAddPh'))}">
+        <button class="btn sm" id="shAddBtn">+ ${esc(T('shareAdd'))}</button>
+      </div>
+    </div>
+    <div class="sh-sec">
+      <div class="sh-t">${esc(T('shareWhat'))}</div>
+      <div class="sh-opts">${optRows}</div>
+    </div>
+    <div class="sh-sec">
+      <div class="sh-t">${esc(T('shareMsg'))}</div>
+      <textarea id="shMsg" class="sh-msg" rows="3" placeholder="${esc(T('shareMsgPh'))}"></textarea>
+    </div>
+    <div class="sh-sec">
+      <div class="sh-t">${esc(T('shareChannel'))}</div>
+      <div class="sh-chan" id="shChan">
+        <button class="sh-ch${shareChannel==='email'?' on':''}" data-ch="email">✉ ${esc(T('shareEmail'))}</button>
+        <button class="sh-ch${shareChannel==='link'?' on':''}" data-ch="link">🔒 ${esc(T('shareLink'))}</button>
+      </div>
+    </div>`;
+  document.getElementById('shareDlgBody').innerHTML = body;
+  document.getElementById('shareFoot').innerHTML =
+    `<span class="disc" id="shareDemo">${T('shareDemo')}</span><div class="sp" style="flex:1"></div>
+     <button class="btn" id="shareCancel">${esc(T('shareCancel'))}</button>
+     <button class="btn pri" id="shareSend">↗ ${esc(T('shareSend'))}</button>`;
+  bindShareBody();
+}
+function bindShareBody(){
+  const addBtn = document.getElementById('shAddBtn');
+  const addIn = document.getElementById('shAddIn');
+  const doAdd = () => {
+    const v = (addIn.value || '').trim();
+    if (v){ shareExtra.push(v); renderShareBody(); setTimeout(() => { const i=document.getElementById('shAddIn'); if(i) i.focus(); }, 0); }
+  };
+  if (addBtn) addBtn.onclick = doAdd;
+  if (addIn) addIn.onkeydown = e => { if (e.key === 'Enter'){ e.preventDefault(); doAdd(); } };
+  document.querySelectorAll('#shChan .sh-ch').forEach(b =>
+    b.onclick = () => { shareChannel = b.dataset.ch; document.querySelectorAll('#shChan .sh-ch').forEach(x => x.classList.toggle('on', x === b)); });
+  document.getElementById('shareCancel').onclick = closeShare;
+  document.getElementById('shareSend').onclick = shareSend;
+}
+function shareSend(){
+  const m = mtgById(shareMtg); if (!m) return;
+  const recN = document.querySelectorAll('#shRecs input:checked').length;
+  const contentN = document.querySelectorAll('.sh-content:checked').length;
+  const demo = document.getElementById('shareDemo');
+  if (!recN){ if (demo){ demo.innerHTML = '<b style="color:var(--down)">' + esc(T('shareNoRec')) + '</b>'; } return; }
+  if (!contentN){ if (demo){ demo.innerHTML = '<b style="color:var(--down)">' + esc(T('shareNoContent')) + '</b>'; } return; }
+  const chan = shareChannel === 'email' ? T('shareEmail') : T('shareLink');
+  document.getElementById('shareDlgBody').innerHTML =
+    `<div class="sh-done">
+       <div class="sh-done-ic">✓</div>
+       <div class="sh-done-t">${esc(T('shareSuccess').replace('{n}', recN))}</div>
+       <div class="sh-done-sub">${esc(T('shareSuccessSub'))}</div>
+       <div class="sh-done-meta">${esc(T('shareSuccessVia'))}: <b>${esc(chan)}</b> · ${contentN} ${esc(T('shareOfWhich'))}</div>
+     </div>`;
+  document.getElementById('shareFoot').innerHTML =
+    `<span class="disc">${T('shareDemo')}</span><div class="sp" style="flex:1"></div>
+     <button class="btn pri" id="shareDone">${esc(T('shareDone'))}</button>`;
+  document.getElementById('shareDone').onclick = closeShare;
+  showToast(T('shareSuccess').replace('{n}', recN));
 }
 
 /* ========================= BOOT ========================= */
@@ -5125,7 +5399,13 @@ document.getElementById('calNext').onclick = () => calShift(1);
 document.getElementById('calToday').onclick = () => { calDay = CAL_DEFAULT_DAY; calSel = null; renderCalendar(); };
 document.getElementById('docClose').onclick = closeDoc;
 document.getElementById('docScrim').onclick = closeDoc;
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDoc(); });
+document.getElementById('shareClose').onclick = closeShare;
+document.getElementById('shareScrim').onclick = closeShare;
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-share]');
+  if (el){ e.preventDefault(); openShare(el.dataset.share); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ closeDoc(); closeShare(); } });
 document.getElementById('chatClear').onclick = () => { CHAT.length = 0; renderChat(); };
 document.getElementById('regen').onclick = () => renderBrief();
 ['ss','y','ip','im'].forEach(id => document.getElementById(id).addEventListener('input', simWheat));
