@@ -8,6 +8,20 @@
   - Run (dev): `LLM_MOCK=1 /workspace/.venv/bin/python -m uvicorn server.app:app --reload --port 8000`
   - Health: `GET /api/health` → `{"ok":true,"mock":<bool>}`. `mock:true` means canned replies; `mock:false` means it is calling a real LLM endpoint.
   - The frontend is one monolithic file (`web/index.html`) containing HTML, CSS, JS and all mock data. Trilingual (AZ default, EN, RU) via `tx()`/`T()`.
+  - Shared, testable executive logic lives in `web/lib/exec.js` (attached to `window.Exec`, also `require`-able in Node). It holds the decision age/overdue/due-window math, meeting-overlap detection, and priority/risk/readiness normalization. Prefer adding pure calculations here (not inline in `index.html`) so they stay unit-testable.
+
+### Demo-mode conventions (P0 containment)
+
+- The panel runs on a fixed demonstration snapshot: `FEED.meta.dataMode === 'demo'`. Freshness is three separate facts — `observedAt` (snapshot assembled), `lastFetchAt` (last successful retrieval), `asOf` (the instant to reason from). There is **no** scheduled refresh; do not reintroduce a "next sync"/auto-refresh promise.
+- Age/overdue/due-window figures are measured against `decAsOf()` (= `FEED.meta.asOf` in demo mode, real Baku clock in live mode) via `Exec` — never a hard-coded date. `Exec` interprets naive timestamps as Asia/Baku and date-only deadlines as end-of-day Baku, so host timezone does not change results.
+- Missing risk/readiness renders as **Not assessed** (`naLabel`), never a fabricated Medium. Meeting attendance priority (`prioLevel`) comes from importance/urgency (+ explicit `crit` override) only; a critical linked task is shown as a separate **delivery criticality** dimension.
+- Unreconciled scenario outputs (net fiscal effect, fiscal payback, drought import/self-sufficiency) are withheld behind `mrRow()` → "Methodology review required"; only defensible quantities show numbers.
+- Document review accepts text formats only and rejects binaries (`drSupported`); a capped review names the exact reviewed range and always shows a "not a full review" note. AI capability is probed at boot (`checkCapabilities()` → `/api/health`); when the backend is down the chat is disabled with a specific retryable banner.
+
+### Tests / verification
+
+- Pure-logic regression tests (no browser): `node --test tests/exec.test.mjs` (covers the handoff's required test matrix — decision age/overdue, meeting overlap, unknown assessments).
+- Headless-Chrome smoke check + screenshots: needs Playwright (`/workspace/.venv/bin/pip install playwright`; the browser is the pre-installed system Chrome, no `playwright install` needed). Start the app in mock mode, then `/workspace/.venv/bin/python tests/verify_ui.py` (uses system Chrome via `channel="chrome"`, `--no-sandbox`; writes to `/workspace/artifacts/`, ignored by git). It walks the key pages, exercises the demo actions and a simulated backend-down state, and fails on any non-environmental console/page error. External CDN (Leaflet/Chart.js/tiles) and favicon failures are expected under restricted egress and are ignored.
 
 ### LLM configuration (`server/llm.py`)
 
