@@ -24,3 +24,6 @@ Thumbs.db
 
 # Node (only if a build step is added later)
 node_modules/
+
+# Demo/verification artifacts (screenshots)
+artifacts/
