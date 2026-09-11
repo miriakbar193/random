@@ -1,0 +1,21 @@
+# Copy this file to  local-config.txt  and fill in your values.
+# run-local.cmd / run-local.sh read it automatically so you never re-type the key.
+# Lines starting with # are ignored. Do NOT put quotes around values.
+
+# Your Cursor API key (crsr_...). Required only for live AI; omit for mock replies.
+CURSOR_API_KEY=crsr_paste_your_key_here
+
+# Optional overrides:
+# CURSOR_MODEL=composer-2.5
+# PORT=8000
+# CURSOR_BRIDGE_PORT=8788
+
+# --- Corporate network options (uncomment if the bridge shows "NetworkError") ---
+# If your company uses a TLS-inspecting proxy, trust the OS certificate store
+# (Node 22.15+ / 23+):
+# NODE_OPTIONS=--use-system-ca
+# ...or point Node at your exported corporate root CA (.pem/.crt), any Node version:
+# NODE_EXTRA_CA_CERTS=C:\path\to\corporate-root-ca.pem
+# If you must go through an HTTP(S) proxy, set both:
+# HTTPS_PROXY=http://your-proxy-host:port
+# HTTP_PROXY=http://your-proxy-host:port
