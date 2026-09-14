@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="az" xmlns:mso="urn:schemas-microsoft-com:office:office" xmlns:msdt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+<html lang="az">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="lib/exec.js"></script>
 <style>
 :root{
   --kt-dark:#0E462A; --kt-green:#0FA54F; --kt-mid:#6BC182; --kt-light:#B1D3BE;
@@ -172,6 +173,8 @@ button{font-family:inherit}
 .hero .chip{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.16);
   padding:4px 10px; border-radius:20px; font-size:11px; font-weight:600}
 .hero .chip i{font-style:normal; color:var(--kt-mid)}
+.hero .chip.demo-chip{background:var(--warn); border-color:var(--warn); color:#3a2a00; letter-spacing:.06em}
+.hero .chip.demo-chip i{color:#3a2a00}
 
 /* ---------- KPI ---------- */
 .kpi{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:14px 15px;
@@ -254,6 +257,7 @@ tbody tr:hover{background:#F7FBF8}
   border-radius:3px; background:var(--kt-dark); color:#fff}
 .pri-b.p2{background:var(--kt-mid); color:var(--kt-dark)}
 .due{font-size:10.5px; color:var(--ink-3); margin-left:auto; font-variant-numeric:tabular-nums}
+.due.over{color:#fff; background:var(--down); padding:1px 7px; border-radius:9px; font-weight:700}
 
 /* ---------- MAP ---------- */
 #cmap{height:560px; border-radius:0 0 var(--r) var(--r); background:#E8EFE9; z-index:1}
@@ -279,6 +283,10 @@ tbody tr:hover{background:#F7FBF8}
   font-size:11px; padding:5px 11px; border-radius:20px; cursor:pointer; transition:.13s; font-weight:500}
 .sugg button:hover{background:rgba(255,255,255,.2); color:#fff}
 /* ---------- CHAT ---------- */
+.chat-cap{align-items:center; gap:10px; padding:9px 16px; font-size:12px; font-weight:600; border-bottom:1px solid var(--line)}
+.chat-cap.demo{background:#FFFBF2; color:#7a5a10}
+.chat-cap.down{background:#FDECEA; color:#8A1810}
+.chat-cap .btn{margin-left:auto}
 .chat-log{padding:16px; height:420px; overflow-y:auto; display:flex; flex-direction:column; gap:13px}
 .chat-log::-webkit-scrollbar{width:7px}
 .chat-log::-webkit-scrollbar-thumb{background:var(--kt-grey-l); border-radius:4px}
@@ -675,6 +683,10 @@ button.dt{font:inherit; color:inherit; text-align:left; width:100%; padding:0; c
 .risk-i{display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:700; color:var(--ink-3)}
 .risk-i::before{content:""; width:7px; height:7px; border-radius:2px; background:var(--kt-mid)}
 .risk-i.high::before{background:var(--down)} .risk-i.med::before{background:var(--warn)} .risk-i.low::before{background:var(--kt-mid)}
+.risk-i.notAssessed::before{background:var(--kt-grey)}
+.ag-dc{display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:700; color:var(--ink-3)}
+.ag-conflict{display:inline-flex; align-items:center; gap:4px; font-size:9.5px; font-weight:800;
+  color:#fff; background:var(--down); padding:2px 7px; border-radius:9px}
 
 /* ---------- CALENDAR (day view + documents) ---------- */
 .cal-bar{margin-bottom:16px; padding:12px 16px}
@@ -1086,6 +1098,7 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
 .rdy.high{color:var(--pri-low); background:rgba(11,107,51,.1)}
 .rdy.medium{color:var(--warn); background:rgba(224,138,21,.12)}
 .rdy.low{color:var(--pri-critical); background:rgba(196,43,34,.1)}
+.rdy.notAssessed{color:var(--ink-3); background:rgba(123,139,131,.14)}
 .agn-row .ag-tags{display:flex; gap:5px; flex-wrap:wrap}
 
 @media(max-width:900px){
@@ -1094,13 +1107,6 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
 }
 </style>
 
-<!--[if gte mso 9]><xml>
-<mso:CustomDocumentProperties>
-<mso:_dlc_DocId msdt:dt="string">EPVCFUHPH6RW-860040630-6346</mso:_dlc_DocId>
-<mso:_dlc_DocIdItemGuid msdt:dt="string">e7c5d763-ee26-4ce8-9ff9-a445a1780600</mso:_dlc_DocIdItemGuid>
-<mso:_dlc_DocIdUrl msdt:dt="string">https://mckinsey.sharepoint.com/sites/spe-int-tysoaut7jjq5y5b6f0/_layouts/15/DocIdRedir.aspx?ID=EPVCFUHPH6RW-860040630-6346, EPVCFUHPH6RW-860040630-6346</mso:_dlc_DocIdUrl>
-</mso:CustomDocumentProperties>
-</xml><![endif]-->
 </head>
 <body class="hub-mode">
 
@@ -1433,6 +1439,7 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
       <div class="sp"></div>
       <button class="btn sm" id="chatClear" data-i18n="chatClear"></button>
     </div>
+    <div class="chat-cap" id="chatCap" style="display:none"></div>
     <div class="chat-log" id="chatLog"></div>
     <div class="chat-in">
       <textarea id="q" rows="1" placeholder=""></textarea>
@@ -1745,9 +1752,19 @@ body.hub-mode #p-hub{min-height:100vh; width:100%; display:flex; flex-direction:
 /*DATA-START*/
 window.FEED = {
   meta:{
-    synced:"2026-09-07T08:00:00+04:00",
+    /* This panel runs on a fixed demonstration snapshot. There is no scheduled
+       retrieval process behind it, so no "next sync" is promised. Freshness is
+       described with three separate facts rather than one "synced" moment:
+       observedAt  — when this demonstration snapshot was assembled;
+       lastFetchAt — the last successful retrieval reflected in the snapshot;
+       asOf        — the point in time the demo asks you to reason from.
+       Per-source publication dates live on each record's `per`/`src`. */
+    dataMode:"demo",
     version:"1.0",
-    nextSync:"2026-09-08T08:00:00+04:00"
+    observedAt:"2026-09-07T08:00:00+04:00",
+    lastFetchAt:"2026-09-07T08:00:00+04:00",
+    asOf:"2026-09-11T12:00:00+04:00",
+    synced:"2026-09-07T08:00:00+04:00"   /* legacy alias for observedAt, kept for existing views */
   },
 
   /* ---------------- HEADLINE KPIs (overview) ---------------- */
@@ -2273,7 +2290,7 @@ window.FEED = {
 
   /* ---------------- DECISION INBOX ---------------- */
   decisions:[
-    {pri:1, due:"2026-09-12",
+    {pri:1, due:"2026-09-12", submittedAt:"2026-09-07T09:00:00+04:00", status:"pending",
      t:{az:"Avans əkin subsidiyasının (30%) tətbiq parametrlərinin təsdiqi",
         en:"Approve the operating parameters for the 30% advance sowing subsidy",
         ru:"Утвердить операционные параметры авансовой посевной субсидии (30%)"},
@@ -2287,7 +2304,7 @@ window.FEED = {
          en:"AZERTAC, 7 Sep 2026 · farmer rating already exists in the eAgro Farmer Score module",
          ru:"AZERTAC, 07.09.2026 · фермерский рейтинг уже существует в модуле eAgro «Фермерский балл»"}},
 
-    {pri:1, due:"2026-09-20",
+    {pri:1, due:"2026-09-20", submittedAt:"2026-09-06T10:00:00+04:00", status:"pending",
      t:{az:"Q4 üçün buğda strateji ehtiyatının artırılması barədə qərar",
         en:"Decide on topping up the strategic wheat reserve for Q4",
         ru:"Решение о пополнении стратегического резерва пшеницы на IV квартал"},
@@ -2301,7 +2318,7 @@ window.FEED = {
          en:"Trading Economics, UkrAgroConsult, IKAR/SovEcon (August 2026), president.az",
          ru:"Trading Economics, UkrAgroConsult, ИКАР/СовЭкон (август 2026), president.az"}},
 
-    {pri:1, due:"2026-09-30",
+    {pri:1, due:"2026-09-30", submittedAt:"2026-09-07T09:00:00+04:00", status:"pending",
      t:{az:"Lazer hamarlama subsidiyası üzrə 2026-2027 əhatə hədəfinin müəyyənləşdirilməsi",
         en:"Set the 2026-2027 coverage target for the laser levelling subsidy",
         ru:"Установить целевой охват субсидии за лазерное выравнивание на 2026-2027 гг."},
@@ -2315,7 +2332,7 @@ window.FEED = {
          en:"AZERTAC, 7 Sep 2026 · Central Grain HQ (Caliber.az, 15 Jul 2026)",
          ru:"AZERTAC, 07.09.2026 · Центральный зерновой штаб (Caliber.az, 15.07.2026)"}},
 
-    {pri:2, due:"2026-10-01",
+    {pri:2, due:"2026-10-01", submittedAt:"2026-09-05T09:00:00+04:00", status:"pending",
      t:{az:"İstixana sektorunun bərpası üzrə hədəfli tədbirlər paketi",
         en:"Targeted recovery package for the greenhouse sector",
         ru:"Целевой пакет восстановления тепличного сектора"},
@@ -2329,7 +2346,7 @@ window.FEED = {
          en:"AzerNews (greenhouse review), FreshPlaza (exports), AZERTAC (7 Sep 2026 concessions)",
          ru:"AzerNews (обзор теплиц), FreshPlaza (экспорт), AZERTAC (льготы от 07.09.2026)"}},
 
-    {pri:2, due:"2026-10-15",
+    {pri:2, due:"2026-10-15", submittedAt:"2026-09-04T09:00:00+04:00", status:"pending",
      t:{az:"Beynəlxalq sertifikatlaşdırma dəstəyinin prioritetləşdirilməsi",
         en:"Prioritise the international certification support scheme",
         ru:"Приоритизация схемы поддержки международной сертификации"},
@@ -2343,7 +2360,7 @@ window.FEED = {
          en:"AZERTAC (7 Sep 2026), FreshPlaza (Jan–Jul 2026 export volumes)",
          ru:"AZERTAC (07.09.2026), FreshPlaza (объёмы экспорта янв–июл 2026)"}},
 
-    {pri:2, due:"2026-10-20",
+    {pri:2, due:"2026-10-20", submittedAt:null, status:"pending",
      t:{az:"Balıqçılıq üzrə ilk məhsul subsidiyasının büdcə limiti",
         en:"Budget cap for the first-ever fisheries product subsidy",
         ru:"Бюджетный лимит первой продуктовой субсидии в рыбном хозяйстве"},
@@ -3584,8 +3601,8 @@ az:{
   prioBack:"Analitika mərkəzinə qayıt", prioKick:"Qərar və İclas Analitikası",
   prioSchedWord:"Günün iş qrafiki", prioMtgWord:"iclas",
   prioSub:"Bu icra görünüşü sabahkı iclasları prioritet və hazırlıq üzrə cəmləşdirir. Bütün məzmun nümayiş məqsədlidir.",
-  prioOptimize:"Təqvimimi optimallaşdır",
-  prioOptToast:"Təqvim prioritet üzrə yenidən sıralandı", prioResetToast:"Təqvim vaxt ardıcıllığına qaytarıldı",
+  prioOptimize:"Prioritetə görə sırala",
+  prioOptToast:"Gündəlik prioritetə görə sıralandı (yalnız göstəriş sırası — iclas vaxtları dəyişmir)", prioResetToast:"Gündəlik vaxt ardıcıllığına qaytarıldı",
   prioBriefH:"Sabahkı gün üçün süni intellekt icmalı", prioAiBadge:"Süni intellekt · nümayiş",
   prioMatrixH:"İclasların prioritetləşdirilməsi", prioMatrixNote:"Vaciblik və təcilliyə görə əsas addımların dəstəklənməsi.",
   prioAgendaH:"Günün gündəliyi", prioAgendaNote:"Hər iclas üçün icmal, hazırlıq və həvalə təklifi.",
@@ -3593,6 +3610,9 @@ az:{
   eisIU:"Vacib və Təcili", eisINU:"Vacib, Təcili deyil", eisNIU:"Vacib deyil, Təcili", eisNINU:"Nə vacib, nə təcili",
   eisEmpty:"Bu kvadrantda iclas yoxdur",
   rdyLabel:"Hazırlıq", rdyHigh:"Yüksək", rdyMed:"Orta", rdyLow:"Aşağı", prioDelegate:"Həvalə təklifi",
+  naLabel:"Qiymətləndirilməyib", deliveryCrit:"İcra kritikliyi (əlaqəli tapşırıqlar)",
+  mtgPriHint:"İştirak prioriteti yalnız vaciblik/təcillikdən qaynaqlanır; tapşırıq kritikliyi ayrı ölçüdür.",
+  mtgConflict:"Vaxt toqquşması", mtgConflictWith:"ilə",
   navPlan:"Planlaşdırma", navExec:"İdarəetmə", navAI:"Süni intellekt", navOps:"Əməliyyat panelləri",
   pgOverview:"İcmal", pgEconomy:"Aqrar iqtisadiyyat", pgMarkets:"Bazarlar və qiymətlər",
   pgCropMap:"Əkin xəritəsi", pgNews:"Xəbərlər", pgAI:"Süni intellekt alətləri",
@@ -3620,7 +3640,7 @@ az:{
   mtgDemo:"<b>Qeyd:</b> transkripsiya və təhlil nümayiş məqsədilə hazırlanmış məlumatlardır. İstismar mühitində transkripsiya iclas qeydlərindən, təhlil isə süni intellekt modeli tərəfindən avtomatik yaradılacaq.",
   navSchedule:"Cədvəl və təqvim", pgCalendar:"Təqvim",
   calH:"Nazirin təqvimi", calSub:"günlük iş qrafiki və iclas sənədləri",
-  calAgenda:"Günün gündəliyi", calToday:"Bu gün", calPrev:"Əvvəlki gün", calNext:"Sonrakı gün",
+  calAgenda:"Günün gündəliyi", calToday:"Nümayiş gününə qayıt", calPrev:"Əvvəlki gün", calNext:"Sonrakı gün",
   calEmpty:"Bu tarixə planlaşdırılmış iclas yoxdur", calMeetings:"iclas",
   calDocs:"İclas sənədləri", calSelectMtg:"Sənədləri görmək üçün iclasa klikləyin", calOpenMtg:"İclası tam aç",
   calDemo:"<b>Qeyd:</b> təqvim, iclas vaxtları və sənədlər nümayiş məqsədilə hazırlanmış məlumatlardır.",
@@ -3638,8 +3658,9 @@ az:{
   bakuTime:"Bakı vaxtı", refresh:"Yenilə", viewAll:"Hamısına bax", modelIt:"Modelləşdir", regen:"Yenidən yarat",
   heroEyebrow:"Nazirlik üçün gündəlik icmal",
   greetMorning:"Sabahınız xeyir, cənab Nazir", greetDay:"Xoş gününüz, cənab Nazir", greetEvening:"Axşamınız xeyir, cənab Nazir",
-  heroSub:"Aqrar sektorun vəziyyəti, bazar qiymətləri, xəbər axını və qərar gözləyən məsələlər — hər səhər saat 08:00-da avtomatik yenilənir.",
-  chipSync:"Son sinxronizasiya", chipNews:"xəbər", chipAlerts:"xəbərdarlıq", chipDec:"qərar gözləyir",
+  heroSub:"Aqrar sektorun vəziyyəti, bazar qiymətləri, xəbər axını və qərar gözləyən məsələlər — sabit nümayiş məlumat anına əsaslanır (avtomatik yeniləmə yoxdur).",
+  chipSync:"Nümayiş məlumat anı", chipNews:"xəbər", chipAlerts:"xəbərdarlıq", chipDec:"qərar gözləyir",
+  dataModeBadge:"NÜMAYİŞ MƏLUMATLARI", refreshDemo:"Nümayiş məlumatı yenidən yükləndi — bu, canlı mənbə yeniləməsi deyil.",
   secKpi:"Əsas göstəricilər", secKpiNote:"Rəsmi mənbələr · dövr göstəricinin altındadır",
   cardNews:"Xəbər axını", cardBrief:"Günün icmalı", cardAlerts:"Xəbərdarlıqlar", secDec:"Qərar gözləyən məsələlər",
   fAll:"Hamısı", fLocal:"Azərbaycan", fGlobal:"Qlobal", fAI:"Süni intellekt və innovasiya",
@@ -3660,12 +3681,22 @@ az:{
   mapAll:"Bütün bitkilər", mapTotalArea:"Ümumi əkin sahəsi", mapDistricts:"Rayon sayı", mapCrops:"Bitki qrupu",
   ppArea:"Əkin sahəsi", ppMain:"Dominant bitki", ppSecond:"İkinci bitki", ppRegion:"İqtisadi rayon",
   mapOffline:"Xəritə qatı yüklənə bilmədi — sxematik görünüşə keçildi. İnternet bağlantısı olduqda tam xəritə açılır.",
-  newsH:"Xəbər axını", newsSyncPrefix:"Son sinxronizasiya:",
+  newsH:"Xəbər axını", newsSyncPrefix:"Nümayiş məlumat anı:",
   aiH:"Məlumat bazasına sual verin", aiSub:"Aqrar göstəricilər, bazar qiymətləri, subsidiya dərəcələri və xəbər axını üzrə suallarınızı yazın.",
   askPlaceholder:"Məsələn: buğda üzrə özünütəminat vəziyyəti nədir?", askBtn:"Soruş",
   chatH:"Söhbət", chatClear:"Təmizlə", chatYou:"Siz", chatVia:"Model:",
   chatEmpty:"Sual verin — cavablar bu paneldəki göstəricilər, istifadə ssenarilərinin nümayiş məlumatları və xəbər axını əsasında hazırlanır.",
   chatThinking:"Cavab hazırlanır…",
+  chatErrAuth:"İcazə yoxdur (401). Sessiyanız bitib ola bilər — yenidən daxil olun və təkrar cəhd edin.",
+  chatErrForbidden:"Giriş qadağandır (403). Bu əməliyyat üçün icazəniz yoxdur.",
+  chatErrNotFound:"Söhbət xidməti tapılmadı (404). Backend mövcud deyil və ya səhv konfiqurasiya edilib.",
+  chatErrRate:"Sorğu həddi aşıldı (429). Bir neçə saniyə gözləyin və təkrar göndərin.",
+  chatErrNet:"Şəbəkə xətası — serverə çatmaq olmadı. Bağlantını yoxlayın və təkrar cəhd edin.",
+  chatErrTimeout:"Sorğu vaxt bitdi. Xidmət ləng cavab verir — bir azdan təkrar göndərin.",
+  chatCapDemo:"Nümayiş süni intellekti (mock) — cavablar öncədən hazırlanmışdır, canlı model deyil.",
+  chatCapDown:"Süni intellekt xidməti əlçatan deyil. Panelin qalan hissəsi işləyir.",
+  chatUnavailShort:"Söhbət hazırda əlçatan deyil",
+  chatRetry:"Yenidən yoxla",
   chatErr:"Süni intellekt xidmətinə qoşulmaq mümkün olmadı. Söhbət server tərəfi tələb edir — faylı birbaşa brauzerdə açmısınızsa, yerli serveri işə salın.",
   chatErrCfg:"Süni intellekt xidməti bu mühitdə konfiqurasiya edilməyib. Panelin qalan bölmələri işləyir; söhbəti aktivləşdirmək üçün model açarı serverdə təyin olunmalıdır.",
   chatErrUp:"Model cavab vermədi. Bu, xidmətin müvəqqəti nasazlığıdır — bir neçə saniyədən sonra sualı təkrar göndərin.",
@@ -3676,6 +3707,12 @@ az:{
   decCtx:"Kontekst", decRec:"Tövsiyə", decEv:"Əsas", decApprove:"Təsdiq et", decDefer:"Təxirə sal", decBrief:"Ətraflı məlumat istə",
   decPri1:"Yüksək prioritet", decPri2:"Orta prioritet", decDue:"Son tarix",
   decTotal:"Ümumi", decHigh:"Yüksək prioritet", decWeek:"Bu həftə", decAvgAge:"Orta gözləmə",
+  decPending:"Gözləyən", decOverdue:"Gecikmiş", decDue7:"Yaxın 7 gündə", decAsOf:"Hesablama anı:",
+  decSubmitted:"Təqdim edilib", decAge:"Gözləmə müddəti", decUnknown:"məlum deyil",
+  decSubFuture:"gələcək tarix — rədd edildi",
+  decUnknownNote:"{n} qərarın təqdim tarixi məlum deyil; gözləmə müddəti hesablanmır.",
+  decDemoActions:"Nümayiş rejimi — bu düymələr rəsmi qərar qeyd etmir və heç nə saxlanmır.",
+  decDemoReceipt:"Nümayiş: «{a}» yalnız nümayiş üçün simulyasiya edildi — rəsmi qərar deyil.",
   simWheatH:"Buğda özünütəminatı ssenarisi", simWheatSub:"hədəf səviyyəyə çatmaq üçün tələb olunan sahə, xərc və qənaət",
   simTargetSS:"Hədəf özünütəminat", simTargetSSHint:"Hazırkı səviyyə: 55%. Tam daxili tələb 2.84 mln ton qəbul edilir.",
   simYield:"Buğda məhsuldarlığı, t/ha", simYieldHint:"2026 faktiki orta: 3.49 t/ha (34.9 sentner/ha, 15.07.2026).",
@@ -3698,6 +3735,7 @@ az:{
   resImpSave:"İdxal qənaəti", resNetCost:"Xalis fiskal təsir", resImpVol:"Qalan idxal həcmi",
   resAddIrr:"Əlavə suvarma sahəsi", resCapexTot:"Ümumi kapital xərci", resStateShare:"Dövlət payı (50%)",
   resYieldGain:"Məhsuldarlıq qazancı", resWaterSaved:"Qənaət edilən su", resPayback:"Geri qaytarılma müddəti",
+  methodReview:"Metodologiya baxışı tələb olunur", methodReviewShort:"uzlaşdırıldıqdan sonra göstəriləcək",
   resLoss:"Taxıl istehsalı itkisi", resNewImport:"Yeni idxal ehtiyacı", resExtraCost:"Əlavə idxal xərci",
   resNewSS:"Yeni özünütəminat", resYieldNew:"Yeni orta məhsuldarlıq", resSevere:"Ssenari qiymətləndirməsi",
   sevLow:"Aşağı", sevMed:"Orta", sevHigh:"Yüksək", sevCrit:"Kəskin",
@@ -3762,10 +3800,13 @@ az:{
   navDocReview:"Sənəd təhlili", pgDocReview:"Sənəd təhlili", dDocReview:"Sənədi yükləyin — Nazir baxışından icra təhlili.",
   drH:"Sənəd təhlili", drSub:"Kənd Təsərrüfatı Naziri baxımından icra icmalı",
   drInputH:"Sənəd", drResultH:"İcra təhlili", drAiBadge:"Süni intellekt · nümayiş",
-  drDropT:"Sənədi bura dartın və ya klikləyib seçin", drDropH:".txt / .md etibarlı oxunur; digər formatlar mümkün olduqda mətn kimi oxunur.",
+  drDropT:"Sənədi bura dartın və ya klikləyib seçin", drDropH:"Yalnız mətn faylları: .txt, .md, .csv, .json. PDF/Word/Excel qəbul edilmir.",
   drOr:"və ya", drPasteT:"Mətni yapışdırın", drPastePh:"Sənəd mətnini bura yapışdırın…",
   drReview:"Sənədi təhlil et", drClear:"Təmizlə", drChars:"simvol",
-  drTruncated:"Sənəd təhlil üçün {n} simvola qədər qısaldıldı.",
+  drTruncated:"Yalnız ilk {n} simvol nəzərdən keçirildi ({total} simvoldan); qalan {rest} simvol təhlilə daxil edilmədi.",
+  drUnsupported:"«{ext}» formatı dəstəklənmir və qəbul edilmədi. Binar sənədlər (PDF/Word/Excel) hələ təhlil edilmir.",
+  drFormats:"Dəstəklənən formatlar: .txt, .md, .csv, .tsv, .json, .log, .xml, .html.",
+  drNotFull:"Bu, yalnız mətn üzrə, məsləhət xarakterli qismən baxışdır — tam PDF/Word sənəd təhlili deyil. Süni intellekt heç nəyi təsdiqləmir və göndərmir.",
   drReviewing:"İcra təhlili hazırlanır…",
   drSecSummary:"İcra icmalı", drSecPoints:"Əsas məqamlar", drSecRisks:"Risklər və narahatlıqlar",
   drSecActions:"Tövsiyə olunan qərar və addımlar", drSecQuestions:"Nazirin verə biləcəyi suallar", drSecDelegation:"Həvalə təklifi",
@@ -3812,8 +3853,8 @@ en:{
   prioBack:"Back to intelligence hub", prioKick:"Decision & Meeting Intelligence",
   prioSchedWord:"The day's schedule", prioMtgWord:"meetings",
   prioSub:"This executive view groups tomorrow's meetings by priority and readiness. All content is demonstration data.",
-  prioOptimize:"Optimise my calendar",
-  prioOptToast:"Calendar re-ordered by priority", prioResetToast:"Calendar restored to chronological order",
+  prioOptimize:"Sort by priority",
+  prioOptToast:"Agenda sorted by priority (display order only — meeting times are unchanged)", prioResetToast:"Agenda restored to chronological order",
   prioBriefH:"AI summary for tomorrow", prioAiBadge:"AI · demo",
   prioMatrixH:"Meeting prioritisation", prioMatrixNote:"Supporting key actions by importance and urgency.",
   prioAgendaH:"The day's agenda", prioAgendaNote:"Per-meeting summary, readiness and suggested delegate.",
@@ -3821,6 +3862,9 @@ en:{
   eisIU:"Important & Urgent", eisINU:"Important, Not Urgent", eisNIU:"Not Important, Urgent", eisNINU:"Not Important, Not Urgent",
   eisEmpty:"No meetings in this quadrant",
   rdyLabel:"Readiness", rdyHigh:"High", rdyMed:"Medium", rdyLow:"Low", prioDelegate:"Suggested to delegate to",
+  naLabel:"Not assessed", deliveryCrit:"Delivery criticality (linked tasks)",
+  mtgPriHint:"Attendance priority is derived from importance/urgency only; task criticality is a separate dimension.",
+  mtgConflict:"Schedule conflict", mtgConflictWith:"with",
   navPlan:"Planning", navExec:"Executive", navAI:"Artificial intelligence", navOps:"Operational dashboards",
   pgOverview:"Overview", pgEconomy:"Agricultural economy", pgMarkets:"Markets & prices",
   pgCropMap:"Crop map", pgNews:"News", pgAI:"AI tools",
@@ -3848,7 +3892,7 @@ en:{
   mtgDemo:"<b>Note:</b> the transcription and analysis are demonstration data. In production the transcription would come from meeting minutes and the analysis would be generated automatically by an AI model.",
   navSchedule:"Schedule & calendar", pgCalendar:"Calendar",
   calH:"Minister's calendar", calSub:"daily schedule & meeting documents",
-  calAgenda:"Today's schedule", calToday:"Today", calPrev:"Previous day", calNext:"Next day",
+  calAgenda:"Today's schedule", calToday:"Reset demo day", calPrev:"Previous day", calNext:"Next day",
   calEmpty:"No meetings scheduled for this day", calMeetings:"meetings",
   calDocs:"Meeting documents", calSelectMtg:"Select a meeting to view its documents", calOpenMtg:"Open full meeting",
   calDemo:"<b>Note:</b> the calendar, meeting times and documents are demonstration data.",
@@ -3866,8 +3910,9 @@ en:{
   bakuTime:"Baku time", refresh:"Refresh", viewAll:"View all", modelIt:"Model it", regen:"Regenerate",
   heroEyebrow:"Daily brief for the Minister",
   greetMorning:"Good morning, Minister", greetDay:"Good afternoon, Minister", greetEvening:"Good evening, Minister",
-  heroSub:"State of the agricultural sector, market prices, news flow and decisions awaiting you — refreshed automatically every morning at 08:00.",
-  chipSync:"Last synced", chipNews:"news items", chipAlerts:"alerts", chipDec:"decisions pending",
+  heroSub:"State of the agricultural sector, market prices, news flow and decisions awaiting you — based on a fixed demonstration snapshot (no automatic refresh).",
+  chipSync:"Demo snapshot", chipNews:"news items", chipAlerts:"alerts", chipDec:"decisions pending",
+  dataModeBadge:"DEMONSTRATION DATA", refreshDemo:"Reloaded the demonstration snapshot — this is not a live source refresh.",
   secKpi:"Headline indicators", secKpiNote:"Official sources · reference period shown under each figure",
   cardNews:"News flow", cardBrief:"Daily brief", cardAlerts:"Alerts", secDec:"Decisions awaiting you",
   fAll:"All", fLocal:"Azerbaijan", fGlobal:"Global", fAI:"AI & innovation",
@@ -3888,12 +3933,22 @@ en:{
   mapAll:"All crops", mapTotalArea:"Total cultivated area", mapDistricts:"Districts", mapCrops:"Crop groups",
   ppArea:"Cultivated area", ppMain:"Dominant crop", ppSecond:"Secondary crop", ppRegion:"Economic region",
   mapOffline:"The map layer could not load — switched to the schematic view. The full map opens when an internet connection is available.",
-  newsH:"News flow", newsSyncPrefix:"Last synced:",
+  newsH:"News flow", newsSyncPrefix:"Demo snapshot:",
   aiH:"Ask your data", aiSub:"Type a question about agricultural indicators, market prices, subsidy rates or the news flow.",
   askPlaceholder:"For example: what is our wheat self-sufficiency position?", askBtn:"Ask",
   chatH:"Conversation", chatClear:"Clear", chatYou:"You", chatVia:"Model:",
   chatEmpty:"Ask a question — answers are grounded in the indicators on this panel, the use-case demonstration data and the news flow.",
   chatThinking:"Preparing an answer…",
+  chatErrAuth:"Not authorised (401). Your session may have expired — sign in again and retry.",
+  chatErrForbidden:"Access denied (403). You do not have permission for this action.",
+  chatErrNotFound:"Chat service not found (404). The backend is absent or misconfigured.",
+  chatErrRate:"Rate limit reached (429). Wait a few seconds and send the question again.",
+  chatErrNet:"Network error — the server could not be reached. Check your connection and retry.",
+  chatErrTimeout:"The request timed out. The service is responding slowly — send it again shortly.",
+  chatCapDemo:"Demonstration AI (mock) — replies are canned, not from a live model.",
+  chatCapDown:"The AI service is unavailable. The rest of the panel still works.",
+  chatUnavailShort:"Chat is currently unavailable",
+  chatRetry:"Check again",
   chatErr:"Could not reach the AI service. Chat needs the backend — if you opened this file directly in a browser, run the local server instead.",
   chatErrCfg:"The AI service is not configured in this environment. The rest of the panel works; a model key has to be set on the server to enable chat.",
   chatErrUp:"The model did not answer. This is a temporary fault in the service — send the question again in a few seconds.",
@@ -3904,6 +3959,12 @@ en:{
   decCtx:"Context", decRec:"Recommendation", decEv:"Evidence", decApprove:"Approve", decDefer:"Defer", decBrief:"Request full briefing",
   decPri1:"High priority", decPri2:"Medium priority", decDue:"Due",
   decTotal:"Total", decHigh:"High priority", decWeek:"Due this week", decAvgAge:"Average wait",
+  decPending:"Pending", decOverdue:"Overdue", decDue7:"Due in next 7 days", decAsOf:"As of",
+  decSubmitted:"Submitted", decAge:"Pending", decUnknown:"unknown",
+  decSubFuture:"future date — rejected",
+  decUnknownNote:"{n} decision(s) have an unknown submission date; their waiting time is not counted.",
+  decDemoActions:"Demonstration mode — these buttons record no official decision and nothing is persisted.",
+  decDemoReceipt:"Demo: \u201C{a}\u201D was simulated for demonstration only — not an official decision.",
   simWheatH:"Wheat self-sufficiency scenario", simWheatSub:"area, cost and savings required to reach a target level",
   simTargetSS:"Target self-sufficiency", simTargetSSHint:"Current level: 55%. Total domestic demand assumed at 2.84 mn t.",
   simYield:"Wheat yield, t/ha", simYieldHint:"2026 actual average: 3.49 t/ha (34.9 centners/ha, 15 Jul 2026).",
@@ -3926,6 +3987,7 @@ en:{
   resImpSave:"Import saving", resNetCost:"Net fiscal effect", resImpVol:"Remaining import volume",
   resAddIrr:"Additional irrigated area", resCapexTot:"Total capital cost", resStateShare:"State share (50%)",
   resYieldGain:"Yield gain", resWaterSaved:"Water saved", resPayback:"Payback period",
+  methodReview:"Methodology review required", methodReviewShort:"shown after reconciliation",
   resLoss:"Grain output loss", resNewImport:"New import requirement", resExtraCost:"Additional import cost",
   resNewSS:"New self-sufficiency", resYieldNew:"New average yield", resSevere:"Scenario assessment",
   sevLow:"Low", sevMed:"Moderate", sevHigh:"High", sevCrit:"Severe",
@@ -3990,10 +4052,13 @@ en:{
   navDocReview:"Document review", pgDocReview:"Document review", dDocReview:"Upload a document for an executive review from the Minister's perspective.",
   drH:"Document review", drSub:"executive review from the perspective of the Minister of Agriculture",
   drInputH:"Document", drResultH:"Executive review", drAiBadge:"AI · demo",
-  drDropT:"Drag a document here, or click to choose a file", drDropH:".txt / .md are read reliably; other types are read as text on a best-effort basis.",
+  drDropT:"Drag a document here, or click to choose a file", drDropH:"Text files only: .txt, .md, .csv, .json. PDF/Word/Excel are not accepted.",
   drOr:"or", drPasteT:"Paste text", drPastePh:"Paste the document text here…",
   drReview:"Review document", drClear:"Clear", drChars:"characters",
-  drTruncated:"Document truncated to {n} characters for review.",
+  drTruncated:"Only the first {n} characters were reviewed (of {total}); the remaining {rest} were not reviewed.",
+  drUnsupported:"The \u201C{ext}\u201D format is not supported and was not accepted. Binary documents (PDF/Word/Excel) are not parsed yet.",
+  drFormats:"Supported formats: .txt, .md, .csv, .tsv, .json, .log, .xml, .html.",
+  drNotFull:"This is a plain-text, advisory partial review — not a full PDF/Word document review. The AI approves and sends nothing.",
   drReviewing:"Preparing the executive review…",
   drSecSummary:"Executive summary", drSecPoints:"Key points", drSecRisks:"Risks & concerns",
   drSecActions:"Recommended decisions & actions", drSecQuestions:"Questions the Minister should ask", drSecDelegation:"Suggested delegation",
@@ -4040,8 +4105,8 @@ ru:{
   prioBack:"Назад в центр аналитики", prioKick:"Аналитика решений и совещаний",
   prioSchedWord:"График дня", prioMtgWord:"совещаний",
   prioSub:"Это исполнительное представление группирует завтрашние совещания по приоритету и готовности. Весь контент — демонстрационные данные.",
-  prioOptimize:"Оптимизировать календарь",
-  prioOptToast:"Календарь пересортирован по приоритету", prioResetToast:"Календарь восстановлен в хронологическом порядке",
+  prioOptimize:"Сортировать по приоритету",
+  prioOptToast:"Повестка отсортирована по приоритету (только порядок отображения — время встреч не меняется)", prioResetToast:"Повестка восстановлена в хронологическом порядке",
   prioBriefH:"ИИ-сводка на завтра", prioAiBadge:"ИИ · демо",
   prioMatrixH:"Приоритизация совещаний", prioMatrixNote:"Поддержка ключевых действий по важности и срочности.",
   prioAgendaH:"Повестка дня", prioAgendaNote:"По каждому совещанию — сводка, готовность и предложенный делегат.",
@@ -4049,6 +4114,9 @@ ru:{
   eisIU:"Важно и срочно", eisINU:"Важно, не срочно", eisNIU:"Не важно, срочно", eisNINU:"Не важно, не срочно",
   eisEmpty:"В этом квадранте нет совещаний",
   rdyLabel:"Готовность", rdyHigh:"Высокая", rdyMed:"Средняя", rdyLow:"Низкая", prioDelegate:"Рекомендуется делегировать",
+  naLabel:"Не оценено", deliveryCrit:"Критичность исполнения (связанные задачи)",
+  mtgPriHint:"Приоритет участия определяется только важностью/срочностью; критичность задач — отдельное измерение.",
+  mtgConflict:"Конфликт расписания", mtgConflictWith:"с",
   navPlan:"Планирование", navExec:"Управление", navAI:"Искусственный интеллект", navOps:"Операционные панели",
   pgOverview:"Обзор", pgEconomy:"Аграрная экономика", pgMarkets:"Рынки и цены",
   pgCropMap:"Карта посевов", pgNews:"Новости", pgAI:"Инструменты ИИ",
@@ -4076,7 +4144,7 @@ ru:{
   mtgDemo:"<b>Примечание:</b> транскрипция и анализ являются демонстрационными данными. В эксплуатации транскрипция формировалась бы из протокола совещания, а анализ — автоматически ИИ-моделью.",
   navSchedule:"Расписание и календарь", pgCalendar:"Календарь",
   calH:"Календарь министра", calSub:"дневное расписание и документы совещаний",
-  calAgenda:"Расписание на день", calToday:"Сегодня", calPrev:"Предыдущий день", calNext:"Следующий день",
+  calAgenda:"Расписание на день", calToday:"Сбросить демо-день", calPrev:"Предыдущий день", calNext:"Следующий день",
   calEmpty:"На этот день совещаний не запланировано", calMeetings:"совещаний",
   calDocs:"Документы совещания", calSelectMtg:"Выберите совещание, чтобы просмотреть документы", calOpenMtg:"Открыть совещание",
   calDemo:"<b>Примечание:</b> календарь, время совещаний и документы являются демонстрационными данными.",
@@ -4094,8 +4162,9 @@ ru:{
   bakuTime:"Бакинское время", refresh:"Обновить", viewAll:"Показать все", modelIt:"Смоделировать", regen:"Сформировать заново",
   heroEyebrow:"Ежедневная сводка для Министра",
   greetMorning:"Доброе утро, господин Министр", greetDay:"Добрый день, господин Министр", greetEvening:"Добрый вечер, господин Министр",
-  heroSub:"Состояние аграрного сектора, рыночные цены, новостной поток и решения, ожидающие вас — обновляется автоматически каждое утро в 08:00.",
-  chipSync:"Последняя синхронизация", chipNews:"новостей", chipAlerts:"предупреждений", chipDec:"решений на рассмотрении",
+  heroSub:"Состояние аграрного сектора, рыночные цены, новостной поток и решения, ожидающие вас — на основе фиксированного демонстрационного снимка (без автоматического обновления).",
+  chipSync:"Демоснимок данных", chipNews:"новостей", chipAlerts:"предупреждений", chipDec:"решений на рассмотрении",
+  dataModeBadge:"ДЕМОНСТРАЦИОННЫЕ ДАННЫЕ", refreshDemo:"Демонстрационный снимок перезагружен — это не обновление из живого источника.",
   secKpi:"Ключевые показатели", secKpiNote:"Официальные источники · период указан под каждым показателем",
   cardNews:"Новостной поток", cardBrief:"Ежедневная сводка", cardAlerts:"Предупреждения", secDec:"Решения, ожидающие вас",
   fAll:"Все", fLocal:"Азербайджан", fGlobal:"Мир", fAI:"ИИ и инновации",
@@ -4116,12 +4185,22 @@ ru:{
   mapAll:"Все культуры", mapTotalArea:"Общая посевная площадь", mapDistricts:"Районов", mapCrops:"Групп культур",
   ppArea:"Посевная площадь", ppMain:"Доминирующая культура", ppSecond:"Вторая культура", ppRegion:"Экономический район",
   mapOffline:"Слой карты не загрузился — переключено на схематичный вид. Полная карта откроется при наличии интернет-соединения.",
-  newsH:"Новостной поток", newsSyncPrefix:"Последняя синхронизация:",
+  newsH:"Новостной поток", newsSyncPrefix:"Демоснимок данных:",
   aiH:"Задайте вопрос данным", aiSub:"Напишите вопрос об аграрных показателях, рыночных ценах, ставках субсидий или новостном потоке.",
   askPlaceholder:"Например: каково наше положение по самообеспеченности пшеницей?", askBtn:"Спросить",
   chatH:"Диалог", chatClear:"Очистить", chatYou:"Вы", chatVia:"Модель:",
   chatEmpty:"Задайте вопрос — ответы строятся на показателях этой панели, демонстрационных данных сценариев использования и новостном потоке.",
   chatThinking:"Готовится ответ…",
+  chatErrAuth:"Нет авторизации (401). Возможно, сессия истекла — войдите снова и повторите.",
+  chatErrForbidden:"Доступ запрещён (403). У вас нет прав на это действие.",
+  chatErrNotFound:"Сервис чата не найден (404). Бэкенд отсутствует или неверно настроен.",
+  chatErrRate:"Превышен лимит запросов (429). Подождите несколько секунд и повторите.",
+  chatErrNet:"Сетевая ошибка — не удалось связаться с сервером. Проверьте подключение и повторите.",
+  chatErrTimeout:"Истекло время ожидания запроса. Сервис отвечает медленно — повторите чуть позже.",
+  chatCapDemo:"Демонстрационный ИИ (mock) — ответы заготовлены, не от живой модели.",
+  chatCapDown:"Сервис ИИ недоступен. Остальная часть панели работает.",
+  chatUnavailShort:"Чат сейчас недоступен",
+  chatRetry:"Проверить снова",
   chatErr:"Не удалось подключиться к сервису ИИ. Для чата нужен бэкенд — если вы открыли файл напрямую в браузере, запустите локальный сервер.",
   chatErrCfg:"Сервис ИИ не настроен в этой среде. Остальные разделы панели работают; для включения чата на сервере должен быть задан ключ модели.",
   chatErrUp:"Модель не ответила. Это временный сбой сервиса — отправьте вопрос повторно через несколько секунд.",
@@ -4132,6 +4211,12 @@ ru:{
   decCtx:"Контекст", decRec:"Рекомендация", decEv:"Основание", decApprove:"Утвердить", decDefer:"Отложить", decBrief:"Запросить полную справку",
   decPri1:"Высокий приоритет", decPri2:"Средний приоритет", decDue:"Срок",
   decTotal:"Всего", decHigh:"Высокий приоритет", decWeek:"На этой неделе", decAvgAge:"Среднее ожидание",
+  decPending:"В ожидании", decOverdue:"Просрочено", decDue7:"В ближайшие 7 дней", decAsOf:"На момент",
+  decSubmitted:"Подано", decAge:"Ожидание", decUnknown:"неизвестно",
+  decSubFuture:"будущая дата — отклонено",
+  decUnknownNote:"У {n} решений неизвестна дата подачи; время ожидания не учитывается.",
+  decDemoActions:"Демонстрационный режим — эти кнопки не фиксируют официальное решение, ничего не сохраняется.",
+  decDemoReceipt:"Демо: «{a}» смоделировано только для демонстрации — не официальное решение.",
   simWheatH:"Сценарий самообеспеченности пшеницей", simWheatSub:"площадь, затраты и экономия для достижения целевого уровня",
   simTargetSS:"Целевая самообеспеченность", simTargetSSHint:"Текущий уровень: 55%. Общий внутренний спрос принят равным 2,84 млн т.",
   simYield:"Урожайность пшеницы, т/га", simYieldHint:"Фактическое среднее 2026: 3,49 т/га (34,9 ц/га, 15.07.2026).",
@@ -4154,6 +4239,7 @@ ru:{
   resImpSave:"Экономия на импорте", resNetCost:"Чистый фискальный эффект", resImpVol:"Остающийся объём импорта",
   resAddIrr:"Дополнительная орошаемая площадь", resCapexTot:"Общие капитальные затраты", resStateShare:"Доля государства (50%)",
   resYieldGain:"Прирост урожая", resWaterSaved:"Сэкономлено воды", resPayback:"Срок окупаемости",
+  methodReview:"Требуется методологическая проверка", methodReviewShort:"будет показано после сверки",
   resLoss:"Потеря производства зерна", resNewImport:"Новая потребность в импорте", resExtraCost:"Дополнительные затраты на импорт",
   resNewSS:"Новая самообеспеченность", resYieldNew:"Новая средняя урожайность", resSevere:"Оценка сценария",
   sevLow:"Низкая", sevMed:"Умеренная", sevHigh:"Высокая", sevCrit:"Критическая",
@@ -4218,10 +4304,13 @@ ru:{
   navDocReview:"Обзор документа", pgDocReview:"Обзор документа", dDocReview:"Загрузите документ для исполнительного обзора с точки зрения министра.",
   drH:"Обзор документа", drSub:"исполнительный обзор с точки зрения министра сельского хозяйства",
   drInputH:"Документ", drResultH:"Исполнительный обзор", drAiBadge:"ИИ · демо",
-  drDropT:"Перетащите документ сюда или нажмите, чтобы выбрать файл", drDropH:".txt / .md читаются надёжно; другие форматы читаются как текст по возможности.",
+  drDropT:"Перетащите документ сюда или нажмите, чтобы выбрать файл", drDropH:"Только текстовые файлы: .txt, .md, .csv, .json. PDF/Word/Excel не принимаются.",
   drOr:"или", drPasteT:"Вставить текст", drPastePh:"Вставьте текст документа сюда…",
   drReview:"Проанализировать документ", drClear:"Очистить", drChars:"символов",
-  drTruncated:"Документ сокращён до {n} символов для анализа.",
+  drTruncated:"Проанализированы только первые {n} символов (из {total}); оставшиеся {rest} не анализировались.",
+  drUnsupported:"Формат «{ext}» не поддерживается и не был принят. Бинарные документы (PDF/Word/Excel) пока не разбираются.",
+  drFormats:"Поддерживаемые форматы: .txt, .md, .csv, .tsv, .json, .log, .xml, .html.",
+  drNotFull:"Это текстовый, рекомендательный частичный обзор — не полный анализ документа PDF/Word. ИИ ничего не утверждает и не отправляет.",
   drReviewing:"Готовится исполнительный обзор…",
   drSecSummary:"Резюме для руководства", drSecPoints:"Ключевые моменты", drSecRisks:"Риски и опасения",
   drSecActions:"Рекомендуемые решения и действия", drSecQuestions:"Вопросы, которые министру следует задать", drSecDelegation:"Предложение по делегированию",
@@ -4396,8 +4485,10 @@ function renderHero(){
   document.getElementById('heroGreet').textContent = greet();
   const s = new Date(F.meta.synced);
   const hi = F.alerts.filter(a => a.sev === 'high').length;
-  document.getElementById('heroChips').innerHTML = [
-    ['◷', T('chipSync'), dfmt(F.meta.synced.slice(0,10)) + ' 08:00'],
+  const demoBadge = (F.meta.dataMode === 'demo')
+    ? `<span class="chip demo-chip"><i>◑</i> ${esc(T('dataModeBadge'))}</span>` : '';
+  document.getElementById('heroChips').innerHTML = demoBadge + [
+    ['◷', T('chipSync'), dfmt(F.meta.observedAt.slice(0,10)) + ' 08:00'],
     ['▤', T('chipNews'), F.news.length],
     ['⚑', T('chipAlerts'), hi + '/' + F.alerts.length],
     ['◫', T('chipDec'), F.decisions.length]
@@ -4541,35 +4632,67 @@ function renderAlerts(){
 }
 
 /* ========================= RENDER: DECISIONS ========================= */
-function decItem(d, full){
+/* Reason from the demo "as-of" instant in demo mode, or the real Baku clock
+   once a live source exists — never a hard-coded production date. */
+function decAsOf(){ return (F.meta.dataMode === 'demo') ? F.meta.asOf : Date.now(); }
+function daysU(){ return LG === 'az' ? 'gün' : (LG === 'ru' ? 'дней' : 'days'); }
+function decItem(d, full, i){
   const pl = d.pri === 1 ? T('decPri1') : T('decPri2');
+  const m = Exec.decisionMetric(d, decAsOf());
+  const dueBadge = m.isOverdue
+    ? `<span class="due over">${esc(T('decOverdue'))}: ${m.overdueDays} ${esc(daysU())}</span>`
+    : (m.dueUnknown
+        ? `<span class="due">${esc(T('decDue'))}: ${esc(T('decUnknown'))}</span>`
+        : `<span class="due">${esc(T('decDue'))}: ${esc(dfmt(d.due))}</span>`);
+  const subTxt = m.futureSubmission ? T('decSubFuture')
+    : (d.submittedAt ? dfmt(String(d.submittedAt).slice(0,10)) : T('decUnknown'));
+  const ageTxt = m.ageUnknown ? T('decUnknown') : (m.ageDays + ' ' + daysU());
+  const acts = full ? `<div class="ev"><b>${esc(T('decEv'))}:</b> ${esc(tx(d.ev))}</div>
+      <div class="acts">
+        <button class="btn pri sm" data-decact="approve" data-deci="${i}">${esc(T('decApprove'))}</button>
+        <button class="btn sm" data-decact="defer" data-deci="${i}">${esc(T('decDefer'))}</button>
+        <button class="btn sm" data-decact="brief" data-deci="${i}">${esc(T('decBrief'))}</button></div>
+      <div class="disc" style="margin-top:6px">⚠ ${esc(T('decDemoActions'))}</div>` : '';
   return `<div class="dc"><div class="dh">
       <span class="pri-b${d.pri === 2 ? ' p2' : ''}">${esc(pl)}</span>
-      <span class="due">${esc(T('decDue'))}: ${esc(dfmt(d.due))}</span></div>
+      ${dueBadge}</div>
     <div class="dt">${esc(tx(d.t))}</div>
+    <div class="dmeta mini" style="margin-top:4px;color:var(--ink-3)">
+      ${esc(T('decSubmitted'))}: ${esc(subTxt)} · ${esc(T('decAge'))}: ${esc(ageTxt)}</div>
     ${full ? `<div class="mini" style="margin-top:6px"><b>${esc(T('decCtx'))}:</b> ${esc(tx(d.ctx))}</div>` : ''}
     <div class="rec">${tx(d.rec)}</div>
-    ${full ? `<div class="ev"><b>${esc(T('decEv'))}:</b> ${esc(tx(d.ev))}</div>
-      <div class="acts">
-        <button class="btn pri sm">${esc(T('decApprove'))}</button>
-        <button class="btn sm">${esc(T('decDefer'))}</button>
-        <button class="btn sm">${esc(T('decBrief'))}</button></div>` : ''}
+    ${acts}
     </div>`;
 }
 function renderDec(){
-  document.getElementById('ovDec').innerHTML = F.decisions.slice(0,3).map(d => decItem(d, false)).join('');
-  document.getElementById('allDec').innerHTML = F.decisions.map(d => decItem(d, true)).join('');
-  const now = new Date('2026-09-07');
-  const wk = F.decisions.filter(d => (new Date(d.due) - now) / 864e5 <= 7).length;
-  const avg = Math.round(F.decisions.reduce((s,d) => s + (new Date(d.due) - now) / 864e5, 0) / F.decisions.length);
-  document.getElementById('decKpi').innerHTML = [
-    [T('decTotal'), F.decisions.length, ''],
-    [T('decHigh'), F.decisions.filter(d => d.pri === 1).length, ''],
-    [T('decWeek'), wk, ''],
-    [T('decAvgAge'), avg, LG === 'az' ? 'gün' : (LG === 'ru' ? 'дней' : 'days')]
-  ].map(([l,v,u],i) => `<div class="kpi${i === 1 ? ' hi' : ''}"><div class="lb">${esc(l)}</div>
+  document.getElementById('ovDec').innerHTML = F.decisions.slice(0,3).map((d,i) => decItem(d, false, i)).join('');
+  document.getElementById('allDec').innerHTML = F.decisions.map((d,i) => decItem(d, true, i)).join('');
+  const s = Exec.decisionSummary(F.decisions, decAsOf(), 7);
+  const highPending = F.decisions.filter((d,i) => s.rows[i].pending && d.pri === 1).length;
+  const asOfLbl = dfmt(String(decAsOf()).slice(0,10)) + ' 12:00';
+  const dash = v => (v == null ? '—' : String(v));
+  const cards = [
+    [T('decPending'), s.pending, '', false],
+    [T('decHigh'), highPending, '', false],
+    [T('decOverdue'), s.overdue, '', s.overdue > 0],
+    [T('decDue7'), s.dueNext, '≤7 ' + daysU(), false],
+    [T('decAvgAge'), dash(s.avgAgeDays), s.avgAgeDays == null ? '' : daysU(), false]
+  ];
+  document.getElementById('decKpi').innerHTML = cards.map(([l,v,u,hi]) =>
+    `<div class="kpi${hi ? ' hi' : ''}"><div class="lb">${esc(l)}</div>
       <div class="vl">${esc(String(v))} <small>${esc(u)}</small></div>
-      <div class="mt"><span>07.09.2026</span></div></div>`).join('');
+      <div class="mt"><span>${esc(T('decAsOf'))} ${esc(asOfLbl)}</span></div></div>`).join('') +
+    (s.unknownSubmission ? `<div class="dec-note mini" style="grid-column:1/-1;color:var(--ink-3);margin-top:2px">
+      ${esc(T('decUnknownNote').replace('{n}', s.unknownSubmission))}</div>` : '');
+  bindGo();
+  document.querySelectorAll('#allDec [data-decact]').forEach(b =>
+    b.onclick = () => decDemoAction(b.dataset.decact, +b.dataset.deci));
+}
+/* Demo-only: no official approval is recorded and nothing is persisted. */
+function decDemoAction(act, i){
+  const d = F.decisions[i];
+  const label = {approve:T('decApprove'), defer:T('decDefer'), brief:T('decBrief')}[act] || act;
+  showToast(T('decDemoReceipt').replace('{a}', label));
 }
 
 /* ========================= RENDER: ECONOMY ========================= */
@@ -4699,6 +4822,14 @@ function rc(l, v, d, col){
     <div class="rv"${col ? ` style="color:${col}"` : ''}>${v}</div>
     <div class="rd">${esc(d || '')}</div></div>`;
 }
+/* P0-05: an output whose accounting is not yet reconciled is shown as
+   "Methodology review required" rather than as a precise-looking, unsupported
+   financial conclusion. */
+function mrRow(l){
+  return `<div class="rc mr"><div class="rl">${esc(l)}</div>
+    <div class="rv" style="font-size:11.5px;color:var(--warn);font-weight:700">${esc(T('methodReview'))}</div>
+    <div class="rd">${esc(T('methodReviewShort'))}</div></div>`;
+}
 function simWheat(){
   const ss = +document.getElementById('ss').value, y = +document.getElementById('y').value,
     ip = +document.getElementById('ip').value, im = +document.getElementById('im').value;
@@ -4710,32 +4841,36 @@ function simWheat(){
   const need = DEM * ss / 100, add = Math.max(0, need - BASE_PROD);
   const area = add * 1e6 / y;
   const rate = 400 * im / 100 + 200 * (1 - im / 100);
-  const sub = area * rate / 1e6;                 // AZN mn
-  const save = add * 1e6 * ip / 1e6;             // USD mn
-  const saveA = save * 1.7;                      // AZN mn
-  const net = sub - saveA;
+  const sub = area * rate / 1e6;                 // AZN mn — public subsidy spend
+  const save = add * 1e6 * ip / 1e6;             // USD mn — avoided import value
+  const saveA = save * 1.7;                      // AZN mn — avoided import value (converted)
   const imp = Math.max(0, DEM - need);
+  /* P0-05: subsidy spend (public budget) and avoided imports (an import-bill
+     effect) are DIFFERENT accounting channels; we no longer net one against the
+     other and present it as a single "net fiscal effect". They are shown as
+     separate quantities and the netted figure is withheld pending review. */
   document.getElementById('wRes').innerHTML =
     rc(T('resAddProd'), nf(add,3) + ' <small style="font-size:11px">mn t</small>', ss + '% → ' + nf(need,3) + ' mn t') +
     rc(T('resAddArea'), nf(area/1000,1) + ' <small style="font-size:11px">k ha</small>', y.toFixed(2) + ' t/ha') +
     rc(T('resSubCost'), nf(sub,1) + ' <small style="font-size:11px">AZN mn</small>', nf(rate,0) + ' AZN/ha', CC.red) +
     rc(T('resImpSave'), nf(save,1) + ' <small style="font-size:11px">USD mn</small>', nf(ip,1) + ' USD/t', CC.green) +
-    rc(T('resNetCost'), (net > 0 ? '+' : '') + nf(net,1) + ' <small style="font-size:11px">AZN mn</small>',
-       net > 0 ? (LG === 'az' ? 'xərc' : (LG === 'ru' ? 'затраты' : 'net cost')) : (LG === 'az' ? 'qənaət' : (LG === 'ru' ? 'экономия' : 'net saving')),
-       net > 0 ? CC.red : CC.green) +
+    mrRow(T('resNetCost')) +
     rc(T('resImpVol'), nf(imp,3) + ' <small style="font-size:11px">mn t</small>',
        nf(BASE_IMP - imp,3) + ' mn t ' + (LG === 'az' ? 'azalma' : (LG === 'ru' ? 'снижение' : 'reduction')));
 
-  const pts = [], lab = [];
+  const lab = [], subLine = [], saveLine = [];
   for (let s = 55; s <= 100; s += 5){
     const n = DEM * s / 100, a = Math.max(0, n - BASE_PROD);
     lab.push(s + '%');
-    pts.push(+(a * 1e6 / y * rate / 1e6 - a * 1e6 * ip / 1e6 * 1.7).toFixed(1));
+    subLine.push(+(a * 1e6 / y * rate / 1e6).toFixed(1));    // subsidy spend, AZN mn
+    saveLine.push(+(a * 1e6 * ip / 1e6 * 1.7).toFixed(1));   // avoided imports, AZN mn
   }
   mkChart('cWheat', {type:'line',
-    data:{labels:lab, datasets:[{data:pts, borderColor:CC.dark, backgroundColor:'rgba(15,165,79,.13)',
-      fill:true, tension:.32, pointRadius:3, pointBackgroundColor:CC.green, borderWidth:2}]},
-    options:{plugins:{tooltip:{callbacks:{label:c => (LG === 'az' ? 'Xalis: ' : (LG === 'ru' ? 'Чистый: ' : 'Net: ')) + nf(c.parsed.y,1) + ' AZN mn'}}}}});
+    data:{labels:lab, datasets:[
+      {label:T('resSubCost'), data:subLine, borderColor:CC.red, backgroundColor:'rgba(208,52,44,.10)', fill:false, tension:.32, pointRadius:2, borderWidth:2},
+      {label:T('resImpSave'), data:saveLine, borderColor:CC.dark, backgroundColor:'rgba(15,165,79,.10)', fill:false, tension:.32, pointRadius:2, borderWidth:2}]},
+    options:{plugins:{legend:{display:true, position:'bottom', labels:{font:{family:'Segoe UI',size:10.5}, boxWidth:10, padding:12, color:CC.ink}},
+      tooltip:{callbacks:{label:c => c.dataset.label + ': ' + nf(c.parsed.y,1) + ' AZN mn'}}}}});
 }
 function simIrr(){
   const it = +document.getElementById('it').value, yu = +document.getElementById('yu').value,
@@ -4748,20 +4883,22 @@ function simIrr(){
   const add = Math.max(0, (it - 130) * 1000);
   const capex = add * cx / 1e6, state = capex * .5;
   const gain = add * 3.49 * yu / 100 / 1e6;          // mn t
-  const gainV = gain * 1e6 * 287.5 / 1e6 * 1.7;      // AZN mn
+  const gainV = gain * 1e6 * 287.5 / 1e6 * 1.7;      // AZN mn (gross crop-value uplift)
   const water = add * 6000 * ws / 100 / 1e6;         // mn m3 at 6000 m3/ha
-  const pay = gainV > 0 ? state / gainV : null;
+  /* P0-05: state capital divided by gross crop-value uplift is not a fiscal
+     payback (it ignores operating costs, timing and who receives the value).
+     The payback interpretation is withheld pending a reviewed cash-flow method
+     (P2-09); the underlying capex, state share and value uplift stay as
+     separate, defensible quantities. */
   document.getElementById('iRes').innerHTML =
     rc(T('resAddIrr'), nf(add/1000,0) + ' <small style="font-size:11px">k ha</small>', '130k → ' + it + 'k ha') +
     rc(T('resCapexTot'), nf(capex,0) + ' <small style="font-size:11px">AZN mn</small>', nf(cx) + ' AZN/ha') +
     rc(T('resStateShare'), nf(state,0) + ' <small style="font-size:11px">AZN mn</small>',
        LG === 'az' ? 'güzəşt 50%' : (LG === 'ru' ? 'льгота 50%' : 'concession 50%'), CC.red) +
     rc(T('resYieldGain'), nf(gain,3) + ' <small style="font-size:11px">mn t</small>',
-       nf(gainV,0) + ' AZN mn ' + (LG === 'az' ? 'dəyər' : (LG === 'ru' ? 'стоимость' : 'value')), CC.green) +
+       nf(gainV,0) + ' AZN mn ' + (LG === 'az' ? 'ümumi dəyər' : (LG === 'ru' ? 'валовая стоимость' : 'gross value')), CC.green) +
     rc(T('resWaterSaved'), nf(water,0) + ' <small style="font-size:11px">mn m³</small>', ws + '% · 6,000 m³/ha') +
-    rc(T('resPayback'), pay ? nf(pay,1) : '—',
-       LG === 'az' ? 'il (dövlət payı üzrə)' : (LG === 'ru' ? 'лет (по доле государства)' : 'years (on state share)'),
-       pay && pay < 8 ? CC.green : CC.warn);
+    mrRow(T('resPayback'));
 
   const lab = [], c1 = [], c2 = [];
   for (let t = 130; t <= 500; t += 50){
@@ -4793,17 +4930,22 @@ function simDr(){
   const newY = 3.49 * (1 - (rf/100) * eff);
   const sc = Math.abs(loss);
   const sev = sc < .1 ? [T('sevLow'), CC.green] : (sc < .3 ? [T('sevMed'), CC.warn] : (sc < .6 ? [T('sevHigh'), CC.red] : [T('sevCrit'), '#8A1810']));
+  /* P0-05: the drought model works on the TOTAL grain balance. Adding that
+     total-grain loss to the WHEAT import line, valuing it at the wheat price,
+     and recomputing wheat self-sufficiency from a separate wheat baseline mixes
+     two different commodity balances. Those three outputs are withheld pending a
+     coherent wheat balance (P2-09); the total-grain loss, new grain yield and
+     severity share stay as defensible quantities. */
+  void newImp; void extra; void newSS;   // retained for the P2-09 rebuild, not displayed
   document.getElementById('dRes').innerHTML =
     rc(T('resLoss'), (loss >= 0 ? '−' : '+') + nf(Math.abs(loss),3) + ' <small style="font-size:11px">mn t</small>',
        nf(BASE_GRAIN,3) + ' → ' + nf(newProd,3) + ' mn t', loss > 0 ? CC.red : CC.green) +
     rc(T('resYieldNew'), nf(newY,2) + ' <small style="font-size:11px">t/ha</small>', '3.49 t/ha → ' + nf(newY,2)) +
-    rc(T('resNewImport'), nf(newImp,3) + ' <small style="font-size:11px">mn t</small>',
-       nf(BASE_IMP,3) + ' mn t ' + (LG === 'az' ? 'bazadan' : (LG === 'ru' ? 'от базы' : 'from base'))) +
-    rc(T('resExtraCost'), (extra >= 0 ? '+' : '') + nf(extra,1) + ' <small style="font-size:11px">USD mn</small>',
-       nf(wp,1) + ' USD/t', extra > 0 ? CC.red : CC.green) +
-    rc(T('resNewSS'), nf(newSS,1) + '%', '55% → ' + nf(newSS,1) + '%', newSS < 50 ? CC.red : CC.warn) +
+    mrRow(T('resNewImport')) +
+    mrRow(T('resExtraCost')) +
+    mrRow(T('resNewSS')) +
     rc(T('resSevere'), '<span style="font-size:16px">' + esc(sev[0]) + '</span>',
-       nf(Math.abs(loss/BASE_GRAIN*100),1) + '% ' + (LG === 'az' ? 'istehsal itkisi' : (LG === 'ru' ? 'потери производства' : 'of output')), sev[1]);
+       nf(Math.abs(loss/BASE_GRAIN*100),1) + '% ' + (LG === 'az' ? 'taxıl istehsalı itkisi' : (LG === 'ru' ? 'потери производства зерна' : 'of grain output')), sev[1]);
 
   const lab = [], pts = [];
   for (let r = -60; r <= 20; r += 10){
@@ -5005,9 +5147,50 @@ function renderChat(){
   log.scrollTop = log.scrollHeight;
 }
 
+/* Capability readiness (P0-08): distinct from "is a server process alive".
+   'ready'   — chat reachable (live or demo/mock);
+   'demo'    — reachable but running canned mock replies;
+   'down'    — backend absent / unreachable;
+   'checking'/'unknown' — before the probe resolves. */
+let AI_CAP = 'unknown';
+function setChatCap(state, detailKey){
+  AI_CAP = state;
+  const el = document.getElementById('chatCap');
+  const ask = document.getElementById('ask');
+  const box = document.getElementById('q');
+  const disabled = (state === 'down');
+  if (ask) ask.disabled = disabled || CHAT_BUSY;
+  if (box){ box.disabled = disabled; box.placeholder = disabled ? T('chatUnavailShort') : T('askPlaceholder'); }
+  if (!el) return;
+  if (state === 'ready' || state === 'checking'){ el.style.display = 'none'; el.innerHTML = ''; return; }
+  const cls = state === 'down' ? 'down' : 'demo';
+  const msg = detailKey ? T(detailKey) : (state === 'demo' ? T('chatCapDemo') : T('chatCapDown'));
+  const retry = state === 'down'
+    ? ` <button class="btn sm" id="chatRetry">${esc(T('chatRetry'))}</button>` : '';
+  el.className = 'chat-cap ' + cls; el.style.display = 'flex';
+  el.innerHTML = `<span>${esc(msg)}</span>${retry}`;
+  const rb = document.getElementById('chatRetry');
+  if (rb) rb.onclick = checkCapabilities;
+}
+async function checkCapabilities(){
+  setChatCap('checking');
+  try {
+    const ctrl = new AbortController();
+    const to = setTimeout(() => ctrl.abort(), 5000);
+    const r = await fetch('api/health', {signal:ctrl.signal});
+    clearTimeout(to);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if (j && j.mock) setChatCap('demo', 'chatCapDemo');
+    else setChatCap('ready');
+  } catch (e){
+    setChatCap('down', 'chatCapDown');
+  }
+}
+
 async function askChat(text){
   const q = String(text || '').trim();
-  if (!q || CHAT_BUSY) return;
+  if (!q || CHAT_BUSY || AI_CAP === 'down') return;
   CHAT.push({role:'user', content:q});
   if (CHAT.length > CHAT_MAX) CHAT.splice(0, CHAT.length - CHAT_MAX);
   CHAT_BUSY = true;
@@ -5017,9 +5200,13 @@ async function askChat(text){
   renderChat();
   setChatState(T('chatThinking'));
   let ek = 'chatErr';
+  const HTTP_ERR = {401:'chatErrAuth', 403:'chatErrForbidden', 404:'chatErrNotFound',
+    429:'chatErrRate', 502:'chatErrUp', 503:'chatErrCfg'};
+  const ctrl = new AbortController();
+  const to = setTimeout(() => ctrl.abort(), 30000);
   try {
     const r = await fetch('api/chat', {
-      method:'POST', headers:{'Content-Type':'application/json'},
+      method:'POST', headers:{'Content-Type':'application/json'}, signal:ctrl.signal,
       body:JSON.stringify({
         lang:LG,
         messages:CHAT.filter(m => !m.err).map(m => ({role:m.role, content:m.content})),
@@ -5027,7 +5214,8 @@ async function askChat(text){
       })
     });
     if (!r.ok){
-      ek = r.status === 503 ? 'chatErrCfg' : (r.status === 502 ? 'chatErrUp' : 'chatErrHttp');
+      ek = HTTP_ERR[r.status] || 'chatErrHttp';
+      if (r.status === 404) setChatCap('down', 'chatCapDown');
       throw new Error('HTTP ' + r.status);
     }
     const j = await r.json();
@@ -5036,7 +5224,12 @@ async function askChat(text){
     CHAT.push({role:'assistant', content:j.reply,
       cite:j.model ? `${T('chatVia')} ${j.model}` : ''});
   } catch (e){
+    /* an abort is a timeout; a fetch rejection with no HTTP status is a network fault */
+    if (e && e.name === 'AbortError') ek = 'chatErrTimeout';
+    else if (String(e && e.message).indexOf('HTTP ') !== 0 && ek === 'chatErr') ek = 'chatErrNet';
     CHAT.push({role:'assistant', err:ek});
+  } finally {
+    clearTimeout(to);
   }
   CHAT_BUSY = false;
   chatLock(false);
@@ -5088,18 +5281,41 @@ function drUpdateFile(){
   if (drFileName){ el.style.display = 'block'; el.innerHTML = `▤ ${esc(T('drFileLbl'))}: <b>${esc(drFileName)}</b>`; }
   else el.style.display = 'none';
 }
+/* Only genuinely text-based inputs are supported. Binary office/PDF/image
+   files are rejected outright rather than read as garbled text — see P0-06.
+   A real PDF/DOCX extraction pipeline is P2-08. */
+const DR_TEXT_EXT = ['txt','md','markdown','csv','tsv','json','log','text','yaml','yml','xml','htm','html'];
+const DR_BINARY_EXT = ['pdf','doc','docx','xls','xlsx','ppt','pptx','rtf','odt','ods','pages','key','numbers','zip','png','jpg','jpeg','gif','webp','heic','tiff','bmp'];
+function drExt(name){ name = String(name || '').toLowerCase(); return name.indexOf('.') >= 0 ? name.split('.').pop() : ''; }
+function drSupported(file){
+  const type = (file.type || '').toLowerCase();
+  const ext = drExt(file.name);
+  if (DR_BINARY_EXT.indexOf(ext) >= 0) return false;
+  if (type && !type.startsWith('text/') && type !== 'application/json' && type !== 'application/xml') {
+    /* an explicit non-text content-type (e.g. application/pdf) is rejected */
+    if (type.indexOf('text') < 0 && DR_TEXT_EXT.indexOf(ext) < 0) return false;
+  }
+  return true;
+}
 function drReadFile(file){
   if (!file) return;
+  const result = document.getElementById('drResult');
+  if (!drSupported(file)){
+    const ext = drExt(file.name) || '?';
+    result.innerHTML = `<div class="dr-err">${esc(T('drUnsupported').replace('{ext}', ext.toUpperCase()))}<br><span class="mini">${esc(T('drFormats'))}</span></div>`;
+    const f = document.getElementById('drFile'); if (f) f.value = '';
+    return;
+  }
   const reader = new FileReader();
   reader.onload = () => {
     document.getElementById('drText').value = String(reader.result || '');
     drFileName = file.name; drUpdateFile(); drUpdateCount();
   };
   reader.onerror = () => {
-    document.getElementById('drResult').innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`;
+    result.innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`;
   };
   try { reader.readAsText(file); }
-  catch (e){ document.getElementById('drResult').innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`; }
+  catch (e){ result.innerHTML = `<div class="dr-err">${esc(T('drReadErr'))}</div>`; }
 }
 function drClear(){
   document.getElementById('drText').value = '';
@@ -5127,20 +5343,30 @@ function drRenderResult(){
   const secs = drParse(drLastReply);
   const structured = secs.filter(s => s.title);
   const demo = drLastModel === 'mock' ? `<div style="margin-bottom:10px"><span class="ts-tag">${esc(T('drDemoTag'))}</span></div>` : '';
+  /* Always disclose that this is a plain-text, advisory, non-complete review. */
+  const scopeHtml = `<div class="dr-count warn" style="margin-bottom:10px">⚠ ${esc(T('drNotFull'))}</div>`;
   const noteHtml = drLastNote ? `<div class="dr-count warn" style="margin-bottom:10px">${esc(drLastNote)}</div>` : '';
   const body = structured.length >= 2
     ? secs.map(s => `<div class="dr-sec">${s.title ? `<div class="dr-sec-t">◆ ${esc(s.title)}</div>` : ''}
         <div class="dr-sec-b">${mdToHtml(s.body.join('\n'))}</div></div>`).join('')
     : `<div class="dr-sec"><div class="dr-sec-t">◆ ${esc(T('drResultH'))}</div>
         <div class="dr-sec-b">${mdToHtml(drLastReply)}</div></div>`;
-  result.innerHTML = demo + noteHtml + body;
+  result.innerHTML = demo + scopeHtml + noteHtml + body;
 }
 async function drReview(){
   const raw = (document.getElementById('drText').value || '').trim();
   const result = document.getElementById('drResult');
   if (!raw){ result.innerHTML = `<div class="dr-err">${esc(T('drNoText'))}</div>`; return; }
   let doc = raw; drLastNote = '';
-  if (doc.length > DR_MAX){ doc = doc.slice(0, DR_MAX); drLastNote = T('drTruncated').replace('{n}', nf(DR_MAX)); }
+  if (doc.length > DR_MAX){
+    doc = doc.slice(0, DR_MAX);
+    /* Name the exact reviewed range and the omitted remainder so a capped
+       review can never be mistaken for a complete one (P0-06). */
+    drLastNote = T('drTruncated')
+      .replace('{n}', nf(DR_MAX))
+      .replace('{total}', nf(raw.length))
+      .replace('{rest}', nf(raw.length - DR_MAX));
+  }
   drBusy(true);
   result.innerHTML = `<div class="dr-loading"><span class="typing"><i></i><i></i><i></i></span>${esc(T('drReviewing'))}</div>`;
   const content = tx(DR_INSTR) + "\n\n=== DOCUMENT START ===\n" + doc + "\n=== DOCUMENT END ===";
@@ -5967,7 +6193,7 @@ function critB(pri){
   return `<span class="cr-b ${esc(pri)}">${esc(lb)}</span>`;
 }
 function riskI(risk){
-  const lb = {high:T('sevHigh'),med:T('sevMed'),low:T('sevLow')}[risk] || risk;
+  const lb = {high:T('sevHigh'),med:T('sevMed'),low:T('sevLow'),notAssessed:T('naLabel')}[risk] || risk;
   return `<span class="risk-i ${esc(risk)}">${esc(T('kbRisk'))}: ${esc(lb)}</span>`;
 }
 function mtgRow(m){
@@ -6091,13 +6317,26 @@ const PRIO_BRIEF = {
   ru:"В этом исполнительном обзоре мы представляем Вашему Превосходительству пять встреч дня: начиная с совета по орошению и управлению водными ресурсами, затем стратегия самообеспеченности пшеницей, обзор механизма фермерских субсидий, готовность к борьбе с саранчой и вредителями и, наконец, обсуждения хлопкового кластера. Самые срочные решения касаются распределения субсидии на современное орошение и закупки пшеницы в четвёртом квартале."
 };
 let prioOpt = false;   /* "Optimise my calendar" toggle: chronological vs priority order */
+/* Meeting attendance priority: derived from importance/urgency (+ explicit
+   minister override) ONLY. A critical linked task is a separate dimension
+   (delivery criticality, mtgCrit) and must not, on its own, make the meeting
+   Critical — see P0-04. */
 function prioLevel(m){
-  if (m.crit) return m.crit;   /* Minister-set priority overrides the derived level */
-  const c = mtgCrit(m);
-  if (c && c !== 'none') return c;
-  return (m.imp && m.urg) ? 'high' : (m.imp ? 'medium' : 'low');
+  return Exec.meetingPriority(m);
 }
-function mtgRisk(m){ return m.risk || 'med'; }
+function mtgRisk(m){ return Exec.normRisk(m); }
+function minU(){ return LG === 'az' ? 'dəq' : (LG === 'ru' ? 'мин' : 'min'); }
+/* Build a schedule-conflict chip for a meeting from a precomputed conflict map
+   (Exec.meetingConflicts). Empty string when the meeting has no overlap. */
+function conflictChip(m, conf, list){
+  const cs = conf && conf[m.id];
+  if (!cs || !cs.length) return '';
+  const first = cs[0];
+  const other = (list || F.meetings || []).find(x => x.id === first.withId);
+  const otherLbl = other ? (other.dt.slice(11,16) + ' ' + tx(other.t)) : '';
+  const more = cs.length > 1 ? ' +' + (cs.length - 1) : '';
+  return `<span class="ag-conflict" title="${esc(otherLbl)}">⚠ ${esc(T('mtgConflict'))}: ${first.minutes} ${esc(minU())} · ${esc(T('mtgConflictWith'))} ${esc(otherLbl)}${esc(more)}</span>`;
+}
 function delegateOf(m){
   if (!m.delegate) return null;
   const a = (m.attendees || []).find(x => x.n === m.delegate);
@@ -6131,11 +6370,16 @@ function renderPrio(){
   const ag = list.slice();
   if (prioOpt) ag.sort((a,b) => (RANK[prioLevel(b)] - RANK[prioLevel(a)]) || a.dt.localeCompare(b.dt));
   else ag.sort((a,b) => a.dt.localeCompare(b.dt));
-  const RDY = {high:'rdyHigh',medium:'rdyMed',low:'rdyLow'};
+  const RDY = {high:'rdyHigh',medium:'rdyMed',low:'rdyLow',notAssessed:'naLabel'};
+  const conf = Exec.meetingConflicts(list);
   document.getElementById('prioAgenda').innerHTML = `<div class="agn">` + ag.map(m => {
     const del = delegateOf(m);
-    const rdy = m.readiness || 'medium';
+    const rdy = Exec.normReadiness(m);
+    const dc = mtgCrit(m);
     const tags = m.tags.map(t => `<span class="chp">${esc(topN(t))}</span>`).join('');
+    const dcHtml = (dc && dc !== 'none')
+      ? `<span class="ag-dc">${esc(T('deliveryCrit'))}: ${critB(dc)}</span>` : '';
+    const cHtml = conflictChip(m, conf, list);
     const delHtml = del
       ? `<span class="av">${esc(initials(del.n))}</span><b>${esc(del.n)}</b>${del.r ? ' · ' + esc(tx(del.r)) : ''}`
       : '—';
@@ -6143,10 +6387,10 @@ function renderPrio(){
       <div class="ag-time"><b>${esc(m.dt.slice(11,16))}</b><small>${esc(m.end || '')}</small></div>
       <div class="ag-b">
         <div class="ag-top"><div class="ag-t">${esc(tx(m.t))}</div>
-          <span class="ag-pri">${critB(prioLevel(m))}</span>
-          <span class="rdy ${esc(rdy)}">${esc(T('rdyLabel'))}: ${esc(T(RDY[rdy] || 'rdyMed'))}</span></div>
+          <span class="ag-pri" title="${esc(T('mtgPriHint'))}">${critB(prioLevel(m))}</span>
+          <span class="rdy ${esc(rdy)}">${esc(T('rdyLabel'))}: ${esc(T(RDY[rdy] || 'naLabel'))}</span></div>
         <div class="ag-sum">✦ ${esc(tx(m.aisum))}</div>
-        <div class="ag-tags" style="margin-top:9px">${tags}${riskI(mtgRisk(m))}</div>
+        <div class="ag-tags" style="margin-top:9px">${tags}${riskI(mtgRisk(m))}${dcHtml}${cHtml}</div>
         <div class="ag-foot"><div class="ag-dlg">◧ ${esc(T('prioDelegate'))}: ${delHtml}</div></div>
       </div></button>`;
   }).join('') + `</div>`;
@@ -6380,16 +6624,18 @@ function renderCalendar(){
     calSel = null;
     agenda.innerHTML = `<div class="cal-empty"><div class="cal-empty-ic">◷</div>${esc(T('calEmpty'))}</div>`;
   } else {
+    const conf = Exec.meetingConflicts(list);
     agenda.innerHTML = list.map(m => {
       const cr = mtgCrit(m);
       const tags = m.tags.map(t => `<span class="chp">${esc(topN(t))}</span>`).join('');
       const nd = (m.docs || []).length;
+      const cHtml = conflictChip(m, conf, list);
       return `<button class="cal-item${m.id === calSel ? ' sel' : ''}" data-cal="${esc(m.id)}">
         <div class="cal-time">${esc(m.dt.slice(11,16))}<small>${esc(m.end || '')}</small></div>
         <div class="cal-body ${esc(cr)}">
           <div class="cal-item-t">${esc(tx(m.t))}</div>
           <div class="cal-item-m">◷ ${esc(mtgLoc(m))} · ${esc(T('mtgAttendees'))}: ${m.attendees.length}${nd ? ' · ▤ ' + nd : ''}</div>
-          <div class="cal-item-tags">${tags}<span class="cal-item-arrow">${esc(T('calDocs'))} →</span></div>
+          <div class="cal-item-tags">${tags}${cHtml}<span class="cal-item-arrow">${esc(T('calDocs'))} →</span></div>
         </div></button>`;
     }).join('');
     agenda.querySelectorAll('.cal-item').forEach(el =>
@@ -6746,6 +6992,7 @@ function renderAll(){
   renderAI(); renderDocReview(); renderDash(); renderMeetings(); renderKanban(); renderCalendar();
   renderMapChrome(); renderCharts(); renderUcCharts(); bindGo();
   if (MAP) drawMap(); else if (document.getElementById('mapfb').style.display === 'block') fallbackMap();
+  if (AI_CAP !== 'unknown') setChatCap(AI_CAP);   /* keep capability banner in sync after re-render */
 }
 document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
   LG = b.dataset.lang; localStorage.setItem('np_lang', LG); renderAll();
@@ -6753,7 +7000,10 @@ document.querySelectorAll('.lang button').forEach(b => b.onclick = () => {
 document.getElementById('navBtn').onclick = () => document.body.classList.toggle('nav-on');
 document.getElementById('scrim').onclick = () => document.body.classList.remove('nav-on');
 document.getElementById('refresh').onclick = e => {
+  /* Demo mode has no scheduled retrieval behind it: a reload re-reads the same
+     fixed snapshot, so we say so plainly rather than implying a live fetch. */
   const btn = e.currentTarget; btn.classList.add('busy');
+  if (F.meta.dataMode === 'demo') showToast(T('refreshDemo'));
   setTimeout(() => location.reload(), 700);
 };
 document.getElementById('ask').onclick = () => askChat(document.getElementById('q').value);
@@ -6821,6 +7071,7 @@ tickClock(); setInterval(tickClock, 20000);
 renderAll();
 go('hub');   /* start on the standalone entry chooser (chrome hidden) */
 initMap();
+checkCapabilities();   /* probe chat/document-review readiness (P0-08) */
 </script>
 </body>
 </html>

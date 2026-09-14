@@ -4,6 +4,8 @@
 !.env.example
 *.key
 *.pem
+# Local run config (holds your Cursor API key for run-local.*)
+local-config.txt
 
 # Python
 __pycache__/
@@ -22,3 +24,6 @@ Thumbs.db
 
 # Node (only if a build step is added later)
 node_modules/
+
+# Demo/verification artifacts (screenshots)
+artifacts/
