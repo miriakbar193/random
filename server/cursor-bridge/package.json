@@ -1,0 +1,19 @@
+{
+  "name": "nazir-cursor-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "OpenAI-compatible /v1/chat/completions bridge backed by the Cursor Agent SDK. Lets Nazir Paneli's existing LLM client run on a Cursor subscription API key.",
+  "bin": {
+    "nazir-cursor-bridge": "bridge.mjs"
+  },
+  "scripts": {
+    "start": "node bridge.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^1.0.31"
+  }
+}
